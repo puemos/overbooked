@@ -14,8 +14,8 @@ defmodule Overbooked.Scheduler do
     from(b in Booking,
       where: b.resource_id == ^resource.id,
       where:
-        (b.start_at >= ^start_at and b.start_at <= ^end_at) or
-          (b.end_at >= ^start_at and b.start_at <= ^end_at)
+        (^start_at >= b.start_at and ^start_at < b.end_at) or
+          (^end_at > b.start_at and ^end_at <= b.end_at)
     )
     |> Repo.exists?()
   end
@@ -32,8 +32,25 @@ defmodule Overbooked.Scheduler do
     end
   end
 
-  def list_bookings do
-    Repo.all(Booking)
+  def list_bookings(start_at, end_at) do
+    from(b in Booking,
+      where:
+        (^start_at >= b.start_at and ^start_at <= b.end_at) or
+          (^end_at >= b.start_at and ^end_at <= b.end_at),
+      order_by: b.start_at
+    )
+    |> Repo.all()
+  end
+
+  def list_bookings(start_at, end_at, %Resource{} = resource) do
+    from(b in Booking,
+      where: b.resource_id == ^resource.id,
+      where:
+        (^start_at >= b.start_at and ^start_at <= b.end_at) or
+          (^end_at >= b.start_at and ^end_at <= b.end_at),
+      order_by: b.start_at
+    )
+    |> Repo.all()
   end
 
   def get_booking!(id), do: Repo.get!(Booking, id)
