@@ -144,4 +144,94 @@ defmodule Overbooked.SchedulerTest do
                )
     end
   end
+
+  describe "modifing bookings" do
+    test "delete_booking/2 delete a booking" do
+      resource_1 = resource_fixture()
+      user = user_fixture()
+
+      assert {:ok, %Booking{} = booking_1} =
+               Scheduler.book_resource(resource_1, user, %{
+                 start_at: ~U[2022-08-14 00:00:00Z],
+                 end_at: ~U[2022-08-14 00:10:00Z]
+               })
+
+      assert {:ok, %Booking{id: _booking_1}} = Scheduler.delete_booking(booking_1, user)
+    end
+
+    test "delete_booking/2 can't delete someone's else booking" do
+      resource_1 = resource_fixture()
+      user_1 = user_fixture()
+      user_2 = user_fixture()
+
+      assert {:ok, %Booking{} = booking_1} =
+               Scheduler.book_resource(resource_1, user_1, %{
+                 start_at: ~U[2022-08-14 00:00:00Z],
+                 end_at: ~U[2022-08-14 00:10:00Z]
+               })
+
+      assert_raise FunctionClauseError, fn ->
+        Scheduler.delete_booking(booking_1, user_2)
+      end
+    end
+
+    test "update_booking/3 update a booking" do
+      resource_1 = resource_fixture()
+      user = user_fixture()
+
+      assert {:ok, %Booking{} = booking_1} =
+               Scheduler.book_resource(resource_1, user, %{
+                 start_at: ~U[2022-08-14 00:00:00Z],
+                 end_at: ~U[2022-08-14 00:10:00Z]
+               })
+
+      assert {:ok, %Booking{start_at: ~U[2022-08-14 00:05:00Z]}} =
+               Scheduler.update_booking(booking_1, resource_1, user, %{
+                 start_at: ~U[2022-08-14 00:05:00Z],
+                 end_at: ~U[2022-08-14 00:10:00Z]
+               })
+    end
+
+    test "update_booking/3 can't update a booking to a busy time" do
+      resource_1 = resource_fixture()
+      user_1 = user_fixture()
+
+      assert {:ok, %Booking{} = booking_1} =
+               Scheduler.book_resource(resource_1, user_1, %{
+                 start_at: ~U[2022-08-14 00:00:00Z],
+                 end_at: ~U[2022-08-14 00:10:00Z]
+               })
+
+      assert {:ok, %Booking{} = _booking_2} =
+               Scheduler.book_resource(resource_1, user_1, %{
+                 start_at: ~U[2022-08-14 00:10:00Z],
+                 end_at: ~U[2022-08-14 00:20:00Z]
+               })
+
+      assert {:error, :resource_busy} =
+               Scheduler.update_booking(booking_1, resource_1, user_1, %{
+                 start_at: ~U[2022-08-14 00:15:00Z],
+                 end_at: ~U[2022-08-14 00:17:00Z]
+               })
+    end
+
+    test "update_booking/3 can't update someone's else booking" do
+      resource_1 = resource_fixture()
+      user_1 = user_fixture()
+      user_2 = user_fixture()
+
+      assert {:ok, %Booking{} = booking_1} =
+               Scheduler.book_resource(resource_1, user_1, %{
+                 start_at: ~U[2022-08-14 00:00:00Z],
+                 end_at: ~U[2022-08-14 00:10:00Z]
+               })
+
+      assert_raise FunctionClauseError, fn ->
+        Scheduler.update_booking(booking_1, resource_1, user_2, %{
+          start_at: ~U[2022-08-14 00:05:00Z],
+          end_at: ~U[2022-08-14 00:10:00Z]
+        })
+      end
+    end
+  end
 end

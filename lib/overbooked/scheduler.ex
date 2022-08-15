@@ -20,6 +20,17 @@ defmodule Overbooked.Scheduler do
     |> Repo.exists?()
   end
 
+  def resource_busy?(%Resource{} = resource, start_at, end_at, booking) do
+    from(b in Booking,
+      where: b.resource_id == ^resource.id,
+      where:
+        (^start_at >= b.start_at and ^start_at < b.end_at) or
+          (^end_at > b.start_at and ^end_at <= b.end_at),
+      where: b.id != ^booking.id
+    )
+    |> Repo.exists?()
+  end
+
   def book_resource(%Resource{} = resource, %User{} = user, attrs \\ %{}) do
     if resource_busy?(resource, attrs[:start_at], attrs[:end_at]) do
       {:error, :resource_busy}
@@ -55,17 +66,26 @@ defmodule Overbooked.Scheduler do
 
   def get_booking!(id), do: Repo.get!(Booking, id)
 
-  def update_booking(%Booking{} = booking, attrs) do
-    booking
-    |> Booking.changeset(attrs)
-    |> Repo.update()
+  def update_booking(
+        %Booking{user_id: user_id} = booking,
+        %Resource{} = resource,
+        %User{id: user_id},
+        attrs
+      ) do
+    if resource_busy?(resource, attrs[:start_at], attrs[:end_at], booking) do
+      {:error, :resource_busy}
+    else
+      booking
+      |> Booking.changeset(attrs)
+      |> Repo.update()
+    end
   end
 
-  def delete_booking(%Booking{} = booking) do
+  def delete_booking(%Booking{user_id: user_id} = booking, %User{id: user_id}) do
     Repo.delete(booking)
   end
 
-  def change_booking(%Booking{} = booking, attrs \\ %{}) do
+  def change_booking(%Booking{user_id: user_id} = booking, %User{id: user_id}, attrs \\ %{}) do
     Booking.changeset(booking, attrs)
   end
 end

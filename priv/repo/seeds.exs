@@ -9,3 +9,10 @@
 #
 # We recommend using the bang functions (`insert!`, `update!`
 # and so on) as they will fail if something goes wrong.
+
+for email <- Overbooked.config([:admin_emails]) do
+  Overbooked.Accounts.register_user(%{
+    email: email,
+    password: "admin"
+  })
+end

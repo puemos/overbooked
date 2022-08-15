@@ -8,7 +8,8 @@
 import Config
 
 config :overbooked,
-  ecto_repos: [Overbooked.Repo]
+  ecto_repos: [Overbooked.Repo],
+  admin_emails: ["admin@overbooked.app"]
 
 # Configures the endpoint
 config :overbooked, OverbookedWeb.Endpoint,

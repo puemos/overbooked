@@ -8,6 +8,10 @@ defmodule Overbooked.Accounts do
 
   alias Overbooked.Accounts.{User, UserToken, UserNotifier}
 
+  def admin?(%User{} = user) do
+    user.email in Overbooked.config([:admin_emails])
+  end
+
   ## Database getters
 
   @doc """
