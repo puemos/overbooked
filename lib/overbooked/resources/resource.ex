@@ -4,7 +4,7 @@ defmodule Overbooked.Resources.Resource do
 
   schema "resources" do
     field :name, :string
-
+    has_many :bookings, Overbooked.Scheduler.Booking
     timestamps()
   end
 
