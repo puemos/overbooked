@@ -1,5 +1,5 @@
-<main class="container">
-  <p class="alert alert-info" role="alert"><%= get_flash(@conn, :info) %></p>
-  <p class="alert alert-danger" role="alert"><%= get_flash(@conn, :error) %></p>
+<main>
+  <.alert with_icon color="info" role="alert"><%= get_flash(@conn, :info) %></.alert>
+  <.alert with_icon color="danger" role="alert"><%= get_flash(@conn, :error) %></.alert>
   <%= @inner_content %>
 </main>

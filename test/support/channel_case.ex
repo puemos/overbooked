@@ -1,9 +1,9 @@
-defmodule OverbookedWeb.ConnCase do
+defmodule OverbookedWeb.ChannelCase do
   @moduledoc """
   This module defines the test case to be used by
-  tests that require setting up a connection.
+  channel tests.
 
-  Such tests rely on `Phoenix.ConnTest` and also
+  Such tests rely on `Phoenix.ChannelTest` and also
   import other functionality to make it easier
   to build common data structures and query the data layer.
 
@@ -11,7 +11,7 @@ defmodule OverbookedWeb.ConnCase do
   we enable the SQL sandbox, so changes done to the database
   are reverted at the end of every test. If you are using
   PostgreSQL, you can even run database tests asynchronously
-  by setting `use OverbookedWeb.ConnCase, async: true`, although
+  by setting `use OverbookedWeb.ChannelCase, async: true`, although
   this option is not recommended for other databases.
   """
 
@@ -19,12 +19,9 @@ defmodule OverbookedWeb.ConnCase do
 
   using do
     quote do
-      # Import conveniences for testing with connections
-      import Plug.Conn
-      import Phoenix.ConnTest
-      import OverbookedWeb.ConnCase
-
-      alias OverbookedWeb.Router.Helpers, as: Routes
+      # Import conveniences for testing with channels
+      import Phoenix.ChannelTest
+      import OverbookedWeb.ChannelCase
 
       # The default endpoint for testing
       @endpoint OverbookedWeb.Endpoint
@@ -34,6 +31,6 @@ defmodule OverbookedWeb.ConnCase do
   setup tags do
     pid = Ecto.Adapters.SQL.Sandbox.start_owner!(Overbooked.Repo, shared: not tags[:async])
     on_exit(fn -> Ecto.Adapters.SQL.Sandbox.stop_owner(pid) end)
-    {:ok, conn: Phoenix.ConnTest.build_conn()}
+    :ok
   end
 end

@@ -7,17 +7,9 @@ import Config
 # any compile-time configuration in here, as it won't be applied.
 # The block below contains prod specific runtime configuration.
 
-# ## Using releases
-#
-# If you use `mix release`, you need to explicitly enable the server
-# by passing the PHX_SERVER=true when you start it:
-#
-#     PHX_SERVER=true bin/overbooked start
-#
-# Alternatively, you can use `mix phx.gen.release` to generate a `bin/server`
-# script that automatically sets the env var above.
-if System.get_env("PHX_SERVER") do
-  config :overbooked, OverbookedWeb.Endpoint, server: true
+# Start the phoenix server if environment is set and running in a release
+if System.get_env("PHX_SERVER") && System.get_env("RELEASE_NAME") do
+  config :overbooked, Overbooked.Endpoint, server: true
 end
 
 if config_env() == :prod do
@@ -52,16 +44,26 @@ if config_env() == :prod do
   port = String.to_integer(System.get_env("PORT") || "4000")
 
   config :overbooked, OverbookedWeb.Endpoint,
-    url: [host: host, port: 443, scheme: "https"],
+    url: [host: host, port: 443],
     http: [
       # Enable IPv6 and bind on all interfaces.
-      # Set it to  {0, 0, 0, 0, 0, 0, 0, 1} for local network only access.
+      # Set it to {0, 0, 0, 0, 0, 0, 0, 1} for local network only access.
       # See the documentation on https://hexdocs.pm/plug_cowboy/Plug.Cowboy.html
       # for details about using IPv6 vs IPv4 and loopback vs public addresses.
       ip: {0, 0, 0, 0, 0, 0, 0, 0},
       port: port
     ],
     secret_key_base: secret_key_base
+
+  # ## Using releases
+  #
+  # If you are doing OTP releases, you need to instruct Phoenix
+  # to start each relevant endpoint:
+  #
+  #     config :overbooked, OverbookedWeb.Endpoint, server: true
+  #
+  # Then you can assemble a release by calling `mix release`.
+  # See `mix help release` for more information.
 
   # ## Configuring the mailer
   #

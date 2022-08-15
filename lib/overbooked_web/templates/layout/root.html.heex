@@ -1,28 +1,48 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="utf-8"/>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <meta name="csrf-token" content={csrf_token_value()}>
-    <%= live_title_tag assigns[:page_title] || "Overbooked" %>
-    <link phx-track-static rel="stylesheet" href={Routes.static_path(@conn, "/assets/app.css")}/>
-    <script defer phx-track-static type="text/javascript" src={Routes.static_path(@conn, "/assets/app.js")}></script>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <%= csrf_meta_tag() %>
+    <%= live_title_tag(assigns[:page_title] || "Overbooked", suffix: " · Phoenix Framework") %>
+    <link phx-track-static rel="stylesheet" href={Routes.static_path(@conn, "/assets/app.css")} />
+    <script defer src="https://unpkg.com/@alpinejs/collapse@3.x.x/dist/cdn.min.js">
+    </script>
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js">
+    </script>
+    <!-- Used in css-theme-switch.js - remove if you don't support light/dark mode -->
+    <script defer src="https://unpkg.com/js-cookie@3.x.x/dist/js.cookie.min.js">
+    </script>
+
+    <script
+      defer
+      phx-track-static
+      type="text/javascript"
+      src={Routes.static_path(@conn, "/assets/app.js")}
+    >
+    </script>
+
+    <.color_scheme_switch_js />
   </head>
   <body>
-    <header>
-      <section class="container">
-        <nav>
-          <ul>
-            <%= if function_exported?(Routes, :live_dashboard_path, 2) do %>
-              <li><%= link "LiveDashboard", to: Routes.live_dashboard_path(@conn, :home) %></li>
-            <% end %>
-          </ul>
-          <%= render "_user_menu.html", assigns %>
-        </nav>
+    <div class="h-screen overflow-auto dark:bg-gray-900">
+      <nav class="sticky top-0 flex items-center justify-between w-full h-16 bg-white dark:bg-gray-900">
+        <div class="flex ml-3 sm:ml-10">
+          <a
+            class="inline-flex text-gray-500 rounded dark:text-gray-400 dark:hover:text-gray-500 hover:text-gray-400"
+            href="/"
+          >
+            Overbooked
+          </a>
+        </div>
 
-      </section>
-    </header>
-    <%= @inner_content %>
+        <div class="flex justify-end gap-3 pr-4">
+          <.color_scheme_switch />
+        </div>
+      </nav>
+
+      <%= @inner_content %>
+    </div>
   </body>
 </html>

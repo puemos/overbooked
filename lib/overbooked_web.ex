@@ -59,14 +59,6 @@ defmodule OverbookedWeb do
     end
   end
 
-  def component do
-    quote do
-      use Phoenix.Component
-
-      unquote(view_helpers())
-    end
-  end
-
   def router do
     quote do
       use Phoenix.Router
@@ -98,6 +90,13 @@ defmodule OverbookedWeb do
       import OverbookedWeb.ErrorHelpers
       import OverbookedWeb.Gettext
       alias OverbookedWeb.Router.Helpers, as: Routes
+
+      # Import global components
+      import OverbookedWeb.Components.{
+        ColorSchemeSwitch
+      }
+
+      use PetalComponents
     end
   end
 

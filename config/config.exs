@@ -15,7 +15,7 @@ config :overbooked, OverbookedWeb.Endpoint,
   url: [host: "localhost"],
   render_errors: [view: OverbookedWeb.ErrorView, accepts: ~w(html json), layout: false],
   pubsub_server: Overbooked.PubSub,
-  live_view: [signing_salt: "2vDbRLzy"]
+  live_view: [signing_salt: "Fd8SWPu3"]
 
 # Configures the mailer
 #
@@ -31,7 +31,7 @@ config :swoosh, :api_client, false
 
 # Configure esbuild (the version is required)
 config :esbuild,
-  version: "0.14.29",
+  version: "0.14.50",
   default: [
     args:
       ~w(js/app.js --bundle --target=es2017 --outdir=../priv/static/assets --external:/fonts/* --external:/images/*),
@@ -46,6 +46,21 @@ config :logger, :console,
 
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
+
+config :petal_components,
+       :error_translator_function,
+       {OverbookedWeb.ErrorHelpers, :translate_error}
+
+config :tailwind,
+  version: "3.1.6",
+  default: [
+    args: ~w(
+         --config=tailwind.config.js
+         --input=css/app.css
+         --output=../priv/static/assets/app.css
+       ),
+    cd: Path.expand("../assets", __DIR__)
+  ]
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.

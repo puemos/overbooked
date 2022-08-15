@@ -7,7 +7,7 @@ defmodule OverbookedWeb.Endpoint do
   @session_options [
     store: :cookie,
     key: "_overbooked_key",
-    signing_salt: "brwFnubt"
+    signing_salt: "S+qhbMV3"
   ]
 
   socket "/live", Phoenix.LiveView.Socket, websocket: [connect_info: [session: @session_options]]
