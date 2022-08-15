@@ -9,7 +9,7 @@ defmodule OverbookedWeb.PageLive do
   @impl true
   def render(assigns) do
     ~H"""
-    <.color_scheme_switch />
+    Wow
     """
   end
 end

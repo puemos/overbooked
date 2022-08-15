@@ -1,21 +1,19 @@
-<main>
+<.container class="my-10">
   <.alert
-    with_icon
     color="info"
-    role="alert"
-    close_button_properties={["phx-click": "lv:clear-flash", "phx-value-key": "info"]}
-  >
-    <%= live_flash(@flash, :info) %>
-  </.alert>
+    class="mb-5"
+    label={live_flash(@flash, :info)}
+    phx-click="lv:clear-flash"
+    phx-value-key="info"
+  />
 
   <.alert
-    with_icon
     color="danger"
-    role="alert"
-    close_button_properties={["phx-click": "lv:clear-flash", "phx-value-key": "error"]}
-  >
-    <%= live_flash(@flash, :error) %>
-  </.alert>
+    class="mb-5"
+    label={live_flash(@flash, :error)}
+    phx-click="lv:clear-flash"
+    phx-value-key="error"
+  />
 
   <%= @inner_content %>
-</main>
+</.container>

@@ -1,5 +1,3 @@
-<main>
-  <.alert with_icon color="info" role="alert"><%= get_flash(@conn, :info) %></.alert>
-  <.alert with_icon color="danger" role="alert"><%= get_flash(@conn, :error) %></.alert>
+<.container class="my-10">
   <%= @inner_content %>
-</main>
+</.container>
