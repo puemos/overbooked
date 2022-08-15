@@ -35,9 +35,8 @@ defmodule OverbookedWeb.UserSessionControllerTest do
       # Now do a logged in request and assert on the menu
       conn = get(conn, "/")
       response = html_response(conn, 200)
-      assert response =~ user.email
-      assert response =~ "Settings</a>"
-      assert response =~ "Log out</a>"
+      assert response =~ "Settings"
+      assert response =~ "Log out"
     end
 
     test "logs the user in with remember me", %{conn: conn, user: user} do
