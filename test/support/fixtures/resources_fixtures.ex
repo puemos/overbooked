@@ -5,16 +5,16 @@ defmodule Overbooked.ResourcesFixtures do
   """
 
   @doc """
-  Generate a resouce.
+  Generate a resource.
   """
-  def resouce_fixture(attrs \\ %{}) do
-    {:ok, resouce} =
+  def resource_fixture(attrs \\ %{}) do
+    {:ok, resource} =
       attrs
       |> Enum.into(%{
         name: "some name"
       })
-      |> Overbooked.Resources.create_resouce()
+      |> Overbooked.Resources.create_resource()
 
-    resouce
+    resource
   end
 end

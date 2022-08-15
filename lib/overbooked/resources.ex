@@ -6,7 +6,7 @@ defmodule Overbooked.Resources do
   import Ecto.Query, warn: false
   alias Overbooked.Repo
 
-  alias Overbooked.Resources.Resouce
+  alias Overbooked.Resources.Resource
 
   @doc """
   Returns the list of resources.
@@ -14,91 +14,91 @@ defmodule Overbooked.Resources do
   ## Examples
 
       iex> list_resources()
-      [%Resouce{}, ...]
+      [%Resource{}, ...]
 
   """
   def list_resources do
-    Repo.all(Resouce)
+    Repo.all(Resource)
   end
 
   @doc """
-  Gets a single resouce.
+  Gets a single resource.
 
-  Raises `Ecto.NoResultsError` if the Resouce does not exist.
+  Raises `Ecto.NoResultsError` if the Resource does not exist.
 
   ## Examples
 
-      iex> get_resouce!(123)
-      %Resouce{}
+      iex> get_resource!(123)
+      %Resource{}
 
-      iex> get_resouce!(456)
+      iex> get_resource!(456)
       ** (Ecto.NoResultsError)
 
   """
-  def get_resouce!(id), do: Repo.get!(Resouce, id)
+  def get_resource!(id), do: Repo.get!(Resource, id)
 
   @doc """
-  Creates a resouce.
+  Creates a resource.
 
   ## Examples
 
-      iex> create_resouce(%{field: value})
-      {:ok, %Resouce{}}
+      iex> create_resource(%{field: value})
+      {:ok, %Resource{}}
 
-      iex> create_resouce(%{field: bad_value})
+      iex> create_resource(%{field: bad_value})
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_resouce(attrs \\ %{}) do
-    %Resouce{}
-    |> Resouce.changeset(attrs)
+  def create_resource(attrs \\ %{}) do
+    %Resource{}
+    |> Resource.changeset(attrs)
     |> Repo.insert()
   end
 
   @doc """
-  Updates a resouce.
+  Updates a resource.
 
   ## Examples
 
-      iex> update_resouce(resouce, %{field: new_value})
-      {:ok, %Resouce{}}
+      iex> update_resource(resource, %{field: new_value})
+      {:ok, %Resource{}}
 
-      iex> update_resouce(resouce, %{field: bad_value})
+      iex> update_resource(resource, %{field: bad_value})
       {:error, %Ecto.Changeset{}}
 
   """
-  def update_resouce(%Resouce{} = resouce, attrs) do
-    resouce
-    |> Resouce.changeset(attrs)
+  def update_resource(%Resource{} = resource, attrs) do
+    resource
+    |> Resource.changeset(attrs)
     |> Repo.update()
   end
 
   @doc """
-  Deletes a resouce.
+  Deletes a resource.
 
   ## Examples
 
-      iex> delete_resouce(resouce)
-      {:ok, %Resouce{}}
+      iex> delete_resource(resource)
+      {:ok, %Resource{}}
 
-      iex> delete_resouce(resouce)
+      iex> delete_resource(resource)
       {:error, %Ecto.Changeset{}}
 
   """
-  def delete_resouce(%Resouce{} = resouce) do
-    Repo.delete(resouce)
+  def delete_resource(%Resource{} = resource) do
+    Repo.delete(resource)
   end
 
   @doc """
-  Returns an `%Ecto.Changeset{}` for tracking resouce changes.
+  Returns an `%Ecto.Changeset{}` for tracking resource changes.
 
   ## Examples
 
-      iex> change_resouce(resouce)
-      %Ecto.Changeset{data: %Resouce{}}
+      iex> change_resource(resource)
+      %Ecto.Changeset{data: %Resource{}}
 
   """
-  def change_resouce(%Resouce{} = resouce, attrs \\ %{}) do
-    Resouce.changeset(resouce, attrs)
+  def change_resource(%Resource{} = resource, attrs \\ %{}) do
+    Resource.changeset(resource, attrs)
   end
 end

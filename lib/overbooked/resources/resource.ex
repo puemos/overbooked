@@ -1,4 +1,4 @@
-defmodule Overbooked.Resources.Resouce do
+defmodule Overbooked.Resources.Resource do
   use Ecto.Schema
   import Ecto.Changeset
 
@@ -9,8 +9,8 @@ defmodule Overbooked.Resources.Resouce do
   end
 
   @doc false
-  def changeset(resouce, attrs) do
-    resouce
+  def changeset(resource, attrs) do
+    resource
     |> cast(attrs, [:name])
     |> validate_required([:name])
   end
