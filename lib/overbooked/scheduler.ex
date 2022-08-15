@@ -7,97 +7,47 @@ defmodule Overbooked.Scheduler do
   alias Overbooked.Repo
 
   alias Overbooked.Scheduler.Booking
+  alias Overbooked.Resources.Resource
+  alias Overbooked.Accounts.User
 
-  @doc """
-  Returns the list of bookings.
+  def resource_busy?(%Resource{} = resource, start_at, end_at) do
+    from(b in Booking,
+      where: b.resource_id == ^resource.id,
+      where:
+        (b.start_at >= ^start_at and b.start_at <= ^end_at) or
+          (b.end_at >= ^start_at and b.start_at <= ^end_at)
+    )
+    |> Repo.exists?()
+  end
 
-  ## Examples
+  def book_resource(%Resource{} = resource, %User{} = user, attrs \\ %{}) do
+    if resource_busy?(resource, attrs[:start_at], attrs[:end_at]) do
+      {:error, :resource_busy}
+    else
+      %Booking{}
+      |> Booking.changeset(attrs)
+      |> Booking.put_resource(resource)
+      |> Booking.put_user(user)
+      |> Repo.insert()
+    end
+  end
 
-      iex> list_bookings()
-      [%Booking{}, ...]
-
-  """
   def list_bookings do
     Repo.all(Booking)
   end
 
-  @doc """
-  Gets a single booking.
-
-  Raises `Ecto.NoResultsError` if the Booking does not exist.
-
-  ## Examples
-
-      iex> get_booking!(123)
-      %Booking{}
-
-      iex> get_booking!(456)
-      ** (Ecto.NoResultsError)
-
-  """
   def get_booking!(id), do: Repo.get!(Booking, id)
 
-  @doc """
-  Creates a booking.
-
-  ## Examples
-
-      iex> create_booking(%{field: value})
-      {:ok, %Booking{}}
-
-      iex> create_booking(%{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def create_booking(attrs \\ %{}) do
-    %Booking{}
-    |> Booking.changeset(attrs)
-    |> Repo.insert()
-  end
-
-  @doc """
-  Updates a booking.
-
-  ## Examples
-
-      iex> update_booking(booking, %{field: new_value})
-      {:ok, %Booking{}}
-
-      iex> update_booking(booking, %{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
-  """
   def update_booking(%Booking{} = booking, attrs) do
     booking
     |> Booking.changeset(attrs)
     |> Repo.update()
   end
 
-  @doc """
-  Deletes a booking.
-
-  ## Examples
-
-      iex> delete_booking(booking)
-      {:ok, %Booking{}}
-
-      iex> delete_booking(booking)
-      {:error, %Ecto.Changeset{}}
-
-  """
   def delete_booking(%Booking{} = booking) do
     Repo.delete(booking)
   end
 
-  @doc """
-  Returns an `%Ecto.Changeset{}` for tracking booking changes.
-
-  ## Examples
-
-      iex> change_booking(booking)
-      %Ecto.Changeset{data: %Booking{}}
-
-  """
   def change_booking(%Booking{} = booking, attrs \\ %{}) do
     Booking.changeset(booking, attrs)
   end

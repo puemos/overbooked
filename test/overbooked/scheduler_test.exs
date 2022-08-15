@@ -5,68 +5,58 @@ defmodule Overbooked.SchedulerTest do
 
   describe "bookings" do
     alias Overbooked.Scheduler.Booking
+    alias Overbooked.Resources.Resource
 
     import Overbooked.SchedulerFixtures
+    import Overbooked.ResourcesFixtures
+    import Overbooked.AccountsFixtures
 
-    @invalid_attrs %{end_at: nil, start_at: nil, time_zone: nil}
+    test "book_resource/3 book a resource" do
+      resource = resource_fixture()
+      user = user_fixture()
 
-    test "list_bookings/0 returns all bookings" do
-      booking = booking_fixture()
-      assert Scheduler.list_bookings() == [booking]
+      assert {:ok, %Booking{} = booking} =
+               Scheduler.book_resource(resource, user, %{
+                 start_at: ~U[2022-08-14 00:00:00Z],
+                 end_at: ~U[2022-08-14 01:00:00Z]
+               })
+
+      assert booking.end_at == ~U[2022-08-14 01:00:00Z]
     end
 
-    test "get_booking!/1 returns the booking with given id" do
-      booking = booking_fixture()
-      assert Scheduler.get_booking!(booking.id) == booking
-    end
+    test "book_resource/3 can't book a resource if it's unavaliable" do
+      resource = resource_fixture()
+      user = user_fixture()
 
-    test "create_booking/1 with valid data creates a booking" do
-      valid_attrs = %{
-        end_at: ~U[2022-08-14 08:43:00Z],
-        start_at: ~U[2022-08-14 08:43:00Z],
-        time_zone: "some time_zone"
-      }
+      assert {:ok, %Booking{} = _booking} =
+               Scheduler.book_resource(resource, user, %{
+                 start_at: ~U[2022-08-14 00:20:00Z],
+                 end_at: ~U[2022-08-14 01:00:00Z]
+               })
 
-      assert {:ok, %Booking{} = booking} = Scheduler.create_booking(valid_attrs)
-      assert booking.end_at == ~U[2022-08-14 08:43:00Z]
-      assert booking.start_at == ~U[2022-08-14 08:43:00Z]
-      assert booking.time_zone == "some time_zone"
-    end
+      assert {:error, :resource_busy} =
+               Scheduler.book_resource(resource, user, %{
+                 start_at: ~U[2022-08-14 00:30:00Z],
+                 end_at: ~U[2022-08-14 00:45:00Z]
+               })
 
-    test "create_booking/1 with invalid data returns error changeset" do
-      assert {:error, %Ecto.Changeset{}} = Scheduler.create_booking(@invalid_attrs)
-    end
+      assert {:error, :resource_busy} =
+               Scheduler.book_resource(resource, user, %{
+                 start_at: ~U[2022-08-14 00:10:00Z],
+                 end_at: ~U[2022-08-14 00:45:00Z]
+               })
 
-    test "update_booking/2 with valid data updates the booking" do
-      booking = booking_fixture()
+      assert {:error, :resource_busy} =
+               Scheduler.book_resource(resource, user, %{
+                 start_at: ~U[2022-08-14 00:10:00Z],
+                 end_at: ~U[2022-08-14 01:10:00Z]
+               })
 
-      update_attrs = %{
-        end_at: ~U[2022-08-15 08:43:00Z],
-        start_at: ~U[2022-08-15 08:43:00Z],
-        time_zone: "some updated time_zone"
-      }
-
-      assert {:ok, %Booking{} = booking} = Scheduler.update_booking(booking, update_attrs)
-      assert booking.end_at == ~U[2022-08-15 08:43:00Z]
-      assert booking.start_at == ~U[2022-08-15 08:43:00Z]
-      assert booking.time_zone == "some updated time_zone"
-    end
-
-    test "update_booking/2 with invalid data returns error changeset" do
-      booking = booking_fixture()
-      assert {:error, %Ecto.Changeset{}} = Scheduler.update_booking(booking, @invalid_attrs)
-      assert booking == Scheduler.get_booking!(booking.id)
-    end
-
-    test "delete_booking/1 deletes the booking" do
-      booking = booking_fixture()
-      assert {:ok, %Booking{}} = Scheduler.delete_booking(booking)
-      assert_raise Ecto.NoResultsError, fn -> Scheduler.get_booking!(booking.id) end
-    end
-
-    test "change_booking/1 returns a booking changeset" do
-      booking = booking_fixture()
-      assert %Ecto.Changeset{} = Scheduler.change_booking(booking)
+      assert {:error, :resource_busy} =
+               Scheduler.book_resource(resource, user, %{
+                 start_at: ~U[2022-08-14 00:20:00Z],
+                 end_at: ~U[2022-08-14 01:00:00Z]
+               })
     end
   end
 end
