@@ -11,7 +11,7 @@ defmodule OverbookedWeb.SignInLive do
     ~H"""
     <h1>Register</h1>
 
-    <.form let={f} for={@changeset} action={Routes.user_session_path(@conn, :create)} as={:user}>
+    <.form let={f} action={Routes.user_session_path(@socket, :create)} for={:user}>
       <.form_field
         type="email_input"
         form={f}
@@ -32,7 +32,6 @@ defmodule OverbookedWeb.SignInLive do
       <.form_field
         type="checkbox"
         form={f}
-        required={true}
         field={:remember_me}
         label="Keep me logged in for 60 days"
         aria_label="Keep me logged in for 60 days"

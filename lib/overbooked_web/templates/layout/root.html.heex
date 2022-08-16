@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
   <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -11,9 +11,6 @@
     </script>
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js">
     </script>
-    <!-- Used in css-theme-switch.js - remove if you don't support light/dark mode -->
-    <script defer src="https://unpkg.com/js-cookie@3.x.x/dist/js.cookie.min.js">
-    </script>
 
     <script
       defer
@@ -22,8 +19,6 @@
       src={Routes.static_path(@conn, "/assets/app.js")}
     >
     </script>
-
-    <.color_scheme_switch_js />
   </head>
   <body>
     <%= @inner_content %>

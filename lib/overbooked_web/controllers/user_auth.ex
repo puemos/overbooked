@@ -20,7 +20,10 @@ defmodule OverbookedWeb.UserAuth do
          end)}
 
       %{} ->
-        {:cont, LiveView.assign(socket, :current_user, nil)}
+        {:cont,
+         socket
+         |> LiveView.assign(:current_user, nil)
+         |> LiveView.assign(:is_admin, nil)}
     end
   end
 
@@ -128,7 +131,7 @@ defmodule OverbookedWeb.UserAuth do
     conn
     |> renew_session()
     |> delete_resp_cookie(@remember_me_cookie)
-    |> redirect(to: "/")
+    |> redirect(to: Routes.sign_in_path(conn, :index))
   end
 
   @doc """

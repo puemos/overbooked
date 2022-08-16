@@ -60,15 +60,16 @@ defmodule OverbookedWeb.Router do
     pipe_through [:browser, :redirect_if_user_is_authenticated]
 
     post "/users/log_in", UserSessionController, :create
-    get "/users/reset_password", UserResetPasswordController, :new
     post "/users/reset_password", UserResetPasswordController, :create
-    get "/users/reset_password/:token", UserResetPasswordController, :edit
     put "/users/reset_password/:token", UserResetPasswordController, :update
+
+    get "/users/reset_password", UserResetPasswordController, :new
+    get "/users/reset_password/:token", UserResetPasswordController, :edit
   end
 
   scope "/", OverbookedWeb do
     pipe_through [:browser, :require_authenticated_user]
-
+    delete "/users/log_out", UserSessionController, :delete
     get "/users/settings", UserSettingsController, :edit
     put "/users/settings", UserSettingsController, :update
     get "/users/settings/confirm_email/:token", UserSettingsController, :confirm_email
@@ -79,17 +80,19 @@ defmodule OverbookedWeb.Router do
 
     live_session :default, on_mount: [{OverbookedWeb.UserAuth, :current_user}] do
       live "/signin", SignInLive, :index
+      live "/users/confirm", UserConfirmationLive, :new
+
       live "/users/register/:token", UserRegistrationLive, :new
     end
 
     live_session :authenticated,
       on_mount: [{OverbookedWeb.UserAuth, :ensure_authenticated}] do
       live "/", HomeLive, :index
-      live "/admin", AdminLive, :index
     end
 
-    delete "/users/log_out", UserSessionController, :delete
-
-    live "/users/confirm", UserConfirmationLive, :new
+    live_session :admin,
+      on_mount: [{OverbookedWeb.UserAuth, :ensure_authenticated}] do
+      live "/admin", AdminLive, :index
+    end
   end
 end
