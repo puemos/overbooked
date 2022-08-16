@@ -9,7 +9,7 @@ defmodule OverbookedWeb.SignInLive do
 
   def render(assigns) do
     ~H"""
-    <h1>Register</h1>
+    <h1>Sign in</h1>
 
     <.form let={f} action={Routes.user_session_path(@socket, :create)} for={:user}>
       <.form_field
@@ -45,7 +45,7 @@ defmodule OverbookedWeb.SignInLive do
     <p>
       <.link to={Routes.sign_in_path(@socket, :index)}>Log in</.link>
       |
-      <.link to={Routes.user_reset_password_path(@socket, :new)}>Forgot your password?</.link>
+      <.link to={Routes.user_forgot_password_path(@socket, :index)}>Forgot your password?</.link>
     </p>
     """
   end

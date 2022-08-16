@@ -53,7 +53,7 @@ defmodule OverbookedWeb.UserRegistrationLive do
     <p>
       <.link to={Routes.sign_in_path(@socket, :index)}>Log in</.link>
       |
-      <.link to={Routes.user_reset_password_path(@socket, :new)}>Forgot your password?</.link>
+      <.link to={Routes.user_forgot_password_path(@socket, :index)}>Forgot your password?</.link>
     </p>
     """
   end
@@ -68,7 +68,6 @@ defmodule OverbookedWeb.UserRegistrationLive do
       |> Overbooked.Accounts.change_user_registration(user_params)
       |> Map.put(:action, :insert)
 
-    IO.inspect(changeset)
     {:noreply, assign(socket, changeset: changeset)}
   end
 
@@ -78,7 +77,7 @@ defmodule OverbookedWeb.UserRegistrationLive do
         {:ok, _} =
           Accounts.deliver_user_confirmation_instructions(
             user,
-            &Routes.user_confirmation_url(socket, :new, token: &1)
+            &Routes.user_confirmation_url(socket, :index, token: &1)
           )
 
         {:noreply,
@@ -87,7 +86,7 @@ defmodule OverbookedWeb.UserRegistrationLive do
            :info,
            "Account created successfully. Please check your email for confirmation instructions."
          )
-         |> redirect(to: Routes.Routes.sign_in_path(socket, :index))}
+         |> redirect(to: Routes.sign_in_path(socket, :index))}
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign(socket, changeset: changeset)}

@@ -39,7 +39,7 @@ defmodule OverbookedWeb.UserConfirmationLive do
     <p>
       <.link to={Routes.sign_in_path(@socket, :index)}>Log in</.link>
       |
-      <.link to={Routes.user_reset_password_path(@socket, :new)}>Forgot your password?</.link>
+      <.link to={Routes.user_forgot_password_path(@socket, :index)}>Forgot your password?</.link>
     </p>
     """
   end
@@ -49,12 +49,10 @@ defmodule OverbookedWeb.UserConfirmationLive do
   end
 
   def handle_event("resend", %{"user" => user_params}, socket) do
-    IO.inspect(user_params)
-
     if user = Accounts.get_user_by_email(user_params["email"]) do
       Accounts.deliver_user_confirmation_instructions(
         user,
-        &Routes.user_confirmation_url(socket, :new, token: &1)
+        &Routes.user_confirmation_url(socket, :index, token: &1)
       )
     end
 

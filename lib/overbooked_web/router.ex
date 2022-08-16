@@ -55,16 +55,10 @@ defmodule OverbookedWeb.Router do
   end
 
   ## Authentication routes
-
   scope "/", OverbookedWeb do
     pipe_through [:browser, :redirect_if_user_is_authenticated]
 
     post "/users/log_in", UserSessionController, :create
-    post "/users/reset_password", UserResetPasswordController, :create
-    put "/users/reset_password/:token", UserResetPasswordController, :update
-
-    get "/users/reset_password", UserResetPasswordController, :new
-    get "/users/reset_password/:token", UserResetPasswordController, :edit
   end
 
   scope "/", OverbookedWeb do
@@ -80,8 +74,9 @@ defmodule OverbookedWeb.Router do
 
     live_session :default, on_mount: [{OverbookedWeb.UserAuth, :current_user}] do
       live "/signin", SignInLive, :index
-      live "/users/confirm", UserConfirmationLive, :new
-
+      live "/users/confirm", UserConfirmationLive, :index
+      live "/users/reset_password", UserForgotPasswordLive, :index
+      live "/users/reset_password/:token", UserResetPasswordLive, :index
       live "/users/register/:token", UserRegistrationLive, :new
     end
 
