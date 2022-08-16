@@ -36,7 +36,7 @@ defmodule OverbookedWeb.UserResetPasswordController do
       {:ok, _} ->
         conn
         |> put_flash(:info, "Password reset successfully.")
-        |> redirect(to: Routes.user_session_path(conn, :new))
+        |> redirect(to: Routes.Routes.sign_in_path(conn, :index))
 
       {:error, changeset} ->
         render(conn, "edit.html", changeset: changeset)

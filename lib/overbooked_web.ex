@@ -45,7 +45,8 @@ defmodule OverbookedWeb do
   def live_view do
     quote do
       use Phoenix.LiveView,
-        layout: {OverbookedWeb.LayoutView, "live.html"}
+        layout: {OverbookedWeb.LayoutView, "live.html"},
+        container: {:div, class: "relative h-screen flex overflow-hidden bg-white"}
 
       unquote(view_helpers())
     end
@@ -87,6 +88,7 @@ defmodule OverbookedWeb do
       # Import basic rendering functionality (render, render_layout, etc)
       import Phoenix.View
 
+      import OverbookedWeb.LiveHelpers
       import OverbookedWeb.ErrorHelpers
       import OverbookedWeb.Gettext
       alias OverbookedWeb.Router.Helpers, as: Routes

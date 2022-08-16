@@ -21,6 +21,7 @@ defmodule OverbookedWeb.UserRegistrationLive do
         required={true}
         field={:email}
         phx_debounce="blur"
+        label="Email address"
         aria_label="Email address"
       />
       <.form_field
@@ -29,6 +30,7 @@ defmodule OverbookedWeb.UserRegistrationLive do
         required={true}
         field={:password}
         phx_debounce="blur"
+        label="Password"
         aria_label="Password"
         value={input_value(f, :password)}
       />
@@ -38,6 +40,7 @@ defmodule OverbookedWeb.UserRegistrationLive do
         required={true}
         field={:password_confirmation}
         phx_debounce="blur"
+        label="Password confirmation"
         aria_label="Password confirmation"
         value={input_value(f, :password_confirmation)}
       />
@@ -48,7 +51,7 @@ defmodule OverbookedWeb.UserRegistrationLive do
     </.form>
 
     <p>
-      <.link to={Routes.user_session_path(@socket, :new)}>Log in</.link>
+      <.link to={Routes.sign_in_path(@socket, :index)}>Log in</.link>
       |
       <.link to={Routes.user_reset_password_path(@socket, :new)}>Forgot your password?</.link>
     </p>
@@ -84,7 +87,7 @@ defmodule OverbookedWeb.UserRegistrationLive do
            :info,
            "Account created successfully. Please check your email for confirmation instructions."
          )
-         |> redirect(to: Routes.user_session_path(socket, :new))}
+         |> redirect(to: Routes.Routes.sign_in_path(socket, :index))}
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign(socket, changeset: changeset)}

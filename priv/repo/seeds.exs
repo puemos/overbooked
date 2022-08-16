@@ -10,9 +10,14 @@
 # We recommend using the bang functions (`insert!`, `update!`
 # and so on) as they will fail if something goes wrong.
 
+alias Overbooked.Accounts.{User}
+alias Overbooked.Repo
+
 for email <- Overbooked.config([:admin_emails]) do
-  Overbooked.Accounts.register_user(%{
+  %User{}
+  |> User.registration_changeset(%{
     email: email,
-    password: "admin"
+    password: "Aa123123123123!"
   })
+  |> Repo.insert!()
 end

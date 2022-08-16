@@ -131,7 +131,7 @@ defmodule OverbookedWeb.UserAuthTest do
     test "redirects if user is not authenticated", %{conn: conn} do
       conn = conn |> fetch_flash() |> UserAuth.require_authenticated_user([])
       assert conn.halted
-      assert redirected_to(conn) == Routes.user_session_path(conn, :new)
+      assert redirected_to(conn) == Routes.Routes.sign_in_path(conn, :index)
       assert get_flash(conn, :error) == "You must log in to access this page."
     end
 

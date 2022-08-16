@@ -9,13 +9,13 @@ defmodule OverbookedWeb.UserSessionControllerTest do
 
   describe "GET /users/log_in" do
     test "renders log in page", %{conn: conn} do
-      conn = get(conn, Routes.user_session_path(conn, :new))
+      conn = get(conn, Routes.Routes.sign_in_path(conn, :index))
       response = html_response(conn, 200)
       assert response =~ "<h1>Log in</h1>"
     end
 
     test "redirects if already logged in", %{conn: conn, user: user} do
-      conn = conn |> log_in_user(user) |> get(Routes.user_session_path(conn, :new))
+      conn = conn |> log_in_user(user) |> get(Routes.Routes.sign_in_path(conn, :index))
       assert redirected_to(conn) == "/"
     end
   end

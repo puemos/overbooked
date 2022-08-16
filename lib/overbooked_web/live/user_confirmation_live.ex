@@ -28,6 +28,7 @@ defmodule OverbookedWeb.UserConfirmationLive do
         required={true}
         field={:email}
         phx_debounce="blur"
+        label="Email address"
         aria_label="Email address"
       />
       <div>
@@ -36,7 +37,7 @@ defmodule OverbookedWeb.UserConfirmationLive do
     </.form>
 
     <p>
-      <.link to={Routes.user_session_path(@socket, :new)}>Log in</.link>
+      <.link to={Routes.sign_in_path(@socket, :index)}>Log in</.link>
       |
       <.link to={Routes.user_reset_password_path(@socket, :new)}>Forgot your password?</.link>
     </p>

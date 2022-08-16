@@ -2,8 +2,55 @@ defmodule OverbookedWeb.UserAuth do
   import Plug.Conn
   import Phoenix.Controller
 
+  alias Phoenix.LiveView
   alias Overbooked.Accounts
+  alias Overbooked.Accounts.{User}
   alias OverbookedWeb.Router.Helpers, as: Routes
+
+  def on_mount(:current_user, _params, session, socket) do
+    case session do
+      %{"user_token" => user_token} ->
+        {:cont,
+         socket
+         |> LiveView.assign_new(:current_user, fn ->
+           Accounts.get_user_by_session_token(user_token)
+         end)
+         |> LiveView.assign_new(:is_admin, fn %{current_user: current_user} ->
+           User.is_admin?(current_user)
+         end)}
+
+      %{} ->
+        {:cont, LiveView.assign(socket, :current_user, nil)}
+    end
+  end
+
+  def on_mount(:ensure_authenticated, _params, session, socket) do
+    case session do
+      %{"user_token" => user_token} ->
+        new_socket =
+          socket
+          |> LiveView.assign_new(:current_user, fn ->
+            Accounts.get_user_by_session_token(user_token)
+          end)
+          |> LiveView.assign_new(:is_admin, fn %{current_user: current_user} ->
+            User.is_admin?(current_user)
+          end)
+
+        %User{} = new_socket.assigns.current_user
+        {:cont, new_socket}
+
+      %{} ->
+        {:halt, redirect_require_login(socket)}
+    end
+  rescue
+    Ecto.NoResultsError -> {:halt, redirect_require_login(socket)}
+  end
+
+  defp redirect_require_login(socket) do
+    socket
+    |> LiveView.put_flash(:error, "Please sign in")
+    |> LiveView.redirect(to: Routes.sign_in_path(socket, :index))
+  end
 
   # Make the remember me cookie valid for 60 days.
   # If you want bump or reduce this value, also change
@@ -20,9 +67,9 @@ defmodule OverbookedWeb.UserAuth do
   function to customize this behaviour.
 
   It also sets a `:live_socket_id` key in the session,
-  so LiveView sessions are identified and automatically
+  so Overbooked sessions are identified and automatically
   disconnected on log out. The line can be safely removed
-  if you are not using LiveView.
+  if you are not using Overbooked.
   """
   def log_in_user(conn, user, params \\ %{}) do
     token = Accounts.generate_user_session_token(user)
@@ -91,7 +138,11 @@ defmodule OverbookedWeb.UserAuth do
   def fetch_current_user(conn, _opts) do
     {user_token, conn} = ensure_user_token(conn)
     user = user_token && Accounts.get_user_by_session_token(user_token)
-    assign(conn, :current_user, user)
+    is_admin = User.is_admin?(user)
+
+    conn
+    |> assign(:current_user, user)
+    |> assign(:is_admin, is_admin)
   end
 
   defp ensure_user_token(conn) do
@@ -127,6 +178,25 @@ defmodule OverbookedWeb.UserAuth do
   If you want to enforce the user email is confirmed before
   they use the application at all, here would be a good place.
   """
+  def require_admin_user(conn, _opts) do
+    user = conn.assigns[:current_user]
+
+    if user and User.is_admin?(%User{email: user.email}) do
+      conn
+    else
+      conn
+      |> put_flash(:error, "You must be an admin to access this page.")
+      |> redirect(to: Routes.home_path(conn, :index))
+      |> halt()
+    end
+  end
+
+  @doc """
+  Used for routes that require the user to be authenticated.
+
+  If you want to enforce the user email is confirmed before
+  they use the application at all, here would be a good place.
+  """
   def require_authenticated_user(conn, _opts) do
     if conn.assigns[:current_user] do
       conn
@@ -134,7 +204,7 @@ defmodule OverbookedWeb.UserAuth do
       conn
       |> put_flash(:error, "You must log in to access this page.")
       |> maybe_store_return_to()
-      |> redirect(to: Routes.user_session_path(conn, :new))
+      |> redirect(to: Routes.sign_in_path(conn, :index))
       |> halt()
     end
   end

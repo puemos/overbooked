@@ -16,7 +16,7 @@ defmodule OverbookedWeb.UserSettingsControllerTest do
     test "redirects if user is not logged in" do
       conn = build_conn()
       conn = get(conn, Routes.user_settings_path(conn, :edit))
-      assert redirected_to(conn) == Routes.user_session_path(conn, :new)
+      assert redirected_to(conn) == Routes.Routes.sign_in_path(conn, :index)
     end
   end
 
@@ -123,7 +123,7 @@ defmodule OverbookedWeb.UserSettingsControllerTest do
     test "redirects if user is not logged in", %{token: token} do
       conn = build_conn()
       conn = get(conn, Routes.user_settings_path(conn, :confirm_email, token))
-      assert redirected_to(conn) == Routes.user_session_path(conn, :new)
+      assert redirected_to(conn) == Routes.Routes.sign_in_path(conn, :index)
     end
   end
 end

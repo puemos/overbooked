@@ -19,8 +19,6 @@ defmodule OverbookedWeb.Router do
 
   scope "/", OverbookedWeb do
     pipe_through :browser
-
-    live "/", PageLive, :index
   end
 
   # Other scopes may use custom stacks.
@@ -61,9 +59,6 @@ defmodule OverbookedWeb.Router do
   scope "/", OverbookedWeb do
     pipe_through [:browser, :redirect_if_user_is_authenticated]
 
-    live "/users/register/:token", UserRegistrationLive, :new
-
-    get "/users/log_in", UserSessionController, :new
     post "/users/log_in", UserSessionController, :create
     get "/users/reset_password", UserResetPasswordController, :new
     post "/users/reset_password", UserResetPasswordController, :create
@@ -81,6 +76,17 @@ defmodule OverbookedWeb.Router do
 
   scope "/", OverbookedWeb do
     pipe_through [:browser]
+
+    live_session :default, on_mount: [{OverbookedWeb.UserAuth, :current_user}] do
+      live "/signin", SignInLive, :index
+      live "/users/register/:token", UserRegistrationLive, :new
+    end
+
+    live_session :authenticated,
+      on_mount: [{OverbookedWeb.UserAuth, :ensure_authenticated}] do
+      live "/", HomeLive, :index
+      live "/admin", AdminLive, :index
+    end
 
     delete "/users/log_out", UserSessionController, :delete
 

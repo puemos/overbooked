@@ -1,4 +1,4 @@
-defmodule OverbookedWeb.PageLive do
+defmodule OverbookedWeb.HomeLive do
   use OverbookedWeb, :live_view
 
   @impl true
@@ -9,7 +9,7 @@ defmodule OverbookedWeb.PageLive do
   @impl true
   def render(assigns) do
     ~H"""
-    Wow
+    Home
     """
   end
 end
