@@ -55,12 +55,6 @@
           <% else %>
             <.link
               class="inline-flex items-center gap-2 p-2 text-gray-500 rounded dark:text-gray-400 dark:hover:text-gray-500 hover:text-gray-400"
-              to={Routes.user_registration_path(@conn, :new)}
-            >
-              Register
-            </.link>
-            <.link
-              class="inline-flex items-center gap-2 p-2 text-gray-500 rounded dark:text-gray-400 dark:hover:text-gray-500 hover:text-gray-400"
               to={Routes.user_session_path(@conn, :new)}
             >
               Log in

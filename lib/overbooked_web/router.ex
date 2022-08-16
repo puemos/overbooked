@@ -61,7 +61,7 @@ defmodule OverbookedWeb.Router do
   scope "/", OverbookedWeb do
     pipe_through [:browser, :redirect_if_user_is_authenticated]
 
-    live "/users/register", UserRegistrationLive, :new
+    live "/users/register/:token", UserRegistrationLive, :new
 
     get "/users/log_in", UserSessionController, :new
     post "/users/log_in", UserSessionController, :create

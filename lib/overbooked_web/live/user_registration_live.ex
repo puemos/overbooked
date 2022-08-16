@@ -55,6 +55,10 @@ defmodule OverbookedWeb.UserRegistrationLive do
     """
   end
 
+  def handle_params(params, _uri, socket) do
+    {:noreply, assign(socket, token: params["token"])}
+  end
+
   def handle_event("validate", %{"user" => user_params}, socket) do
     changeset =
       %User{}
@@ -66,7 +70,7 @@ defmodule OverbookedWeb.UserRegistrationLive do
   end
 
   def handle_event("save", %{"user" => user_params}, socket) do
-    case Accounts.register_user(user_params) do
+    case Accounts.register_user_with_token(socket.assigns.token, user_params) do
       {:ok, user} ->
         {:ok, _} =
           Accounts.deliver_user_confirmation_instructions(

@@ -12,6 +12,10 @@ defmodule Overbooked.Accounts.User do
     timestamps()
   end
 
+  def is_admin?(%__MODULE__{} = user) do
+    user.email in Overbooked.config([:admin_emails])
+  end
+
   @doc """
   A user changeset for registration.
 

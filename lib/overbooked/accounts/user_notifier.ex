@@ -20,6 +20,26 @@ defmodule Overbooked.Accounts.UserNotifier do
   @doc """
   Deliver instructions to confirm account.
   """
+  def deliver_user_invitation_instructions(email, url) do
+    deliver(email, "Confirmation instructions", """
+
+    ==============================
+
+    Hi #{email},
+
+    You can register your account by visiting the URL below:
+
+    #{url}
+
+    If you didn't create an account with us, please ignore this.
+
+    ==============================
+    """)
+  end
+
+  @doc """
+  Deliver instructions to confirm account.
+  """
   def deliver_confirmation_instructions(user, url) do
     deliver(user.email, "Confirmation instructions", """
 
