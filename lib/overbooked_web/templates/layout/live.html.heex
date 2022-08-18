@@ -24,7 +24,9 @@
                       <span class="text-gray-900 text-sm font-medium truncate">
                         Shy Alter
                       </span>
-                      <span class="text-gray-500 text-sm truncate"><%= @current_user.email %></span>
+                      <span class="text-gray-500 text-sm truncate">
+                        <%= @current_user.email %>
+                      </span>
                     </span>
                   </span>
                   <svg
@@ -48,7 +50,6 @@
           <.dropdown_menu_item
             link_type="a"
             to={Routes.user_settings_path(@socket, :index)}
-            method={:delete}
             label="Settings"
           />
           <.dropdown_menu_item
@@ -134,7 +135,7 @@
     phx-click="lv:clear-flash"
     phx-value-key="error"
   />
-
+  <div class="h-screen hidden"></div>
   <main class="flex-1 relative z-0 overflow-y-auto focus:outline-none pt-5 px-3.5">
     <%= @inner_content %>
   </main>

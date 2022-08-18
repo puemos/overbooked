@@ -32,10 +32,10 @@ defmodule OverbookedWeb.UserSettingsLive do
         type="password_input"
         form={f}
         required={true}
-        field={:password}
+        field={:current_password}
         label="Password"
         aria_label="Password"
-        value={input_value(f, :password)}
+        value={input_value(f, :current_password)}
       />
       <div>
         <.button label="Change email" type="submit" phx_disable_with="Chnaging..." />
@@ -82,19 +82,6 @@ defmodule OverbookedWeb.UserSettingsLive do
     """
   end
 
-  def handle_params(params, _uri, socket) do
-    token = params["token"]
-
-    if user = Accounts.get_user_by_reset_password_token(token) do
-      {:noreply, socket |> assign(:user, user) |> assign(:token, token)}
-    else
-      {:noreply,
-       socket
-       |> put_flash(:error, "Reset password link is invalid or it has expired.")
-       |> redirect(to: "/")}
-    end
-  end
-
   def handle_event("update_password", params, socket) do
     %{"current_password" => password, "user" => user_params} = params
     user = socket.assigns.current_user
@@ -111,7 +98,7 @@ defmodule OverbookedWeb.UserSettingsLive do
     end
   end
 
-  def handle_event("update_email", params, socket) do
+  def handle_event("update_email", %{"user" => params}, socket) do
     %{"current_password" => password, "email" => email} = params
     user = socket.assigns.current_user
 
@@ -131,6 +118,7 @@ defmodule OverbookedWeb.UserSettingsLive do
          )}
 
       {:error, %Ecto.Changeset{} = changeset} ->
+        IO.inspect(changeset)
         {:noreply, assign(socket, email_changeset: changeset)}
     end
   end

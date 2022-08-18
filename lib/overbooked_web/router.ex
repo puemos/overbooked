@@ -59,13 +59,13 @@ defmodule OverbookedWeb.Router do
     pipe_through [:browser, :redirect_if_user_is_authenticated]
 
     post "/login", UserSessionController, :create
-    get "/confirm_email/:token", UserConfirmationController, :confirm_email
     get "/confirm_account/:token", UserConfirmationController, :confirm_account
   end
 
   scope "/", OverbookedWeb do
     pipe_through [:browser, :require_authenticated_user]
     delete "/logout", UserSessionController, :delete
+    get "/confirm_email/:token", UserConfirmationController, :confirm_email
   end
 
   scope "/", OverbookedWeb do
