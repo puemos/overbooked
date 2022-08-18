@@ -91,7 +91,7 @@ defmodule OverbookedWeb.UserSettingsLive do
         {:noreply,
          socket
          |> put_flash(:info, "Password updated successfully.")
-         |> redirect(to: Routes.sign_in_path(socket, :index))}
+         |> redirect(to: Routes.login_path(socket, :index))}
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign(socket, password_changeset: changeset)}
@@ -118,7 +118,6 @@ defmodule OverbookedWeb.UserSettingsLive do
          )}
 
       {:error, %Ecto.Changeset{} = changeset} ->
-        IO.inspect(changeset)
         {:noreply, assign(socket, email_changeset: changeset)}
     end
   end

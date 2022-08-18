@@ -1,3 +1,3 @@
-defmodule OverbookedWeb.UserRegistrationView do
+defmodule OverbookedWeb.SignupView do
   use OverbookedWeb, :view
 end

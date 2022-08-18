@@ -1,4 +1,4 @@
-defmodule OverbookedWeb.UserRegistrationLive do
+defmodule OverbookedWeb.SignupLive do
   use OverbookedWeb, :live_view
 
   alias OverbookedWeb.Router.Helpers, as: Routes
@@ -12,9 +12,9 @@ defmodule OverbookedWeb.UserRegistrationLive do
 
   def render(assigns) do
     ~H"""
-    <h1>Register</h1>
+    <h1>Sign up</h1>
 
-    <.form let={f} for={@changeset} phx_change={:validate} phx_submit={:save}>
+    <.form let={f} for={@changeset} phx_change={:validate} phx_submit={:save} id="signup-form">
       <.form_field
         type="email_input"
         form={f}
@@ -51,7 +51,7 @@ defmodule OverbookedWeb.UserRegistrationLive do
     </.form>
 
     <p>
-      <.link to={Routes.sign_in_path(@socket, :index)}>Log in</.link>
+      <.link to={Routes.login_path(@socket, :index)}>Log in</.link>
       |
       <.link to={Routes.user_forgot_password_path(@socket, :index)}>Forgot your password?</.link>
     </p>
@@ -77,7 +77,7 @@ defmodule OverbookedWeb.UserRegistrationLive do
         {:ok, _} =
           Accounts.deliver_user_confirmation_instructions(
             user,
-            &Routes.user_confirmation_url(socket, :confirm_account, token: &1)
+            &Routes.user_confirmation_url(socket, :confirm_account, &1)
           )
 
         {:noreply,
@@ -86,7 +86,18 @@ defmodule OverbookedWeb.UserRegistrationLive do
            :info,
            "Account created successfully. Please check your email for confirmation instructions."
          )
-         |> redirect(to: Routes.sign_in_path(socket, :index))}
+         |> redirect(to: Routes.user_resend_confirmation_path(socket, :index))}
+
+      {:error,
+       %Ecto.Changeset{errors: [registration_token: {"Invalid registration token!", []}]} =
+           changeset} ->
+        {:noreply,
+         socket
+         |> put_flash(
+           :info,
+           "Invalid sign up token, please ask your admin to resend it"
+         )
+         |> assign(changeset: changeset)}
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign(socket, changeset: changeset)}

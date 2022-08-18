@@ -30,7 +30,7 @@ defmodule OverbookedWeb.UserResendConfirmationLive do
     </.form>
 
     <p>
-      <.link to={Routes.sign_in_path(@socket, :index)}>Log in</.link>
+      <.link to={Routes.login_path(@socket, :index)}>Log in</.link>
       |
       <.link to={Routes.user_forgot_password_path(@socket, :index)}>Forgot your password?</.link>
     </p>

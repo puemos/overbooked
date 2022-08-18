@@ -7,17 +7,12 @@ defmodule OverbookedWeb.UserAuth do
   alias Overbooked.Accounts.{User}
   alias OverbookedWeb.Router.Helpers, as: Routes
 
-  def on_mount(:current_user, _params, session, socket) do
+  def on_mount(:redirect_if_user_is_authenticated, _params, session, socket) do
     case session do
-      %{"user_token" => user_token} ->
-        {:cont,
+      %{"user_token" => _} ->
+        {:halt,
          socket
-         |> LiveView.assign_new(:current_user, fn ->
-           Accounts.get_user_by_session_token(user_token)
-         end)
-         |> LiveView.assign_new(:is_admin, fn %{current_user: current_user} ->
-           User.is_admin?(current_user)
-         end)}
+         |> LiveView.redirect(to: Routes.home_path(socket, :index))}
 
       %{} ->
         {:cont,
@@ -52,7 +47,7 @@ defmodule OverbookedWeb.UserAuth do
   defp redirect_require_login(socket) do
     socket
     |> LiveView.put_flash(:error, "Please sign in")
-    |> LiveView.redirect(to: Routes.sign_in_path(socket, :index))
+    |> LiveView.redirect(to: Routes.login_path(socket, :index))
   end
 
   # Make the remember me cookie valid for 60 days.
@@ -131,7 +126,7 @@ defmodule OverbookedWeb.UserAuth do
     conn
     |> renew_session()
     |> delete_resp_cookie(@remember_me_cookie)
-    |> redirect(to: Routes.sign_in_path(conn, :index))
+    |> redirect(to: Routes.login_path(conn, :index))
   end
 
   @doc """
@@ -207,7 +202,7 @@ defmodule OverbookedWeb.UserAuth do
       conn
       |> put_flash(:error, "You must log in to access this page.")
       |> maybe_store_return_to()
-      |> redirect(to: Routes.sign_in_path(conn, :index))
+      |> redirect(to: Routes.login_path(conn, :index))
       |> halt()
     end
   end

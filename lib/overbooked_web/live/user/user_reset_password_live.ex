@@ -12,7 +12,7 @@ defmodule OverbookedWeb.UserResetPasswordLive do
     ~H"""
     <h1>Reset password</h1>
 
-    <.form let={f} for={@changeset} phx_submit={:reset}>
+    <.form let={f} for={@changeset} phx_submit={:reset} id="reset-password-form">
       <.form_field
         type="password_input"
         form={f}
@@ -39,7 +39,7 @@ defmodule OverbookedWeb.UserResetPasswordLive do
     </.form>
 
     <p>
-      <.link to={Routes.sign_in_path(@socket, :index)}>Log in</.link>
+      <.link to={Routes.login_path(@socket, :index)}>Log in</.link>
     </p>
     """
   end
@@ -59,7 +59,7 @@ defmodule OverbookedWeb.UserResetPasswordLive do
       {:noreply,
        socket
        |> put_flash(:error, "Reset password link is invalid or it has expired.")
-       |> redirect(to: "/")}
+       |> redirect(to: Routes.login_path(socket, :index))}
     end
   end
 
@@ -78,7 +78,7 @@ defmodule OverbookedWeb.UserResetPasswordLive do
         {:noreply,
          socket
          |> put_flash(:info, "Password reset successfully.")
-         |> redirect(to: Routes.sign_in_path(socket, :index))}
+         |> redirect(to: Routes.login_path(socket, :index))}
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign(socket, changeset: changeset)}

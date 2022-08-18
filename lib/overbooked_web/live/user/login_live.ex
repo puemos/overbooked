@@ -1,4 +1,4 @@
-defmodule OverbookedWeb.SignInLive do
+defmodule OverbookedWeb.LoginLive do
   use OverbookedWeb, :live_view
 
   alias OverbookedWeb.Router.Helpers, as: Routes
@@ -9,7 +9,7 @@ defmodule OverbookedWeb.SignInLive do
 
   def render(assigns) do
     ~H"""
-    <h1>Sign in</h1>
+    <h1>Log in</h1>
 
     <.form let={f} action={Routes.user_session_path(@socket, :create)} for={:user}>
       <.form_field
@@ -43,7 +43,7 @@ defmodule OverbookedWeb.SignInLive do
     </.form>
 
     <p>
-      <.link to={Routes.sign_in_path(@socket, :index)}>Log in</.link>
+      <.link to={Routes.login_path(@socket, :index)}>Log in</.link>
       |
       <.link to={Routes.user_forgot_password_path(@socket, :index)}>Forgot your password?</.link>
     </p>

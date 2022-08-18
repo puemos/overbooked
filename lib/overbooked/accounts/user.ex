@@ -140,7 +140,6 @@ defmodule Overbooked.Accounts.User do
   Validates the current password otherwise adds an error to the changeset.
   """
   def validate_current_password(changeset, password) do
-    IO.inspect(hashed_password: changeset.data.hashed_password)
     if valid_password?(changeset.data, password) do
       changeset
     else

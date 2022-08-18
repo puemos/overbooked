@@ -7,23 +7,10 @@ defmodule OverbookedWeb.UserSessionControllerTest do
     %{user: user_fixture()}
   end
 
-  describe "GET /users/log_in" do
-    test "renders log in page", %{conn: conn} do
-      conn = get(conn, Routes.Routes.sign_in_path(conn, :index))
-      response = html_response(conn, 200)
-      assert response =~ "<h1>Log in</h1>"
-    end
-
-    test "redirects if already logged in", %{conn: conn, user: user} do
-      conn = conn |> log_in_user(user) |> get(Routes.Routes.sign_in_path(conn, :index))
-      assert redirected_to(conn) == "/"
-    end
-  end
-
-  describe "POST /users/log_in" do
+  describe "POST /signin" do
     test "logs the user in", %{conn: conn, user: user} do
       conn =
-        post(conn, Routes.sign_in_path(@conn, :index), %{
+        post(conn, Routes.user_session_path(conn, :create), %{
           "user" => %{"email" => user.email, "password" => valid_user_password()}
         })
 
@@ -33,13 +20,12 @@ defmodule OverbookedWeb.UserSessionControllerTest do
       # Now do a logged in request and assert on the menu
       conn = get(conn, "/")
       response = html_response(conn, 200)
-      assert response =~ "Settings"
-      assert response =~ "Log out"
+      assert response =~ user.email
     end
 
     test "logs the user in with remember me", %{conn: conn, user: user} do
       conn =
-        post(conn, Routes.sign_in_path(@conn, :index), %{
+        post(conn, Routes.user_session_path(conn, :create), %{
           "user" => %{
             "email" => user.email,
             "password" => valid_user_password(),
@@ -55,7 +41,7 @@ defmodule OverbookedWeb.UserSessionControllerTest do
       conn =
         conn
         |> init_test_session(user_return_to: "/foo/bar")
-        |> post(Routes.sign_in_path(@conn, :index), %{
+        |> post(Routes.user_session_path(conn, :create), %{
           "user" => %{
             "email" => user.email,
             "password" => valid_user_password()
@@ -67,29 +53,25 @@ defmodule OverbookedWeb.UserSessionControllerTest do
 
     test "emits error message with invalid credentials", %{conn: conn, user: user} do
       conn =
-        post(conn, Routes.sign_in_path(@conn, :index), %{
+        post(conn, Routes.user_session_path(conn, :create), %{
           "user" => %{"email" => user.email, "password" => "invalid_password"}
         })
 
-      response = html_response(conn, 200)
-      assert response =~ "<h1>Log in</h1>"
-      assert response =~ "Invalid email or password"
+      assert redirected_to(conn) == Routes.login_path(conn, :index)
     end
   end
 
-  describe "DELETE /users/log_out" do
+  describe "DELETE /logout" do
     test "logs the user out", %{conn: conn, user: user} do
       conn = conn |> log_in_user(user) |> delete(Routes.user_session_path(conn, :delete))
-      assert redirected_to(conn) == "/"
+      assert redirected_to(conn) == "/login"
       refute get_session(conn, :user_token)
-      assert get_flash(conn, :info) =~ "Logged out successfully"
     end
 
     test "succeeds even if the user is not logged in", %{conn: conn} do
       conn = delete(conn, Routes.user_session_path(conn, :delete))
-      assert redirected_to(conn) == "/"
+      assert redirected_to(conn) == "/login"
       refute get_session(conn, :user_token)
-      assert get_flash(conn, :info) =~ "Logged out successfully"
     end
   end
 end

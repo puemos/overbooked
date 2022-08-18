@@ -59,7 +59,7 @@ defmodule OverbookedWeb.UserAuthTest do
       refute get_session(conn, :user_token)
       refute conn.cookies[@remember_me_cookie]
       assert %{max_age: 0} = conn.resp_cookies[@remember_me_cookie]
-      assert redirected_to(conn) == "/"
+      assert redirected_to(conn) == "/login"
       refute Accounts.get_user_by_session_token(user_token)
     end
 
@@ -78,7 +78,7 @@ defmodule OverbookedWeb.UserAuthTest do
       conn = conn |> fetch_cookies() |> UserAuth.log_out_user()
       refute get_session(conn, :user_token)
       assert %{max_age: 0} = conn.resp_cookies[@remember_me_cookie]
-      assert redirected_to(conn) == "/"
+      assert redirected_to(conn) == "/login"
     end
   end
 
@@ -131,7 +131,7 @@ defmodule OverbookedWeb.UserAuthTest do
     test "redirects if user is not authenticated", %{conn: conn} do
       conn = conn |> fetch_flash() |> UserAuth.require_authenticated_user([])
       assert conn.halted
-      assert redirected_to(conn) == Routes.Routes.sign_in_path(conn, :index)
+      assert redirected_to(conn) == Routes.login_path(conn, :index)
       assert get_flash(conn, :error) == "You must log in to access this page."
     end
 

@@ -13,7 +13,7 @@ defmodule OverbookedWeb.UserSessionController do
       # In order to prevent user enumeration attacks, don't disclose whether the email is registered.
       conn
       |> put_flash(:error, "Invalid email or password")
-      |> redirect(to: Routes.sign_in_path(conn, :index))
+      |> redirect(to: Routes.login_path(conn, :index))
     end
   end
 
