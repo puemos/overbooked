@@ -77,7 +77,7 @@ defmodule OverbookedWeb.UserRegistrationLive do
         {:ok, _} =
           Accounts.deliver_user_confirmation_instructions(
             user,
-            &Routes.user_confirmation_url(socket, :index, token: &1)
+            &Routes.user_confirmation_url(socket, :confirm_account, token: &1)
           )
 
         {:noreply,

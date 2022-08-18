@@ -58,15 +58,14 @@ defmodule OverbookedWeb.Router do
   scope "/", OverbookedWeb do
     pipe_through [:browser, :redirect_if_user_is_authenticated]
 
-    post "/users/log_in", UserSessionController, :create
+    post "/login", UserSessionController, :create
+    get "/confirm_email/:token", UserConfirmationController, :confirm_email
+    get "/confirm_account/:token", UserConfirmationController, :confirm_account
   end
 
   scope "/", OverbookedWeb do
     pipe_through [:browser, :require_authenticated_user]
-    delete "/users/log_out", UserSessionController, :delete
-    get "/users/settings", UserSettingsController, :edit
-    put "/users/settings", UserSettingsController, :update
-    get "/users/settings/confirm_email/:token", UserSettingsController, :confirm_email
+    delete "/logout", UserSessionController, :delete
   end
 
   scope "/", OverbookedWeb do
@@ -74,7 +73,7 @@ defmodule OverbookedWeb.Router do
 
     live_session :default, on_mount: [{OverbookedWeb.UserAuth, :current_user}] do
       live "/signin", SignInLive, :index
-      live "/users/confirm", UserConfirmationLive, :index
+      live "/users/confirm", UserResendConfirmationLive, :index
       live "/users/reset_password", UserForgotPasswordLive, :index
       live "/users/reset_password/:token", UserResetPasswordLive, :index
       live "/users/register/:token", UserRegistrationLive, :new
@@ -83,6 +82,7 @@ defmodule OverbookedWeb.Router do
     live_session :authenticated,
       on_mount: [{OverbookedWeb.UserAuth, :ensure_authenticated}] do
       live "/", HomeLive, :index
+      live "/settings", UserSettingsLive, :index
     end
 
     live_session :admin,
