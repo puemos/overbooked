@@ -4,6 +4,7 @@ defmodule Overbooked.Accounts.User do
 
   schema "users" do
     field :email, :string
+    field :name, :string
     field :password, :string, virtual: true, redact: true
     field :hashed_password, :string, redact: true
     field :confirmed_at, :naive_datetime
@@ -37,7 +38,7 @@ defmodule Overbooked.Accounts.User do
   """
   def registration_changeset(user, attrs, opts \\ []) do
     user
-    |> cast(attrs, [:email, :password])
+    |> cast(attrs, [:email, :password, :name])
     |> validate_email()
     |> validate_password(opts)
   end
@@ -91,6 +92,11 @@ defmodule Overbooked.Accounts.User do
       %{changes: %{email: _}} = changeset -> changeset
       %{} = changeset -> add_error(changeset, :email, "did not change")
     end
+  end
+
+  def profile_changeset(user, attrs) do
+    user
+    |> cast(attrs, [:name])
   end
 
   @doc """

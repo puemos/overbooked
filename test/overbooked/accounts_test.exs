@@ -71,6 +71,46 @@ defmodule Overbooked.AccountsTest do
     end
   end
 
+  describe "change_user_profile/2" do
+    setup do
+      user = user_fixture()
+
+      %{user: user}
+    end
+
+    test "returns a changeset", %{user: user} do
+      assert %Ecto.Changeset{} = changeset = Accounts.change_user_profile(user)
+      assert changeset.required == []
+    end
+
+    test "allows fields to be set", %{user: user} do
+      changeset =
+        Accounts.change_user_profile(
+          user,
+          %{name: "a name"}
+        )
+
+      assert changeset.valid?
+      assert get_change(changeset, :name) == "a name"
+    end
+  end
+
+  describe "update_user_profile/2" do
+    setup do
+      user = user_fixture()
+
+      %{user: user}
+    end
+
+    test "updates the user profile", %{user: user} do
+      name = valid_user_name() <> "1"
+      assert {:ok, _user} = Accounts.update_user_profile(user, %{name: name})
+      changed_user = Repo.get!(User, user.id)
+      assert changed_user.name != user.name
+      assert changed_user.name == name
+    end
+  end
+
   describe "change_user_email/2" do
     test "returns a user changeset" do
       assert %Ecto.Changeset{} = changeset = Accounts.change_user_email(%User{})
