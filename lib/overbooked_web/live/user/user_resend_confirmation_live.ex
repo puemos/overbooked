@@ -41,7 +41,7 @@ defmodule OverbookedWeb.UserResendConfirmationLive do
     if user = Accounts.get_user_by_email(user_params["email"]) do
       Accounts.deliver_user_confirmation_instructions(
         user,
-        &Routes.user_confirmation_url(socket, :confirm_account, token: &1)
+        &Routes.user_confirmation_url(socket, :confirm_account, &1)
       )
     end
 

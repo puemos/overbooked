@@ -120,21 +120,23 @@
 </div>
 <!-- Main column -->
 <div class="flex flex-col w-0 flex-1 overflow-hidden">
-  <.alert
-    color="info"
-    class="mb-5"
-    label={live_flash(@flash, :info)}
-    phx-click="lv:clear-flash"
-    phx-value-key="info"
-  />
+  <div class="fixed z-10 top-2 right-2 flex flex-col space-y-1">
+    <.alert
+      color="info"
+      class="mb-5 max-w-sm cursor-pointer"
+      label={live_flash(@flash, :info)}
+      phx-click="lv:clear-flash"
+      phx-value-key="info"
+    />
 
-  <.alert
-    color="danger"
-    class="mb-5"
-    label={live_flash(@flash, :error)}
-    phx-click="lv:clear-flash"
-    phx-value-key="error"
-  />
+    <.alert
+      color="danger"
+      class="mb-5 max-w-sm cursor-pointer"
+      label={live_flash(@flash, :error)}
+      phx-click="lv:clear-flash"
+      phx-value-key="error"
+    />
+  </div>
   <div class="h-screen hidden"></div>
   <main class="flex-1 relative z-0 overflow-y-auto focus:outline-none pt-5 px-3.5">
     <%= @inner_content %>

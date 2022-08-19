@@ -7,6 +7,13 @@ defmodule OverbookedWeb.UserAuth do
   alias Overbooked.Accounts.{User}
   alias OverbookedWeb.Router.Helpers, as: Routes
 
+  def on_mount(:default, _params, _session, socket) do
+    {:cont,
+     socket
+     |> LiveView.assign(:current_user, nil)
+     |> LiveView.assign(:is_admin, nil)}
+  end
+
   def on_mount(:redirect_if_user_is_authenticated, _params, session, socket) do
     case session do
       %{"user_token" => _} ->
@@ -42,7 +49,7 @@ defmodule OverbookedWeb.UserAuth do
                :info,
                "To log in, please confirm your email address"
              )
-             |> redirect_require_login()}
+             |> LiveView.redirect(to: Routes.user_resend_confirmation_path(socket, :index))}
 
           %User{confirmed_at: _} ->
             {:cont, new_socket}
