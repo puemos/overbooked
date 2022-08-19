@@ -12,33 +12,34 @@ defmodule OverbookedWeb.UserResendConfirmationLive do
 
   def render(assigns) do
     ~H"""
-    <h1>Resend confirmation instructions</h1>
-
-    <.form :let={f} for={:user} phx-submit={:resend}>
-      <div class="">
-        <label for="email" class="block text-sm font-medium text-gray-700">
-          Email address
-        </label>
-        <div class="mt-1">
-          <.text_input form={f} field={:email} phx_debounce="blur" required={true} />
-          <.error form={f} field={:email} />
+    <.header label="Resend confirmation instructions" />
+    <div class="px-4 py-4 sm:px-6 lg:px-8 max-w-xl">
+      <.form :let={f} for={:user} phx-submit={:resend} class="flex flex-col space-y-2">
+        <div class="">
+          <label for="email" class="block text-sm font-medium text-gray-700">
+            Email address
+          </label>
+          <div class="mt-1">
+            <.text_input form={f} field={:email} phx_debounce="blur" required={true} />
+            <.error form={f} field={:email} />
+          </div>
         </div>
-      </div>
 
-      <div>
-        <.button type="submit" phx-disable-with="Sending...">
-          Resend confirmation instructions
-        </.button>
-      </div>
-    </.form>
+        <div class="py-2">
+          <.button type="submit" phx-disable-with="Sending...">
+            Resend confirmation instructions
+          </.button>
+        </div>
+      </.form>
 
-    <p>
-      <.link navigate={Routes.login_path(@socket, :index)}>Log in</.link>
-      |
-      <.link navigate={Routes.user_forgot_password_path(@socket, :index)}>
-        Forgot your password?
-      </.link>
-    </p>
+      <p>
+        <.link class="text-sm" navigate={Routes.login_path(@socket, :index)}>Log in</.link>
+        |
+        <.link class="text-sm" navigate={Routes.user_forgot_password_path(@socket, :index)}>
+          Forgot your password?
+        </.link>
+      </p>
+    </div>
     """
   end
 

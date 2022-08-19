@@ -541,6 +541,20 @@ defmodule OverbookedWeb.LiveHelpers do
     """
   end
 
+  attr :label, :string
+
+  def header(assigns) do
+    ~H"""
+    <div class="border-b border-gray-200 px-4 py-4 sm:flex sm:items-center sm:justify-between sm:px-6 lg:px-8 sm:h-16">
+      <div class="flex-1 min-w-0">
+        <h1 tabindex="-1">
+          <%= @label %>
+        </h1>
+      </div>
+    </div>
+    """
+  end
+
   @doc """
   Calls a wired up event listener to call a function with arguments.
       window.addEventListener("js:exec", e => e.target[e.detail.call](...e.detail.args))

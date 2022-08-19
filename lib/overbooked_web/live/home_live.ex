@@ -9,7 +9,8 @@ defmodule OverbookedWeb.HomeLive do
   @impl true
   def render(assigns) do
     ~H"""
-    Home
+    <.header label="Home" />
+    <div class="px-4 py-4 sm:px-6 lg:px-8 max-w-xl">Sweet home</div>
     """
   end
 end

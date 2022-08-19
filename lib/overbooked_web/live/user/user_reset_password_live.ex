@@ -10,48 +10,55 @@ defmodule OverbookedWeb.UserResetPasswordLive do
 
   def render(assigns) do
     ~H"""
-    <h1>Reset password</h1>
-
-    <.form :let={f} for={@changeset} phx-submit={:reset} id="reset-password-form">
-      <div class="">
-        <label for="password" class="block text-sm font-medium text-gray-700">
-          New password
-        </label>
-        <div class="mt-1">
-          <.password_input
-            form={f}
-            field={:password}
-            value={input_value(f, :password)}
-            required={true}
-          />
-          <.error form={f} field={:password} />
+    <.header label="Reset password" />
+    <div class="px-4 py-4 sm:px-6 lg:px-8 max-w-xl" class="flex flex-col space-y-2">
+      <.form
+        :let={f}
+        for={@changeset}
+        phx-submit={:reset}
+        id="reset-password-form"
+        class="flex flex-col space-y-2"
+      >
+        <div class="">
+          <label for="password" class="block text-sm font-medium text-gray-700">
+            New password
+          </label>
+          <div class="mt-1">
+            <.password_input
+              form={f}
+              field={:password}
+              value={input_value(f, :password)}
+              required={true}
+            />
+            <.error form={f} field={:password} />
+          </div>
         </div>
-      </div>
-      <div class="">
-        <label for="password_confirmation" class="block text-sm font-medium text-gray-700">
-          Confirm new password
-        </label>
-        <div class="mt-1">
-          <.password_input
-            form={f}
-            field={:password_confirmation}
-            value={input_value(f, :password_confirmation)}
-            required={true}
-          />
-          <.error form={f} field={:password_confirmation} />
+        <div class="">
+          <label for="password_confirmation" class="block text-sm font-medium text-gray-700">
+            Confirm new password
+          </label>
+          <div class="mt-1">
+            <.password_input
+              form={f}
+              field={:password_confirmation}
+              value={input_value(f, :password_confirmation)}
+              required={true}
+            />
+            <.error form={f} field={:password_confirmation} />
+          </div>
         </div>
-      </div>
 
-      <div>
-        <.button type="submit" phx-disable-with="Reseting...">
-          Reset password
-        </.button>
-      </div>
-    </.form>
+        <div class="py-2">
+          <.button type="submit" phx-disable-with="Reseting...">
+            Reset password
+          </.button>
+        </div>
+      </.form>
 
-    <p>
-      <.link navigate={Routes.login_path(@socket, :index)}>Log in</.link>
-    </p>
+      <p>
+        <.link class="text-sm" navigate={Routes.login_path(@socket, :index)}>Log in</.link>
+      </p>
+    </div>
     """
   end
 

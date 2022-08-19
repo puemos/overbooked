@@ -2,7 +2,7 @@
 <div class="flex flex-shrink-0" role="region">
   <div class="flex flex-col w-64 border-r border-gray-200 pt-5 pb-4 bg-gray-100">
     <div class="flex items-center flex-shrink-0 px-6">
-      <.link link_type="live_redirect" to={Routes.home_path(@socket, :index)}>
+      <.link navigate={Routes.home_path(@socket, :index)}>
         <span class="h-8 w-auto text-2xl ml-1 font-bold">
           Overbooked
         </span>
@@ -13,7 +13,7 @@
       <%= if @current_user do %>
         <.dropdown id="tesr" foo="bar">
           <:title><%= @current_user.name %></:title>
-          <:subtitle>@<%= @current_user.email %></:subtitle>
+          <:subtitle><%= @current_user.email %></:subtitle>
           <:link navigate={Routes.user_settings_path(@socket, :index)}>Settings</:link>
           <:link href={Routes.user_session_path(@socket, :delete)} method={:delete}>
             Log out
@@ -22,11 +22,10 @@
       <% end %>
       <!-- Navigation -->
       <nav class="px-3 mt-6">
-        <div class="space-y-1">
+        <div class="space-y-2">
           <%= if @current_user do %>
             <.link
-              link_type="live_redirect"
-              to="#"
+              navigate="#"
               class="text-gray-700 hover:text-gray-900 group flex items-center px-2 py-2 text-sm font-medium rounded-md hover:bg-gray-50"
             >
               <.icon
@@ -35,15 +34,16 @@
               /> Schedule
             </.link>
             <.link
-              link_type="live_redirect"
-              to="#"
+              navigate="#"
               class="text-gray-700 hover:text-gray-900 group flex items-center px-2 py-2 text-sm font-medium rounded-md hover:bg-gray-50"
             >
-              Rooms
+              <.icon
+                name={:presentation_chart_bar}
+                class="text-gray-400 group-hover:text-gray-500 mr-3 flex-shrink-0 h-6 w-6"
+              /> Rooms
             </.link>
             <.link
-              link_type="live_redirect"
-              to="#"
+              navigate="#"
               class="text-gray-700 hover:text-gray-900 group flex items-center px-2 py-2 text-sm font-medium rounded-md hover:bg-gray-50"
             >
               <.icon
@@ -53,8 +53,9 @@
             </.link>
           <% end %>
           <%= if @is_admin do %>
+            <hr />
             <.link
-              to={Routes.admin_path(@socket, :index)}
+              navigate={Routes.admin_path(@socket, :index)}
               class="text-gray-700 hover:text-gray-900 hover:bg-gray-50 group flex items-center px-2 py-2 text-sm font-medium rounded-md"
             >
               <svg
@@ -89,7 +90,7 @@
     <.flash flash={@flash} kind={:error} />
   </div>
   <div class="h-screen hidden"></div>
-  <main class="flex-1 relative z-0 overflow-y-auto focus:outline-none pt-5 px-3.5">
+  <main class="flex-1 relative z-0 overflow-y-auto focus:outline-none">
     <%= @inner_content %>
   </main>
 </div>

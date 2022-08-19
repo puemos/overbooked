@@ -12,61 +12,62 @@ defmodule OverbookedWeb.SignupLive do
 
   def render(assigns) do
     ~H"""
-    <h1>Sign up</h1>
-
-    <.form :let={f} for={@changeset} phx-change={:validate} phx-submit={:save} id="signup-form">
-      <div class="">
-        <label for="email" class="block text-sm font-medium text-gray-700">
-          Email address
-        </label>
-        <div class="mt-1">
-          <.text_input form={f} field={:email} phx_debounce="blur" required={true} />
-          <.error form={f} field={:email} />
+    <.header label="Sign up" />
+    <div class="px-4 py-4 sm:px-6 lg:px-8 max-w-xl">
+      <.form :let={f} for={@changeset} phx-change={:validate} phx-submit={:save} id="signup-form">
+        <div class="">
+          <label for="email" class="block text-sm font-medium text-gray-700">
+            Email address
+          </label>
+          <div class="mt-1">
+            <.text_input form={f} field={:email} phx_debounce="blur" required={true} />
+            <.error form={f} field={:email} />
+          </div>
         </div>
-      </div>
-      <div class="">
-        <label for="password" class="block text-sm font-medium text-gray-700">
-          Password
-        </label>
-        <div class="mt-1">
-          <.password_input
-            form={f}
-            phx_debounce="blur"
-            field={:password}
-            value={input_value(f, :password)}
-            required={true}
-          />
-          <.error form={f} field={:password} />
+        <div class="">
+          <label for="password" class="block text-sm font-medium text-gray-700">
+            Password
+          </label>
+          <div class="mt-1">
+            <.password_input
+              form={f}
+              phx_debounce="blur"
+              field={:password}
+              value={input_value(f, :password)}
+              required={true}
+            />
+            <.error form={f} field={:password} />
+          </div>
         </div>
-      </div>
-      <div class="">
-        <label for="password_confirmation" class="block text-sm font-medium text-gray-700">
-          Confirm password
-        </label>
-        <div class="mt-1">
-          <.password_input
-            form={f}
-            phx_debounce="blur"
-            field={:password_confirmation}
-            value={input_value(f, :password_confirmation)}
-            required={true}
-          />
-          <.error form={f} field={:password_confirmation} />
+        <div class="">
+          <label for="password_confirmation" class="block text-sm font-medium text-gray-700">
+            Confirm password
+          </label>
+          <div class="mt-1">
+            <.password_input
+              form={f}
+              phx_debounce="blur"
+              field={:password_confirmation}
+              value={input_value(f, :password_confirmation)}
+              required={true}
+            />
+            <.error form={f} field={:password_confirmation} />
+          </div>
         </div>
-      </div>
 
-      <div>
-        <.button type="submit" phx-disable-with="Registering...">Register</.button>
-      </div>
-    </.form>
+        <div class="py-2">
+          <.button type="submit" phx-disable-with="Registering...">Register</.button>
+        </div>
+      </.form>
 
-    <p>
-      <.link navigate={Routes.login_path(@socket, :index)}>Log in</.link>
-      |
-      <.link navigate={Routes.user_forgot_password_path(@socket, :index)}>
-        Forgot your password?
-      </.link>
-    </p>
+      <p>
+        <.link class="text-sm" navigate={Routes.login_path(@socket, :index)}>Log in</.link>
+        |
+        <.link class="text-sm" navigate={Routes.user_forgot_password_path(@socket, :index)}>
+          Forgot your password?
+        </.link>
+      </p>
+    </div>
     """
   end
 

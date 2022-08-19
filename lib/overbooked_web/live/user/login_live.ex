@@ -10,9 +10,15 @@ defmodule OverbookedWeb.LoginLive do
 
   def render(assigns) do
     ~H"""
-    <h1>Log in</h1>
-    <div class="mt-6">
-      <.form :let={f} action={Routes.user_session_path(@socket, :create)} for={:user} id="login-form" class="flex flex-col space-y-2">
+    <.header label="Log in" />
+    <div class="px-4 py-4 sm:px-6 lg:px-8 max-w-xl">
+      <.form
+        :let={f}
+        action={Routes.user_session_path(@socket, :create)}
+        for={:user}
+        id="login-form"
+        class="flex flex-col space-y-2"
+      >
         <div class="">
           <label for="email" class="block text-sm font-medium text-gray-700">
             Email address
@@ -47,7 +53,7 @@ defmodule OverbookedWeb.LoginLive do
           </div>
         </div>
 
-        <div>
+        <div class="py-2">
           <.button type="submit" phx-disable-with="Logging...">Login</.button>
         </div>
       </.form>

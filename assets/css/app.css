@@ -1,18 +1,15 @@
 /* This file is for your main application CSS */
 @import "tailwindcss/base";
-@import "./petal-components-enhancements.css";
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
 
 @layer base {
-  /* Add base styles here (eg. styles that are the defaults for common elements)
-
-    Example base style:
-    h1 {
-      @apply text-2xl;
-    }
-
-  */
+  h1 {
+    @apply text-lg font-medium leading-6 text-gray-900 sm:truncate focus:outline-none;
+  }
+  h3 {
+    @apply text-base font-medium leading-6 text-gray-900 sm:truncate focus:outline-none;
+  }
 }
 
 @layer components {
@@ -37,7 +34,7 @@
     transition: opacity 1s ease-out;
   }
 
-  .phx-loading{
+  .phx-loading {
     cursor: wait;
   }
 

@@ -10,28 +10,35 @@ defmodule OverbookedWeb.UserForgotPasswordLive do
 
   def render(assigns) do
     ~H"""
-    <h1>Forgot your password?</h1>
-
-    <.form :let={f} for={:user} phx-submit={:reset} id="forgot-password-form">
-      <div class="">
-        <label for="email" class="block text-sm font-medium text-gray-700">
-          Email address
-        </label>
-        <div class="mt-1">
-          <.text_input form={f} field={:email} required={true} />
-          <.error form={f} field={:email} />
+    <.header label="Forgot your password?" />
+    <div class="px-4 py-4 sm:px-6 lg:px-8 max-w-xl">
+      <.form
+        :let={f}
+        for={:user}
+        phx-submit={:reset}
+        id="forgot-password-form"
+        class="flex flex-col space-y-2"
+      >
+        <div class="">
+          <label for="email" class="block text-sm font-medium text-gray-700">
+            Email address
+          </label>
+          <div class="mt-1">
+            <.text_input form={f} field={:email} required={true} />
+            <.error form={f} field={:email} />
+          </div>
         </div>
-      </div>
-      <div>
-        <.button type="submit" phx-disable-with="Sending...">
-          Send instructions to reset password
-        </.button>
-      </div>
-    </.form>
+        <div class="py-2">
+          <.button type="submit" phx-disable-with="Sending...">
+            Send instructions to reset password
+          </.button>
+        </div>
+      </.form>
 
-    <p>
-      <.link navigate={Routes.login_path(@socket, :index)}>Log in</.link>
-    </p>
+      <p>
+        <.link class="text-sm" navigate={Routes.login_path(@socket, :index)}>Log in</.link>
+      </p>
+    </div>
     """
   end
 
