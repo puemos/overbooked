@@ -14,7 +14,14 @@ defmodule OverbookedWeb.SignupLive do
     ~H"""
     <.header label="Sign up" />
     <div class="px-4 py-4 sm:px-6 lg:px-8 max-w-xl">
-      <.form :let={f} for={@changeset} phx-change={:validate} phx-submit={:save} id="signup-form">
+      <.form
+        :let={f}
+        for={@changeset}
+        phx-change={:validate}
+        phx-submit={:save}
+        id="signup-form"
+        class="flex flex-col space-y-2"
+      >
         <div class="">
           <label for="email" class="block text-sm font-medium text-gray-700">
             Email address
@@ -22,6 +29,15 @@ defmodule OverbookedWeb.SignupLive do
           <div class="mt-1">
             <.text_input form={f} field={:email} phx_debounce="blur" required={true} />
             <.error form={f} field={:email} />
+          </div>
+        </div>
+        <div class="">
+          <label for="name" class="block text-sm font-medium text-gray-700">
+            Full name
+          </label>
+          <div class="mt-1">
+            <.text_input form={f} field={:name} phx_debounce="blur" required={true} />
+            <.error form={f} field={:name} />
           </div>
         </div>
         <div class="">

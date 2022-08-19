@@ -3,6 +3,15 @@ defmodule OverbookedWeb.LiveHelpers do
 
   alias Phoenix.LiveView.JS
 
+  ## String formatters
+
+  def relative_time(nil), do: ""
+
+  def relative_time(datetime) do
+    {:ok, str} = Timex.format(datetime, "{relative}", :relative)
+    str
+  end
+
   attr :flash, :map
   attr :kind, :atom
 
@@ -270,6 +279,7 @@ defmodule OverbookedWeb.LiveHelpers do
 
   attr :id, :string, required: true
   attr :show, :boolean, default: false
+  attr :icon, :atom, default: :information_circle
   attr :patch, :string, default: nil
   attr :navigate, :string, default: nil
   attr :on_cancel, JS, default: %JS{}
@@ -317,10 +327,13 @@ defmodule OverbookedWeb.LiveHelpers do
               <.link navigate={@navigate} data-modal-return class="hidden"></.link>
             <% end %>
             <div class="sm:flex sm:items-start">
-              <div class="mx-auto flex-shrink-0 flex items-center justify-center h-8 w-8 rounded-full bg-purple-100 sm:mx-0">
-                <!-- Heroicon name: outline/plus -->
-                <.icon name={:information_circle} outlined class="h-6 w-6 text-purple-600" />
-              </div>
+              <%= if @icon do %>
+                <div class="mx-auto flex-shrink-0 flex items-center justify-center h-8 w-8 rounded-full bg-purple-100 sm:mx-0">
+                  <!-- Heroicon name: outline/plus -->
+                  <.icon name={@icon || :information_circle} outlined class="h-6 w-6 text-purple-600" />
+                </div>
+              <% end %>
+
               <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full mr-12">
                 <h3 class="text-lg leading-6 font-medium text-gray-900" id={"#{@id}-title"}>
                   <%= render_slot(@title) %>
@@ -336,7 +349,7 @@ defmodule OverbookedWeb.LiveHelpers do
               <%= for confirm <- @confirm do %>
                 <button
                   id={"#{@id}-confirm"}
-                  class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm"
+                  class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-primary-500 text-base font-medium text-white hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 sm:ml-3 sm:w-auto sm:text-sm"
                   phx-click={@on_confirm}
                   phx-disable-with
                   {assigns_to_attributes(confirm)}
@@ -475,11 +488,11 @@ defmodule OverbookedWeb.LiveHelpers do
             </tr>
           </thead>
           <tbody class="bg-white divide-y divide-gray-100">
-            <%= for {row, i} <- Enum.with_index(@rows) do %>
+            <%= for {row, _i} <- Enum.with_index(@rows) do %>
               <tr id={@row_id && @row_id.(row)} class="hover:bg-gray-50">
                 <%= for col <- @col do %>
                   <td class={
-                    "px-6 py-3 whitespace-nowrap text-sm font-medium text-gray-900 #{if i == 0, do: "max-w-0 w-full"} #{col[:class]}"
+                    "px-6 py-3 text-sm font-medium text-gray-900 #{col[:class]}"
                   }>
                     <div class="flex items-center space-x-3 lg:pl-2">
                       <%= render_slot(col, row) %>

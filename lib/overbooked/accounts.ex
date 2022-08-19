@@ -10,6 +10,21 @@ defmodule Overbooked.Accounts do
 
   ## Database getters
 
+  def list_users(opts \\ []) do
+    from(u in User,
+      limit: ^Keyword.get(opts, :limit, 100)
+    )
+    |> Repo.all()
+  end
+
+  def list_invitations(opts \\ []) do
+    from(r in RegistrationToken,
+      limit: ^Keyword.get(opts, :limit, 100),
+      preload: [:generated_by_user, :used_by_user]
+    )
+    |> Repo.all()
+  end
+
   @doc """
   Gets a user by email.
 
@@ -87,7 +102,7 @@ defmodule Overbooked.Accounts do
         registration_url_fun
       )
       when is_function(registration_url_fun, 1) do
-    if User.is_admin?(generated_by_user) do
+    if !User.is_admin?(generated_by_user) do
       {:error, :forbidden}
     else
       {:ok, %RegistrationToken{} = token} =

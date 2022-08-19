@@ -13,7 +13,7 @@ defmodule OverbookedWeb.LoginLiveTest do
       conn = get(conn, Routes.login_path(conn, :index))
       {:ok, _view, html} = live(conn)
 
-      assert html =~ "Log in</h1>"
+      assert html =~ "Log in"
     end
 
     test "redirects if already logged in", %{conn: conn, user: user} do

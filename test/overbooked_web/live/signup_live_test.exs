@@ -19,7 +19,7 @@ defmodule OverbookedWeb.LiveTest do
       conn = get(conn, Routes.signup_path(conn, :index, token))
       {:ok, _view, html} = live(conn)
 
-      assert html =~ "Sign up</h1>"
+      assert html =~ "Sign up"
     end
 
     test "redirects if already logged in", %{conn: conn, token: token} do
@@ -41,6 +41,7 @@ defmodule OverbookedWeb.LiveTest do
         |> form("#signup-form",
           user: %{
             email: email,
+            name: "john",
             password: valid_user_password(),
             password_confirmation: valid_user_password()
           }
@@ -74,7 +75,7 @@ defmodule OverbookedWeb.LiveTest do
         )
         |> render_submit()
 
-      assert response =~ "Sign up</h1>"
+      assert response =~ "Sign up"
       assert response =~ "must have the @ sign and no spaces"
       assert response =~ "should be at least 12 character"
     end
@@ -96,7 +97,7 @@ defmodule OverbookedWeb.LiveTest do
         )
         |> render_submit()
 
-      assert response =~ "Sign up</h1>"
+      assert response =~ "Sign up"
     end
   end
 end

@@ -23,7 +23,7 @@ defmodule OverbookedWeb.UserResetPasswordLiveTest do
       conn = get(conn, Routes.user_reset_password_path(conn, :index, token))
       {:ok, _view, html} = live(conn)
 
-      assert html =~ "<h1>Reset password</h1>"
+      assert html =~ "Reset password"
     end
 
     test "does not render reset password with invalid token", %{conn: conn} do
@@ -83,7 +83,7 @@ defmodule OverbookedWeb.UserResetPasswordLiveTest do
         )
         |> render_submit()
 
-      assert response =~ "<h1>Reset password</h1>"
+      assert response =~ "Reset password"
       assert response =~ "should be at least 12 character(s)"
       assert response =~ "does not match password"
     end

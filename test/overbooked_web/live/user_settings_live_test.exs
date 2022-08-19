@@ -12,7 +12,7 @@ defmodule OverbookedWeb.UserSettingsLiveTest do
       conn = get(conn, Routes.user_settings_path(conn, :index))
       {:ok, _view, html} = live(conn)
 
-      assert html =~ "Settings</h1>"
+      assert html =~ "Settings"
     end
 
     test "redirects if user is not logged in" do
@@ -105,7 +105,7 @@ defmodule OverbookedWeb.UserSettingsLiveTest do
         )
         |> render_submit()
 
-      assert response =~ "<h1>Settings</h1>"
+      assert response =~ "Settings"
       assert response =~ "should be at least 12 character(s)"
       assert response =~ "does not match password"
       assert response =~ "is not valid"
@@ -154,7 +154,7 @@ defmodule OverbookedWeb.UserSettingsLiveTest do
         )
         |> render_submit()
 
-      assert response =~ "Settings</h1>"
+      assert response =~ "Settings"
       assert response =~ "must have the @ sign and no spaces"
       assert response =~ "is not valid"
     end

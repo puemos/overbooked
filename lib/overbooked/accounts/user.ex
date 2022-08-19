@@ -41,6 +41,7 @@ defmodule Overbooked.Accounts.User do
     |> cast(attrs, [:email, :password, :name])
     |> validate_email()
     |> validate_password(opts)
+    |> validate_required([:name])
   end
 
   defp validate_email(changeset) do
