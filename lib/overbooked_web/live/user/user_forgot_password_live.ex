@@ -12,7 +12,7 @@ defmodule OverbookedWeb.UserForgotPasswordLive do
     ~H"""
     <h1>Forgot your password?</h1>
 
-    <.form :let={f} for={:user} phx_submit={:reset} id="forgot-password-form">
+    <.form :let={f} for={:user} phx-submit={:reset} id="forgot-password-form">
       <div class="">
         <label for="email" class="block text-sm font-medium text-gray-700">
           Email address
@@ -23,7 +23,7 @@ defmodule OverbookedWeb.UserForgotPasswordLive do
         </div>
       </div>
       <div>
-        <.button type="submit" phx_disable_with="Sending...">
+        <.button type="submit" phx-disable-with="Sending...">
           Send instructions to reset password
         </.button>
       </div>

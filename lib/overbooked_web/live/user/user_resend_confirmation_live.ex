@@ -14,7 +14,7 @@ defmodule OverbookedWeb.UserResendConfirmationLive do
     ~H"""
     <h1>Resend confirmation instructions</h1>
 
-    <.form :let={f} for={:user} phx_submit={:resend}>
+    <.form :let={f} for={:user} phx-submit={:resend}>
       <div class="">
         <label for="email" class="block text-sm font-medium text-gray-700">
           Email address
@@ -26,7 +26,7 @@ defmodule OverbookedWeb.UserResendConfirmationLive do
       </div>
 
       <div>
-        <.button type="submit" phx_disable_with="Sending...">
+        <.button type="submit" phx-disable-with="Sending...">
           Resend confirmation instructions
         </.button>
       </div>

@@ -12,7 +12,7 @@ defmodule OverbookedWeb.UserResetPasswordLive do
     ~H"""
     <h1>Reset password</h1>
 
-    <.form :let={f} for={@changeset} phx_submit={:reset} id="reset-password-form">
+    <.form :let={f} for={@changeset} phx-submit={:reset} id="reset-password-form">
       <div class="">
         <label for="password" class="block text-sm font-medium text-gray-700">
           New password
@@ -43,7 +43,7 @@ defmodule OverbookedWeb.UserResetPasswordLive do
       </div>
 
       <div>
-        <.button type="submit" phx_disable_with="Reseting...">
+        <.button type="submit" phx-disable-with="Reseting...">
           Reset password
         </.button>
       </div>

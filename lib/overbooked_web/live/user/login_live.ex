@@ -48,7 +48,7 @@ defmodule OverbookedWeb.LoginLive do
         </div>
 
         <div>
-          <.button type="submit" phx_disable_with="Logging...">Login</.button>
+          <.button type="submit" phx-disable-with="Logging...">Login</.button>
         </div>
       </.form>
 

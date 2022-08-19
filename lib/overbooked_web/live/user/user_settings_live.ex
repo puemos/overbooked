@@ -9,6 +9,7 @@ defmodule OverbookedWeb.UserSettingsLive do
 
     {:ok,
      socket
+     |> assign(:profile_changeset, Accounts.change_user_profile(user))
      |> assign(:email_changeset, Accounts.change_user_email(user))
      |> assign(:password_changeset, Accounts.change_user_password(user))}
   end
@@ -17,9 +18,29 @@ defmodule OverbookedWeb.UserSettingsLive do
     ~H"""
     <h1>Settings</h1>
 
+    <h3>Change profile</h3>
+
+    <.form :let={f} for={@profile_changeset} phx-submit={:change_profile} id="change-profile-form">
+      <div class="">
+        <label for="name" class="block text-sm font-medium text-gray-700">
+          Full name
+        </label>
+        <div class="mt-1">
+          <.text_input form={f} field={:name} required={true} />
+          <.error form={f} field={:name} />
+        </div>
+      </div>
+
+      <div>
+        <.button type="submit" phx-disable-with="Saving...">
+          Save
+        </.button>
+      </div>
+    </.form>
+
     <h3>Change email</h3>
 
-    <.form :let={f} for={@email_changeset} phx_submit={:change_email} id="change-email-form">
+    <.form :let={f} for={@email_changeset} phx-submit={:change_email} id="change-email-form">
       <div class="">
         <label for="password" class="block text-sm font-medium text-gray-700">
           New email address
@@ -46,15 +67,15 @@ defmodule OverbookedWeb.UserSettingsLive do
       </div>
 
       <div>
-        <.button type="submit" phx_disable_with="Chnaging...">
-          Change email
+        <.button type="submit" phx-disable-with="Saving...">
+          Save
         </.button>
       </div>
     </.form>
 
     <h3>Change password</h3>
 
-    <.form :let={f} for={@password_changeset} phx_submit={:change_password} id="change-password-form">
+    <.form :let={f} for={@password_changeset} phx-submit={:change_password} id="change-password-form">
       <div class="">
         <label for="password" class="block text-sm font-medium text-gray-700">
           New password
@@ -100,8 +121,8 @@ defmodule OverbookedWeb.UserSettingsLive do
       </div>
 
       <div>
-        <.button type="submit" phx_disable_with="Changing...">
-          Change password
+        <.button type="submit" phx-disable-with="Changing...">
+          Save
         </.button>
       </div>
     </.form>

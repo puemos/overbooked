@@ -14,7 +14,7 @@ defmodule OverbookedWeb.SignupLive do
     ~H"""
     <h1>Sign up</h1>
 
-    <.form :let={f} for={@changeset} phx_change={:validate} phx_submit={:save} id="signup-form">
+    <.form :let={f} for={@changeset} phx-change={:validate} phx-submit={:save} id="signup-form">
       <div class="">
         <label for="email" class="block text-sm font-medium text-gray-700">
           Email address
@@ -56,7 +56,7 @@ defmodule OverbookedWeb.SignupLive do
       </div>
 
       <div>
-        <.button type="submit" phx_disable_with="Registering...">Register</.button>
+        <.button type="submit" phx-disable-with="Registering...">Register</.button>
       </div>
     </.form>
 
