@@ -144,6 +144,22 @@ defmodule OverbookedWeb.UserSettingsLive do
     end
   end
 
+  def handle_event("change_profile", params, socket) do
+    %{"user" => user_params} = params
+    user = socket.assigns.current_user
+
+    case Accounts.update_user_profile(user, user_params) do
+      {:ok, _} ->
+        {:noreply,
+         socket
+         |> put_flash(:info, "Profile updated successfully.")
+         |> push_redirect(to: Routes.user_settings_path(socket, :index))}
+
+      {:error, %Ecto.Changeset{} = changeset} ->
+        {:noreply, assign(socket, password_changeset: changeset)}
+    end
+  end
+
   def handle_event("change_email", params, socket) do
     %{"current_password" => password, "user" => %{"email" => email}} = params
     user = socket.assigns.current_user

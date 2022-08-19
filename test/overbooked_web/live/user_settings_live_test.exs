@@ -22,6 +22,31 @@ defmodule OverbookedWeb.UserSettingsLiveTest do
     end
   end
 
+  describe "change profile form" do
+    test "updates the user password and resets tokens", %{conn: conn, user: user} do
+      conn = get(conn, Routes.user_settings_path(conn, :index))
+      {:ok, view, html} = live(conn)
+      assert html =~ user.name
+
+      response =
+        view
+        |> form(
+          "#change-profile-form",
+          %{
+            "user" => %{
+              "name" => "a name"
+            }
+          }
+        )
+        |> render_submit()
+
+      assert {:error, {:live_redirect, %{flash: _, kind: :push, to: "/settings"}}} = response
+
+      {:ok, _view, html} = live(conn)
+      assert html =~ "a name"
+    end
+  end
+
   describe "change password form" do
     test "updates the user password and resets tokens", %{conn: conn, user: user} do
       conn = get(conn, Routes.user_settings_path(conn, :index))
