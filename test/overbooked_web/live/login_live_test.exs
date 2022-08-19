@@ -8,7 +8,7 @@ defmodule OverbookedWeb.LoginLiveTest do
     %{user: user_fixture()}
   end
 
-  describe "GET /signin" do
+  describe "view login page" do
     test "renders log in page", %{conn: conn} do
       conn = get(conn, Routes.login_path(conn, :index))
       {:ok, _view, html} = live(conn)

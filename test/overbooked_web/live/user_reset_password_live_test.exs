@@ -9,7 +9,7 @@ defmodule OverbookedWeb.UserResetPasswordLiveTest do
     %{user: user_fixture()}
   end
 
-  describe "loading reset password view" do
+  describe "visit reset password page" do
     setup %{user: user} do
       token =
         extract_user_token(fn url ->

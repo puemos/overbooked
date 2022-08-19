@@ -95,7 +95,7 @@ defmodule OverbookedWeb.SignupLive do
          socket
          |> put_flash(
            :info,
-           "Invalid sign up token, please ask your admin to resend it"
+           "Your sign up token is invalid, please ask your admin to resend it"
          )
          |> assign(changeset: changeset)}
 

@@ -34,8 +34,19 @@ defmodule OverbookedWeb.UserAuth do
             User.is_admin?(current_user)
           end)
 
-        %User{} = new_socket.assigns.current_user
-        {:cont, new_socket}
+        case new_socket.assigns.current_user do
+          %User{confirmed_at: nil} ->
+            {:halt,
+             socket
+             |> Phoenix.LiveView.Utils.put_flash(
+               :info,
+               "To log in, please confirm your email address"
+             )
+             |> redirect_require_login()}
+
+          %User{confirmed_at: _} ->
+            {:cont, new_socket}
+        end
 
       %{} ->
         {:halt, redirect_require_login(socket)}
@@ -196,14 +207,25 @@ defmodule OverbookedWeb.UserAuth do
   they use the application at all, here would be a good place.
   """
   def require_authenticated_user(conn, _opts) do
-    if conn.assigns[:current_user] do
-      conn
-    else
-      conn
-      |> put_flash(:error, "You must log in to access this page.")
-      |> maybe_store_return_to()
-      |> redirect(to: Routes.login_path(conn, :index))
-      |> halt()
+    user = conn.assigns[:current_user]
+
+    case user do
+      %User{confirmed_at: nil} ->
+        conn
+        |> put_flash(:error, "To log in, please confirm your email address")
+        |> maybe_store_return_to()
+        |> redirect(to: Routes.user_resend_confirmation_path(conn, :index))
+        |> halt()
+
+      %User{confirmed_at: _} ->
+        conn
+
+      _ ->
+        conn
+        |> put_flash(:error, "You must log in to access this page.")
+        |> maybe_store_return_to()
+        |> redirect(to: Routes.login_path(conn, :index))
+        |> halt()
     end
   end
 

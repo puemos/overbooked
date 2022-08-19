@@ -59,13 +59,13 @@ defmodule OverbookedWeb.Router do
     pipe_through [:browser, :redirect_if_user_is_authenticated]
 
     post "/login", UserSessionController, :create
+    get "/confirm/account/:token", UserConfirmationController, :confirm_account
   end
 
   scope "/", OverbookedWeb do
     pipe_through [:browser, :require_authenticated_user]
     delete "/logout", UserSessionController, :delete
-    get "/confirm-account/:token", UserConfirmationController, :confirm_account
-    get "/confirm-email/:token", UserConfirmationController, :confirm_email
+    get "/confirm/email/:token", UserConfirmationController, :confirm_email
   end
 
   scope "/", OverbookedWeb do
@@ -75,7 +75,7 @@ defmodule OverbookedWeb.Router do
       on_mount: [{OverbookedWeb.UserAuth, :redirect_if_user_is_authenticated}] do
       live "/login", LoginLive, :index
       live "/signup/:token", SignupLive, :index
-      live "/signup/confirm-email", UserResendConfirmationLive, :index
+      live "/signup/confirmation", UserResendConfirmationLive, :index
       live "/forgot-password", UserForgotPasswordLive, :index
       live "/reset-password/:token", UserResetPasswordLive, :index
     end

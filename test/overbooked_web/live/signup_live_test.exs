@@ -1,7 +1,6 @@
 defmodule OverbookedWeb.LiveTest do
   use OverbookedWeb.ConnCase, async: true
 
-  alias Overbooked.Accounts
   import Overbooked.AccountsFixtures
   import Phoenix.LiveViewTest
 
@@ -35,7 +34,7 @@ defmodule OverbookedWeb.LiveTest do
       email = unique_user_email()
       token = registration_token_fixture(email).token_string
       conn = get(conn, Routes.signup_path(conn, :index, token))
-      {:ok, view, html} = live(conn)
+      {:ok, view, _html} = live(conn)
 
       response =
         view
@@ -48,13 +47,13 @@ defmodule OverbookedWeb.LiveTest do
         )
         |> render_submit()
 
-      flash = assert_redirect(view, Routes.user_resend_confirmation_path(conn, :index))
+      assert_redirect(view, Routes.user_resend_confirmation_path(conn, :index))
 
       assert {:error,
               {:redirect,
                %{
                  flash: _,
-                 to: "/signup/confirm-email"
+                 to: "/signup/confirmation"
                }}} = response
     end
 
@@ -62,7 +61,7 @@ defmodule OverbookedWeb.LiveTest do
       email = unique_user_email()
       token = registration_token_fixture(email).token_string
       conn = get(conn, Routes.signup_path(conn, :index, token))
-      {:ok, view, html} = live(conn)
+      {:ok, view, _html} = live(conn)
 
       response =
         view
@@ -84,7 +83,7 @@ defmodule OverbookedWeb.LiveTest do
       email = unique_user_email()
       token = registration_token_fixture(email <> "a").token_string
       conn = get(conn, Routes.signup_path(conn, :index, token))
-      {:ok, view, html} = live(conn)
+      {:ok, view, _html} = live(conn)
 
       response =
         view

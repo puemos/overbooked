@@ -19,7 +19,7 @@ defmodule OverbookedWeb.UserSettingsLive do
 
     <h3>Change email</h3>
 
-    <.form let={f} for={@email_changeset} phx_submit={:update_email}>
+    <.form let={f} for={@email_changeset} phx_submit={:change_email} id="change-email-form">
       <.form_field
         type="email_input"
         form={f}
@@ -33,6 +33,7 @@ defmodule OverbookedWeb.UserSettingsLive do
         form={f}
         required={true}
         field={:current_password}
+        name="current_password"
         label="Password"
         aria_label="Password"
         value={input_value(f, :current_password)}
@@ -44,7 +45,7 @@ defmodule OverbookedWeb.UserSettingsLive do
 
     <h3>Change password</h3>
 
-    <.form let={f} for={@password_changeset} phx_submit={:update_password}>
+    <.form let={f} for={@password_changeset} phx_submit={:change_password} id="change-password-form">
       <.form_field
         type="password_input"
         form={f}
@@ -70,6 +71,7 @@ defmodule OverbookedWeb.UserSettingsLive do
         form={f}
         required={true}
         field={:current_password}
+        name="current_password"
         phx_debounce="blur"
         label="Current password"
         aria_label="Current password"
@@ -82,7 +84,7 @@ defmodule OverbookedWeb.UserSettingsLive do
     """
   end
 
-  def handle_event("update_password", params, socket) do
+  def handle_event("change_password", params, socket) do
     %{"current_password" => password, "user" => user_params} = params
     user = socket.assigns.current_user
 
@@ -90,16 +92,15 @@ defmodule OverbookedWeb.UserSettingsLive do
       {:ok, _} ->
         {:noreply,
          socket
-         |> put_flash(:info, "Password updated successfully.")
-         |> redirect(to: Routes.login_path(socket, :index))}
+         |> put_flash(:info, "Password updated successfully.")}
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign(socket, password_changeset: changeset)}
     end
   end
 
-  def handle_event("update_email", %{"user" => params}, socket) do
-    %{"current_password" => password, "email" => email} = params
+  def handle_event("change_email", params, socket) do
+    %{"current_password" => password, "user" => %{"email" => email}} = params
     user = socket.assigns.current_user
 
     case Accounts.apply_user_email(user, password, %{email: email}) do

@@ -11,7 +11,7 @@ defmodule OverbookedWeb.LoginLive do
     ~H"""
     <h1>Log in</h1>
 
-    <.form let={f} action={Routes.user_session_path(@socket, :create)} for={:user}>
+    <.form let={f} action={Routes.user_session_path(@socket, :create)} for={:user} id="login-form">
       <.form_field
         type="email_input"
         form={f}

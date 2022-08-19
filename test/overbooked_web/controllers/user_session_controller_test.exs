@@ -7,8 +7,10 @@ defmodule OverbookedWeb.UserSessionControllerTest do
     %{user: user_fixture()}
   end
 
-  describe "POST /signin" do
-    test "logs the user in", %{conn: conn, user: user} do
+  describe "POST /login" do
+    test "logs the user in", %{conn: conn} do
+      %{conn: conn, user: user} = OverbookedWeb.ConnCase.register_and_log_in_user(%{conn: conn})
+
       conn =
         post(conn, Routes.user_session_path(conn, :create), %{
           "user" => %{"email" => user.email, "password" => valid_user_password()}
@@ -62,8 +64,10 @@ defmodule OverbookedWeb.UserSessionControllerTest do
   end
 
   describe "DELETE /logout" do
-    test "logs the user out", %{conn: conn, user: user} do
-      conn = conn |> log_in_user(user) |> delete(Routes.user_session_path(conn, :delete))
+    test "logs the user out", %{conn: conn} do
+      %{conn: conn} = OverbookedWeb.ConnCase.register_and_log_in_user(%{conn: conn})
+      conn = conn |> delete(Routes.user_session_path(conn, :delete))
+
       assert redirected_to(conn) == "/login"
       refute get_session(conn, :user_token)
     end

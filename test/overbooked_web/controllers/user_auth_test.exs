@@ -161,8 +161,15 @@ defmodule OverbookedWeb.UserAuthTest do
       refute get_session(halted_conn, :user_return_to)
     end
 
-    test "does not redirect if user is authenticated", %{conn: conn, user: user} do
-      conn = conn |> assign(:current_user, user) |> UserAuth.require_authenticated_user([])
+    test "does not redirect if user is authenticated and confirmed", %{conn: conn} do
+      %{conn: conn, user: user} = OverbookedWeb.ConnCase.register_and_log_in_user(%{conn: conn})
+
+      conn =
+        conn
+        |> fetch_flash()
+        |> assign(:current_user, user)
+        |> UserAuth.require_authenticated_user([])
+
       refute conn.halted
       refute conn.status
     end

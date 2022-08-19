@@ -24,7 +24,7 @@ defmodule OverbookedWeb.UserConfirmationController do
       {:ok, _} ->
         conn
         |> put_flash(:info, "User confirmed successfully.")
-        |> redirect(to: Routes.home_path(conn, :index))
+        |> redirect(to: Routes.login_path(conn, :index))
 
       :error ->
         # If there is a current user and the account was already confirmed,

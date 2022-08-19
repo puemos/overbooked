@@ -47,6 +47,14 @@ defmodule OverbookedWeb.ConnCase do
   """
   def register_and_log_in_user(%{conn: conn}) do
     user = Overbooked.AccountsFixtures.user_fixture()
+
+    token =
+      Overbooked.AccountsFixtures.extract_user_token(fn url ->
+        Overbooked.Accounts.deliver_user_confirmation_instructions(user, url)
+      end)
+
+    {:ok, user} = Overbooked.Accounts.confirm_user(token)
+
     %{conn: log_in_user(conn, user), user: user}
   end
 
