@@ -1,11 +1,7 @@
 const colors = require("tailwindcss/colors");
 
 module.exports = {
-  content: [
-    "../lib/*_web/**/*.*ex",
-    "./js/**/*.js",
-    "../deps/petal_components/**/*.*ex",
-  ],
+  content: ["../lib/*_web/**/*.*ex", "./js/**/*.js"],
   theme: {
     extend: {
       colors: {

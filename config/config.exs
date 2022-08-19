@@ -48,10 +48,6 @@ config :logger, :console,
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
 
-config :petal_components,
-       :error_translator_function,
-       {OverbookedWeb.ErrorHelpers, :translate_error}
-
 config :tailwind,
   version: "3.1.6",
   default: [

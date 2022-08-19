@@ -89,6 +89,7 @@ defmodule OverbookedWeb do
       import Phoenix.View
 
       import OverbookedWeb.LiveHelpers
+      import OverbookedWeb.LiveFormHelpers
       import OverbookedWeb.ErrorHelpers
       import OverbookedWeb.Gettext
       alias OverbookedWeb.Router.Helpers, as: Routes
@@ -97,8 +98,6 @@ defmodule OverbookedWeb do
       import OverbookedWeb.Components.{
         ColorSchemeSwitch
       }
-
-      use PetalComponents
     end
   end
 

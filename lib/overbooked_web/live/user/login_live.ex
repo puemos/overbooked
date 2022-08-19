@@ -2,6 +2,7 @@ defmodule OverbookedWeb.LoginLive do
   use OverbookedWeb, :live_view
 
   alias OverbookedWeb.Router.Helpers, as: Routes
+  import Phoenix.HTML.Form
 
   def mount(_params, _session, socket) do
     {:ok, socket}
@@ -9,41 +10,50 @@ defmodule OverbookedWeb.LoginLive do
 
   def render(assigns) do
     ~H"""
-    <.h2>Log in</.h2>
+    <h1>Log in</h1>
     <div class="mt-6">
-      <.form let={f} action={Routes.user_session_path(@socket, :create)} for={:user} id="login-form">
-        <.form_field
-          type="email_input"
-          form={f}
-          required={true}
-          field={:email}
-          label="Email address"
-          aria_label="Email address"
-        />
-        <.form_field
-          type="password_input"
-          form={f}
-          required={true}
-          field={:password}
-          label="Password"
-          aria_label="Password"
-          value={input_value(f, :password)}
-        />
-        <.form_field
-          type="checkbox"
-          form={f}
-          field={:remember_me}
-          label="Keep me logged in for 60 days"
-          aria_label="Keep me logged in for 60 days"
-        />
+      <.form :let={f} action={Routes.user_session_path(@socket, :create)} for={:user} id="login-form" class="flex flex-col space-y-2">
+        <div class="">
+          <label for="email" class="block text-sm font-medium text-gray-700">
+            Email address
+          </label>
+          <div class="mt-1">
+            <.text_input form={f} field={:email} required={true} />
+            <.error form={f} field={:email} />
+          </div>
+        </div>
+        <div class="">
+          <label for="password" class="block text-sm font-medium text-gray-700">
+            Password
+          </label>
+          <div class="mt-1">
+            <.password_input
+              form={f}
+              field={:password}
+              value={input_value(f, :password)}
+              required={true}
+            />
+            <.error form={f} field={:password} />
+          </div>
+        </div>
+        <div class="">
+          <div class="flex flex-row items-baseline space-x-2">
+            <div class="mt-1">
+              <.checkbox form={f} field={:remember_me} value={input_value(f, :password)} />
+            </div>
+            <label for="remember_me" class="block text-sm font-medium text-gray-700">
+              Keep me logged in for 60 days
+            </label>
+          </div>
+        </div>
 
         <div>
-          <.button label="Login" type="submit" phx_disable_with="Logging..." />
+          <.button type="submit" phx_disable_with="Logging...">Login</.button>
         </div>
       </.form>
 
       <p class="mt-6">
-        <.link class="text-sm" to={Routes.user_forgot_password_path(@socket, :index)}>
+        <.link class="text-sm" navigate={Routes.user_forgot_password_path(@socket, :index)}>
           Forgot your password?
         </.link>
       </p>

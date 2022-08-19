@@ -12,34 +12,45 @@ defmodule OverbookedWeb.UserResetPasswordLive do
     ~H"""
     <h1>Reset password</h1>
 
-    <.form let={f} for={@changeset} phx_submit={:reset} id="reset-password-form">
-      <.form_field
-        type="password_input"
-        form={f}
-        required={true}
-        field={:password}
-        phx_debounce="blur"
-        label="New password"
-        aria_label="New password"
-        value={input_value(f, :password)}
-      />
-      <.form_field
-        type="password_input"
-        form={f}
-        required={true}
-        field={:password_confirmation}
-        phx_debounce="blur"
-        label="Confirm new password"
-        aria_label="Confirm new password"
-        value={input_value(f, :password_confirmation)}
-      />
+    <.form :let={f} for={@changeset} phx_submit={:reset} id="reset-password-form">
+      <div class="">
+        <label for="password" class="block text-sm font-medium text-gray-700">
+          New password
+        </label>
+        <div class="mt-1">
+          <.password_input
+            form={f}
+            field={:password}
+            value={input_value(f, :password)}
+            required={true}
+          />
+          <.error form={f} field={:password} />
+        </div>
+      </div>
+      <div class="">
+        <label for="password_confirmation" class="block text-sm font-medium text-gray-700">
+          Confirm new password
+        </label>
+        <div class="mt-1">
+          <.password_input
+            form={f}
+            field={:password_confirmation}
+            value={input_value(f, :password_confirmation)}
+            required={true}
+          />
+          <.error form={f} field={:password_confirmation} />
+        </div>
+      </div>
+
       <div>
-        <.button label="Reset password" type="submit" phx_disable_with="Reseting..." />
+        <.button type="submit" phx_disable_with="Reseting...">
+          Reset password
+        </.button>
       </div>
     </.form>
 
     <p>
-      <.link to={Routes.login_path(@socket, :index)}>Log in</.link>
+      <.link navigate={Routes.login_path(@socket, :index)}>Log in</.link>
     </p>
     """
   end

@@ -14,25 +14,30 @@ defmodule OverbookedWeb.UserResendConfirmationLive do
     ~H"""
     <h1>Resend confirmation instructions</h1>
 
-    <.form let={f} for={:user} phx_submit={:resend}>
-      <.form_field
-        type="email_input"
-        form={f}
-        required={true}
-        field={:email}
-        phx_debounce="blur"
-        label="Email address"
-        aria_label="Email address"
-      />
+    <.form :let={f} for={:user} phx_submit={:resend}>
+      <div class="">
+        <label for="email" class="block text-sm font-medium text-gray-700">
+          Email address
+        </label>
+        <div class="mt-1">
+          <.text_input form={f} field={:email} phx_debounce="blur" required={true} />
+          <.error form={f} field={:email} />
+        </div>
+      </div>
+
       <div>
-        <.button label="Resend confirmation instructions" type="submit" phx_disable_with="Sending..." />
+        <.button type="submit" phx_disable_with="Sending...">
+          Resend confirmation instructions
+        </.button>
       </div>
     </.form>
 
     <p>
-      <.link to={Routes.login_path(@socket, :index)}>Log in</.link>
+      <.link navigate={Routes.login_path(@socket, :index)}>Log in</.link>
       |
-      <.link to={Routes.user_forgot_password_path(@socket, :index)}>Forgot your password?</.link>
+      <.link navigate={Routes.user_forgot_password_path(@socket, :index)}>
+        Forgot your password?
+      </.link>
     </p>
     """
   end

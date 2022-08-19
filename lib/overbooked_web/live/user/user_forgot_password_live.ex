@@ -12,26 +12,25 @@ defmodule OverbookedWeb.UserForgotPasswordLive do
     ~H"""
     <h1>Forgot your password?</h1>
 
-    <.form let={f} for={:user} phx_submit={:reset} id="forgot-password-form">
-      <.form_field
-        type="email_input"
-        form={f}
-        required={true}
-        field={:email}
-        label="Email address"
-        aria_label="Email address"
-      />
+    <.form :let={f} for={:user} phx_submit={:reset} id="forgot-password-form">
+      <div class="">
+        <label for="email" class="block text-sm font-medium text-gray-700">
+          Email address
+        </label>
+        <div class="mt-1">
+          <.text_input form={f} field={:email} required={true} />
+          <.error form={f} field={:email} />
+        </div>
+      </div>
       <div>
-        <.button
-          label="Send instructions to reset password"
-          type="submit"
-          phx_disable_with="Sending..."
-        />
+        <.button type="submit" phx_disable_with="Sending...">
+          Send instructions to reset password
+        </.button>
       </div>
     </.form>
 
     <p>
-      <.link to={Routes.login_path(@socket, :index)}>Log in</.link>
+      <.link navigate={Routes.login_path(@socket, :index)}>Log in</.link>
     </p>
     """
   end

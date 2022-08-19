@@ -19,66 +19,90 @@ defmodule OverbookedWeb.UserSettingsLive do
 
     <h3>Change email</h3>
 
-    <.form let={f} for={@email_changeset} phx_submit={:change_email} id="change-email-form">
-      <.form_field
-        type="email_input"
-        form={f}
-        required={true}
-        field={:email}
-        label="New email"
-        aria_label="New email"
-      />
-      <.form_field
-        type="password_input"
-        form={f}
-        required={true}
-        field={:current_password}
-        name="current_password"
-        label="Password"
-        aria_label="Password"
-        value={input_value(f, :current_password)}
-      />
+    <.form :let={f} for={@email_changeset} phx_submit={:change_email} id="change-email-form">
+      <div class="">
+        <label for="password" class="block text-sm font-medium text-gray-700">
+          New email address
+        </label>
+        <div class="mt-1">
+          <.text_input form={f} field={:email} required={true} />
+          <.error form={f} field={:email} />
+        </div>
+      </div>
+      <div class="">
+        <label for="current_password" class="block text-sm font-medium text-gray-700">
+          Password
+        </label>
+        <div class="mt-1">
+          <.password_input
+            form={f}
+            field={:current_password}
+            value={input_value(f, :current_password)}
+            required={true}
+            name="current_password"
+          />
+          <.error form={f} field={:current_password} />
+        </div>
+      </div>
+
       <div>
-        <.button label="Change email" type="submit" phx_disable_with="Chnaging..." />
+        <.button type="submit" phx_disable_with="Chnaging...">
+          Change email
+        </.button>
       </div>
     </.form>
 
     <h3>Change password</h3>
 
-    <.form let={f} for={@password_changeset} phx_submit={:change_password} id="change-password-form">
-      <.form_field
-        type="password_input"
-        form={f}
-        required={true}
-        field={:password}
-        phx_debounce="blur"
-        label="New password"
-        aria_label="New password"
-        value={input_value(f, :password)}
-      />
-      <.form_field
-        type="password_input"
-        form={f}
-        required={true}
-        field={:password_confirmation}
-        phx_debounce="blur"
-        label="Confirm new password"
-        aria_label="Confirm new password"
-        value={input_value(f, :password_confirmation)}
-      />
-      <.form_field
-        type="password_input"
-        form={f}
-        required={true}
-        field={:current_password}
-        name="current_password"
-        phx_debounce="blur"
-        label="Current password"
-        aria_label="Current password"
-        value={input_value(f, :current_password)}
-      />
+    <.form :let={f} for={@password_changeset} phx_submit={:change_password} id="change-password-form">
+      <div class="">
+        <label for="password" class="block text-sm font-medium text-gray-700">
+          New password
+        </label>
+        <div class="mt-1">
+          <.password_input
+            form={f}
+            field={:password}
+            value={input_value(f, :password)}
+            required={true}
+          />
+          <.error form={f} field={:password} />
+        </div>
+      </div>
+      <div class="">
+        <label for="password_confirmation" class="block text-sm font-medium text-gray-700">
+          Confirm new password
+        </label>
+        <div class="mt-1">
+          <.password_input
+            form={f}
+            field={:password_confirmation}
+            value={input_value(f, :password_confirmation)}
+            required={true}
+          />
+          <.error form={f} field={:password_confirmation} />
+        </div>
+      </div>
+      <div class="">
+        <label for="current_password" class="block text-sm font-medium text-gray-700">
+          Current password
+        </label>
+        <div class="mt-1">
+          <.password_input
+            form={f}
+            field={:current_password}
+            value={input_value(f, :current_password)}
+            required={true}
+            name="current_password"
+          />
+          <.error form={f} field={:current_password} />
+        </div>
+      </div>
+
       <div>
-        <.button label="Change password" type="submit" phx_disable_with="Changing..." />
+        <.button type="submit" phx_disable_with="Changing...">
+          Change password
+        </.button>
       </div>
     </.form>
     """
