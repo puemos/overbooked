@@ -23,6 +23,28 @@ defmodule Overbooked.Resources do
     Repo.all(Resource)
   end
 
+  def list_rooms(opts \\ []) do
+    from(r in Resource,
+      limit: ^Keyword.get(opts, :limit, 100),
+      join: rt in ResourceType,
+      on: rt.id == r.resource_type_id,
+      where: rt.name == "room",
+      group_by: r.id
+    )
+    |> Repo.all()
+  end
+
+  def list_desks(opts \\ []) do
+    from(r in Resource,
+      limit: ^Keyword.get(opts, :limit, 100),
+      join: rt in ResourceType,
+      on: rt.id == r.resource_type_id,
+      where: rt.name == "desk",
+      group_by: r.id
+    )
+    |> Repo.all()
+  end
+
   @doc """
   Gets a single resource.
 
@@ -56,6 +78,18 @@ defmodule Overbooked.Resources do
     |> Resource.changeset(attrs)
     |> Resource.put_resource_type(resource_type)
     |> Repo.insert()
+  end
+
+  def create_desk(attrs \\ %{}) do
+    resource_type = get_resource_type_by_name!("desk")
+
+    create_resource(resource_type, attrs)
+  end
+
+  def create_room(attrs \\ %{}) do
+    resource_type = get_resource_type_by_name!("room")
+
+    create_resource(resource_type, attrs)
   end
 
   @doc """

@@ -4,7 +4,7 @@ defmodule OverbookedWeb.AdminDesksLive do
   alias Overbooked.Resources.{Resource}
   @impl true
   def mount(socket) do
-    resources = Resources.list_resources()
+    resources = Resources.list_desks()
     changelog = Resources.change_resource(%Resource{})
 
     {:ok,
@@ -113,7 +113,7 @@ defmodule OverbookedWeb.AdminDesksLive do
 
   @impl true
   def handle_event("add_desk", %{"resource" => resource_params}, socket) do
-    case Resources.create_resource(resource_params) do
+    case Resources.create_desk(resource_params) do
       {:ok, _resource} ->
         {:noreply,
          socket

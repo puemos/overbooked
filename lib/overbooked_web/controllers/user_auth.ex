@@ -45,7 +45,7 @@ defmodule OverbookedWeb.UserAuth do
           %User{confirmed_at: nil} ->
             {:halt,
              socket
-             |> Phoenix.LiveView.Utils.put_flash(
+             |> LiveView.put_flash(
                :info,
                "To log in, please confirm your email address"
              )
@@ -55,7 +55,7 @@ defmodule OverbookedWeb.UserAuth do
             {:cont, new_socket}
 
           _ ->
-            {:halt, redirect_require_login(socket)}
+            {:cont, new_socket}
         end
 
       %{} ->
