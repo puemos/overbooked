@@ -121,7 +121,7 @@ defmodule OverbookedWeb.AdminRoomsLive do
            :info,
            "Resource created successfully."
          )
-         |> push_patch(to: Routes.admin_path(socket, :rooms))}
+         |> push_redirect(to: Routes.admin_path(socket, :rooms))}
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign(socket, changeset: changeset)}

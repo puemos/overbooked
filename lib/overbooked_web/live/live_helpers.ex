@@ -330,9 +330,7 @@ defmodule OverbookedWeb.LiveHelpers do
             class={
               "#{if @show, do: "fade-in-scale", else: "hidden"} sticky inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform sm:my-8 sm:align-middle sm:max-w-xl sm:w-full sm:p-6"
             }
-            phx-window-keydown={hide_modal(@on_cancel, @id)}
             phx-key="escape"
-            phx-click-away={hide_modal(@on_cancel, @id)}
           >
             <%= if @patch do %>
               <.link patch={@patch} data-modal-return class="hidden"></.link>

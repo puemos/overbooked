@@ -56,11 +56,7 @@ defmodule OverbookedWeb.AdminDesksLive do
               <:cancel>Cancel</:cancel>
             </.modal>
           </div>
-          <.table
-            id="desks"
-            rows={@desks}
-            row_id={fn resource -> "resource-#{resource.id}" end}
-          >
+          <.table id="desks" rows={@desks} row_id={fn resource -> "resource-#{resource.id}" end}>
             <:col :let={resource} label="Name"><%= resource.name %></:col>
             <:col :let={resource} label="Created at">
               <%= relative_time(resource.inserted_at) %>
@@ -121,7 +117,7 @@ defmodule OverbookedWeb.AdminDesksLive do
            :info,
            "Resource created successfully."
          )
-         |> push_patch(to: Routes.admin_path(socket, :desks))}
+         |> push_redirect(to: Routes.admin_path(socket, :desks))}
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign(socket, changeset: changeset)}

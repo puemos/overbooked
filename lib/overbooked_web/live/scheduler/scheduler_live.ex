@@ -1,4 +1,4 @@
-defmodule OverbookedWeb.HomeLive do
+defmodule OverbookedWeb.SchedulerLive do
   use OverbookedWeb, :live_view
 
   alias Overbooked.Resources
@@ -9,16 +9,17 @@ defmodule OverbookedWeb.HomeLive do
   def mount(_params, _session, socket) do
     from_date =
       Timex.today()
+      |> Timex.beginning_of_week()
       |> Timex.to_naive_datetime()
 
     to_date =
       Timex.today()
-      |> Timex.end_of_year()
+      |> Timex.end_of_week()
       |> Timex.to_naive_datetime()
 
     daterange = %{to_date: to_date, from_date: from_date}
 
-    bookings = Scheduler.list_bookings(from_date, to_date, socket.assigns.current_user)
+    bookings = Scheduler.list_bookings(from_date, to_date)
 
     resources = Resources.list_resources()
 
@@ -35,18 +36,18 @@ defmodule OverbookedWeb.HomeLive do
   @impl true
   def render(assigns) do
     ~H"""
-    <.header label="Home" />
+    <.header label="Scheduler" />
     <div class="px-4 py-4 sm:px-6 lg:px-8 max-w-4xl w-full">
       <div class="w-full space-y-12">
         <div class="w-full">
           <div class="w-full flex flex-row justify-between">
-            <h3>Upcoming bookings</h3>
+            <h3>Booking</h3>
 
             <.button type="button" phx-click={show_modal("booking-form-modal")}>
               Book
             </.button>
             <.live_component
-              success_path={Routes.home_path(@socket, :index)}
+              success_path={Routes.scheduler_path(@socket, :index)}
               current_user={@current_user}
               is_admin={@is_admin}
               changelog={@changelog}
@@ -68,8 +69,12 @@ defmodule OverbookedWeb.HomeLive do
               <.date_input form={f} field={:to_date} />
             </.form>
           </div>
-
-          <.table id="bookings" rows={@bookings} row_id={fn booking -> "booking-#{booking.id}" end}>
+          <OverbookedWeb.SchedulerLive.Calendar.calendar
+            id="calendar"
+            end_of_month={Timex.end_of_month(Timex.shift(Timex.today(), months: 2))}
+            beginning_of_month={Timex.beginning_of_month(Timex.shift(Timex.today(), months: 2))}
+          />
+          <.table rows={@bookings} row_id={fn booking -> "booking-#{booking.id}" end}>
             <:col :let={booking} label="Resource" width="w-16"><%= booking.resource.name %></:col>
             <:col :let={booking} label="Booked by" width="w-24"><%= booking.user.name %></:col>
             <:col :let={booking} label="Type" width="w-16" class="capitalize">
@@ -125,8 +130,7 @@ defmodule OverbookedWeb.HomeLive do
     bookings =
       Scheduler.list_bookings(
         Timex.parse!(from_date, "{YYYY}-{M}-{D}"),
-        Timex.parse!(to_date, "{YYYY}-{M}-{D}"),
-        socket.assigns.current_user
+        Timex.parse!(to_date, "{YYYY}-{M}-{D}")
       )
 
     daterange_changeset =

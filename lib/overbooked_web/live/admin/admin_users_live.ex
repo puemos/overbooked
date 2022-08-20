@@ -180,7 +180,7 @@ defmodule OverbookedWeb.AdminUsersLive do
        :info,
        "Your new member will receive instructions to sign up."
      )
-     |> push_patch(to: Routes.admin_path(socket, :users))}
+     |> push_redirect(to: Routes.admin_path(socket, :users))}
   end
 
   def handle_event("delete-user", %{"id" => id}, socket) do
