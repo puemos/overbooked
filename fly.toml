@@ -40,4 +40,4 @@ processes = []
     grace_period = "20s"
     interval = "15s"
     restart_limit = 0
-    timeout = "2s"
+    timeout = "5s"
