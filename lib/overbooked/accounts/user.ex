@@ -101,6 +101,11 @@ defmodule Overbooked.Accounts.User do
     |> cast(attrs, [:name])
   end
 
+  def admin_changeset(user, attrs) do
+    user
+    |> cast(attrs, [:admin])
+  end
+
   @doc """
   A user changeset for changing the password.
 

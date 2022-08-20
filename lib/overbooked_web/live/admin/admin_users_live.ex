@@ -74,6 +74,13 @@ defmodule OverbookedWeb.AdminUsersLive do
                   <%= relative_time(user.confirmed_at) %>
                 </span>
               </:col>
+              <:col :let={user} label="Admin" width="w-24">
+                <.form :let={f} for={:admin} phx-change="change-admin" phx-target={@myself}>
+                  <.number_input form={f} field={:user_id} value={user.id} class="hidden" />
+                  <.switch form={f} field={:admin} checked={user.admin} />
+                </.form>
+              </:col>
+
               <:col :let={user} label="Actions" width="w-16">
                 <.button
                   phx-click={show_modal("remove-user-modal-#{user.id}")}
@@ -186,11 +193,32 @@ defmodule OverbookedWeb.AdminUsersLive do
      |> push_redirect(to: Routes.admin_path(socket, :users))}
   end
 
+  def handle_event("change-admin", %{"admin" => params}, socket) do
+    %{"admin" => admin, "user_id" => user_id} = params
+    user = Accounts.get_user!(user_id)
+
+    {:ok, _} = Accounts.update_admin(socket.assigns.current_user, user, %{admin: admin})
+
+    {:noreply,
+     socket
+     |> put_flash(
+       :info,
+       "#{if user.admin, do: "#{user.name} is no more admin", else: "#{user.name} is now admin"}"
+     )
+     |> push_redirect(to: Routes.admin_path(socket, :users))}
+  end
+
   def handle_event("delete-user", %{"id" => id}, socket) do
     user = Accounts.get_user!(id)
     {:ok, _} = Accounts.delete_user(socket.assigns.current_user, user)
 
-    {:noreply, socket}
+    {:noreply,
+     socket
+     |> put_flash(
+       :info,
+       "#{user.name} was removeed successfully"
+     )
+     |> push_redirect(to: Routes.admin_path(socket, :users))}
   end
 
   def handle_event("delete-invitation", %{"id" => id}, socket) do

@@ -83,6 +83,16 @@ defmodule Overbooked.Accounts do
     end
   end
 
+  def update_admin(action_by_user, user, attr) do
+    if !User.is_admin?(action_by_user) do
+      {:error, :forbidden}
+    else
+      user
+      |> User.admin_changeset(attr)
+      |> Repo.update()
+    end
+  end
+
   ## User registration
 
   def get_registration_token!(id), do: Repo.get!(RegistrationToken, id)
