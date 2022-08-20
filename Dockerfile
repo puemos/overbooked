@@ -78,6 +78,9 @@ ENV LANG en_US.UTF-8
 ENV LANGUAGE en_US:en
 ENV LC_ALL en_US.UTF-8
 
+COPY ./erl_inetrc ./
+ENV ERL_INETRC=/erl_inetrc
+
 WORKDIR "/app"
 RUN chown nobody /app
 
