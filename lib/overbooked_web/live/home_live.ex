@@ -27,6 +27,7 @@ defmodule OverbookedWeb.HomeLive do
     {:ok,
      socket
      |> assign(daterange_changeset: daterange_change(%{}, daterange))
+     |> assign(default_day: Timex.format!(Timex.now(), "{YYYY}-{0M}-{D}"))
      |> assign(resources: resources)
      |> assign(bookings: bookings)
      |> assign(changelog: changelog)}
@@ -36,37 +37,39 @@ defmodule OverbookedWeb.HomeLive do
   def render(assigns) do
     ~H"""
     <.header label="Home" />
-    <div class="px-4 py-4 sm:px-6 lg:px-8 max-w-4xl w-full">
+
+    <.live_component
+      success_path={Routes.home_path(@socket, :index)}
+      current_user={@current_user}
+      is_admin={@is_admin}
+      changelog={@changelog}
+      resources={@resources}
+      default_day={@default_day}
+      module={OverbookedWeb.SchedulerLive.BookingForm}
+      id="booking-form"
+    />
+
+    <.page>
       <div class="w-full space-y-12">
         <div class="w-full">
           <div class="w-full flex flex-row justify-between">
             <h3>Upcoming bookings</h3>
-
-            <.button type="button" phx-click={show_modal("booking-form-modal")}>
-              Book
-            </.button>
-            <.live_component
-              success_path={Routes.home_path(@socket, :index)}
-              current_user={@current_user}
-              is_admin={@is_admin}
-              changelog={@changelog}
-              resources={@resources}
-              module={OverbookedWeb.SchedulerLive.BookingForm}
-              id="booking-form"
-            />
-          </div>
-          <div class="w-full flex flex-row mt-6">
-            <.form
-              :let={f}
-              for={@daterange_changeset}
-              as={:daterange}
-              phx-change={:daterange}
-              id="date-range-form"
-              class="flex flex-row space-x-2"
-            >
-              <.date_input form={f} field={:from_date} />
-              <.date_input form={f} field={:to_date} />
-            </.form>
+            <div class="flex flex-row space-x-2">
+              <.form
+                :let={f}
+                for={@daterange_changeset}
+                as={:daterange}
+                phx-change={:daterange}
+                id="date-range-form"
+                class="flex flex-row space-x-2"
+              >
+                <.date_input form={f} field={:from_date} />
+                <.date_input form={f} field={:to_date} />
+              </.form>
+              <.button type="button" phx-click={show_modal("booking-form-modal")}>
+                Book
+              </.button>
+            </div>
           </div>
 
           <.table id="bookings" rows={@bookings} row_id={fn booking -> "booking-#{booking.id}" end}>
@@ -114,7 +117,7 @@ defmodule OverbookedWeb.HomeLive do
           </.table>
         </div>
       </div>
-    </div>
+    </.page>
     """
   end
 

@@ -23,19 +23,19 @@ defmodule OverbookedWeb.AdminLive do
       <div class="space-y-2 w-60 p-6">
         <.link
           navigate={Routes.admin_path(@socket, :users)}
-          class={"text-gray-700 hover:text-gray-900 group flex items-center px-2 py-2 text-xs font-medium rounded-md #{if @live_action == :users, do: "bg-gray-200", else: "hover:bg-gray-50"}"}
+          class={"text-gray-700 hover:text-gray-900 group flex items-center px-2 py-2 text-sm font-medium rounded-md #{if @live_action == :users, do: "bg-gray-200", else: "hover:bg-gray-50"}"}
         >
           Users
         </.link>
         <.link
           navigate={Routes.admin_path(@socket, :rooms)}
-          class={"text-gray-700 hover:text-gray-900 group flex items-center px-2 py-2 text-xs font-medium rounded-md #{if @live_action == :rooms, do: "bg-gray-200", else: "hover:bg-gray-50"}"}
+          class={"text-gray-700 hover:text-gray-900 group flex items-center px-2 py-2 text-sm font-medium rounded-md #{if @live_action == :rooms, do: "bg-gray-200", else: "hover:bg-gray-50"}"}
         >
           Rooms
         </.link>
         <.link
           navigate={Routes.admin_path(@socket, :desks)}
-          class={"text-gray-700 hover:text-gray-900 group flex items-center px-2 py-2 text-xs font-medium rounded-md #{if @live_action == :desks, do: "bg-gray-200", else: "hover:bg-gray-50"}"}
+          class={"text-gray-700 hover:text-gray-900 group flex items-center px-2 py-2 text-sm font-medium rounded-md #{if @live_action == :desks, do: "bg-gray-200", else: "hover:bg-gray-50"}"}
         >
           Desks
         </.link>

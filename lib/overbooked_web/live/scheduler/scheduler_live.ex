@@ -9,15 +9,13 @@ defmodule OverbookedWeb.SchedulerLive do
   def mount(_params, _session, socket) do
     from_date =
       Timex.today()
-      |> Timex.beginning_of_week()
+      |> Timex.beginning_of_month()
       |> Timex.to_naive_datetime()
 
     to_date =
       Timex.today()
-      |> Timex.end_of_week()
+      |> Timex.end_of_month()
       |> Timex.to_naive_datetime()
-
-    daterange = %{to_date: to_date, from_date: from_date}
 
     bookings = Scheduler.list_bookings(from_date, to_date)
 
@@ -27,7 +25,9 @@ defmodule OverbookedWeb.SchedulerLive do
 
     {:ok,
      socket
-     |> assign(daterange_changeset: daterange_change(%{}, daterange))
+     |> assign(default_day: Timex.format!(Timex.now(), "{YYYY}-{0M}-{D}"))
+     |> assign(from_date: from_date)
+     |> assign(to_date: to_date)
      |> assign(resources: resources)
      |> assign(bookings: bookings)
      |> assign(changelog: changelog)}
@@ -37,112 +37,85 @@ defmodule OverbookedWeb.SchedulerLive do
   def render(assigns) do
     ~H"""
     <.header label="Scheduler" />
-    <div class="px-4 py-4 sm:px-6 lg:px-8 max-w-4xl w-full">
+    <.live_component
+      success_path={Routes.scheduler_path(@socket, :index)}
+      current_user={@current_user}
+      is_admin={@is_admin}
+      changelog={@changelog}
+      resources={@resources}
+      default_day={@default_day}
+      module={OverbookedWeb.SchedulerLive.BookingForm}
+      id="booking-form"
+    />
+    <.page>
       <div class="w-full space-y-12">
         <div class="w-full">
-          <div class="w-full flex flex-row justify-between">
-            <h3>Booking</h3>
-
-            <.button type="button" phx-click={show_modal("booking-form-modal")}>
-              Book
-            </.button>
-            <.live_component
-              success_path={Routes.scheduler_path(@socket, :index)}
-              current_user={@current_user}
-              is_admin={@is_admin}
-              changelog={@changelog}
-              resources={@resources}
-              module={OverbookedWeb.SchedulerLive.BookingForm}
-              id="booking-form"
-            />
-          </div>
-          <div class="w-full flex flex-row mt-6">
-            <.form
-              :let={f}
-              for={@daterange_changeset}
-              as={:daterange}
-              phx-change={:daterange}
-              id="date-range-form"
-              class="flex flex-row space-x-2"
-            >
-              <.date_input form={f} field={:from_date} />
-              <.date_input form={f} field={:to_date} />
-            </.form>
-          </div>
           <OverbookedWeb.SchedulerLive.Calendar.calendar
             id="calendar"
-            end_of_month={Timex.end_of_month(Timex.shift(Timex.today(), months: 2))}
-            beginning_of_month={Timex.beginning_of_month(Timex.shift(Timex.today(), months: 2))}
+            bookings={@bookings}
+            beginning_of_month={@from_date}
+            end_of_month={@to_date}
           />
-          <.table rows={@bookings} row_id={fn booking -> "booking-#{booking.id}" end}>
-            <:col :let={booking} label="Resource" width="w-16"><%= booking.resource.name %></:col>
-            <:col :let={booking} label="Booked by" width="w-24"><%= booking.user.name %></:col>
-            <:col :let={booking} label="Type" width="w-16" class="capitalize">
-              <%= booking.resource.resource_type.name %>
-            </:col>
-
-            <:col :let={booking} label="When" width="w-36">
-              <%= from_to_datetime(booking.start_at, booking.end_at) %>
-            </:col>
-
-            <:col :let={booking} label="Actions" width="w-24">
-              <.button
-                phx-click={show_modal("remove-booking-modal-#{booking.id}")}
-                variant={:danger}
-                size={:small}
-                disabled={@current_user.id != booking.user.id and !@is_admin}
-              >
-                Remove
-              </.button>
-
-              <.modal
-                id={"remove-booking-modal-#{booking.id}"}
-                on_confirm={
-                  JS.push("delete", value: %{id: booking.id})
-                  |> hide_modal("remove-booking-modal-#{booking.id}")
-                  |> hide("#booking-#{booking.id}")
-                }
-                icon={nil}
-              >
-                <:title>Remove a booking</:title>
-                <span>
-                  Are you sure you want to remove
-                  <span class="font-bold"><%= booking.resource.name %>?</span>
-                </span>
-                <:confirm phx-disable-with="Removing..." variant={:danger}>
-                  Remove
-                </:confirm>
-
-                <:cancel>Cancel</:cancel>
-              </.modal>
-            </:col>
-          </.table>
         </div>
       </div>
-    </div>
+    </.page>
     """
   end
 
   @impl true
-  def handle_event("daterange", %{"daterange" => daterange_params}, socket) do
-    %{"from_date" => from_date, "to_date" => to_date} = daterange_params
+  def handle_event("prev_month", _params, socket) do
+    from_date =
+      socket.assigns.from_date
+      |> Timex.shift(months: -1)
+      |> Timex.beginning_of_month()
+      |> Timex.to_naive_datetime()
 
-    bookings =
-      Scheduler.list_bookings(
-        Timex.parse!(from_date, "{YYYY}-{M}-{D}"),
-        Timex.parse!(to_date, "{YYYY}-{M}-{D}")
-      )
+    to_date =
+      socket.assigns.to_date
+      |> Timex.shift(months: -1)
+      |> Timex.end_of_month()
+      |> Timex.to_naive_datetime()
 
-    daterange_changeset =
-      daterange_change(socket.assigns.daterange_changeset, %{
-        to_date: to_date,
-        from_date: from_date
-      })
+    bookings = Scheduler.list_bookings(from_date, to_date)
 
     {:noreply,
      socket
-     |> assign(bookings: bookings)
-     |> assign(daterange_changeset: daterange_changeset)}
+     |> assign(from_date: from_date)
+     |> assign(to_date: to_date)
+     |> assign(bookings: bookings)}
+  end
+
+  def handle_event("day-modal", %{"date" => date}, socket) do
+    default_day =
+      date
+      |> Timex.parse!("{ISO:Extended:Z}")
+      |> Timex.format!("{YYYY}-{0M}-{0D}")
+
+    {:noreply,
+     socket
+     |> assign(default_day: default_day)}
+  end
+
+  def handle_event("next_month", _params, socket) do
+    from_date =
+      socket.assigns.from_date
+      |> Timex.shift(months: 1)
+      |> Timex.beginning_of_month()
+      |> Timex.to_naive_datetime()
+
+    to_date =
+      socket.assigns.to_date
+      |> Timex.shift(months: 1)
+      |> Timex.end_of_month()
+      |> Timex.to_naive_datetime()
+
+    bookings = Scheduler.list_bookings(from_date, to_date)
+
+    {:noreply,
+     socket
+     |> assign(from_date: from_date)
+     |> assign(to_date: to_date)
+     |> assign(bookings: bookings)}
   end
 
   def handle_event("delete", %{"id" => id}, socket) do

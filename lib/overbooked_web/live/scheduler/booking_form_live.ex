@@ -41,7 +41,13 @@ defmodule OverbookedWeb.SchedulerLive.BookingForm do
                 Day
               </label>
               <div class="mt-1">
-                <.date_input form={f} field={:date} phx_debounce="blur" required={true} />
+                <.date_input
+                  form={f}
+                  field={:date}
+                  phx_debounce="blur"
+                  value={@default_day}
+                  required={true}
+                />
                 <.error form={f} field={:date} />
               </div>
             </div>
@@ -53,6 +59,7 @@ defmodule OverbookedWeb.SchedulerLive.BookingForm do
                 <div class="mt-1">
                   <.select
                     options={time_options()}
+                    selected="09:00"
                     form={f}
                     field={:start_at}
                     phx_debounce="blur"
@@ -63,6 +70,7 @@ defmodule OverbookedWeb.SchedulerLive.BookingForm do
                 <div class="mt-1">
                   <.select
                     options={time_options()}
+                    selected="10:00"
                     form={f}
                     field={:end_at}
                     phx_debounce="blur"
@@ -74,12 +82,7 @@ defmodule OverbookedWeb.SchedulerLive.BookingForm do
             </div>
           </div>
         </.form>
-        <:confirm
-          type="submit"
-          form={"#{@id}-form"}
-          phx-disable-with="Saving..."
-          variant={:secondary}
-        >
+        <:confirm type="submit" form={"#{@id}-form"} phx-disable-with="Saving..." variant={:secondary}>
           Save
         </:confirm>
 
@@ -129,8 +132,9 @@ defmodule OverbookedWeb.SchedulerLive.BookingForm do
          socket
          |> put_flash(
            :error,
-           "Resource is unavailable during those hours"
-         )}
+           "#{resource.name} is unavailable during those hours"
+         )
+         |> push_redirect(to: socket.assigns.success_path)}
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign(socket, changeset: changeset)}

@@ -6,7 +6,7 @@ defmodule Overbooked.Repo.Migrations.CreateBookings do
       add :end_at, :utc_datetime
       add :start_at, :utc_datetime
       add :time_zone, :string
-      add :resource_id, references(:resources, on_delete: :nothing)
+      add :resource_id, references(:resources, on_delete: :delete_all)
 
       timestamps()
     end

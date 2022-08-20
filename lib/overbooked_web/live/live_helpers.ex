@@ -25,7 +25,14 @@ defmodule OverbookedWeb.LiveHelpers do
         "#{if !same_year, do: "{YYYY}"} #{if same_day, do: "{h24}:{m}", else: "{Mshort} {D} {h24}:{m}"}"
       )
 
-    "#{from_date_str} ⋅ #{to_date_str}"
+    "#{from_date_str} - #{to_date_str}"
+  end
+
+  def from_to_datetime(from_date, to_date, :hours) do
+    {:ok, from_date_str} = Timex.format(from_date, "{h24}:{m}")
+    {:ok, to_date_str} = Timex.format(to_date, "{h24}:{m}")
+
+    "#{from_date_str} - #{to_date_str}"
   end
 
   attr :flash, :map
@@ -585,6 +592,14 @@ defmodule OverbookedWeb.LiveHelpers do
           <%= @label %>
         </h1>
       </div>
+    </div>
+    """
+  end
+
+  def page(assigns) do
+    ~H"""
+    <div class="px-4 py-4 sm:px-6 lg:px-8 max-w-4xl w-full mx-auto">
+      <%= render_slot(@inner_block) %>
     </div>
     """
   end
