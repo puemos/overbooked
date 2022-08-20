@@ -17,7 +17,8 @@ for email <- Overbooked.config([:admin_emails]) do
   %User{}
   |> User.registration_changeset(%{
     email: email,
-    password: "Aa123123123123!"
+    password: "Aa123123123123!",
+    name: "Admin"
   })
   |> Repo.insert!()
 end

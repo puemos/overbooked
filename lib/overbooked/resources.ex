@@ -6,7 +6,9 @@ defmodule Overbooked.Resources do
   import Ecto.Query, warn: false
   alias Overbooked.Repo
 
-  alias Overbooked.Resources.Resource
+  alias Overbooked.Resources.{Resource, ResourceType}
+
+  def get_resource_type_by_name!(name), do: Repo.get_by!(ResourceType, name: name)
 
   @doc """
   Returns the list of resources.
@@ -42,16 +44,17 @@ defmodule Overbooked.Resources do
 
   ## Examples
 
-      iex> create_resource(%{field: value})
+      iex> create_resource(resource_type, %{field: value})
       {:ok, %Resource{}}
 
-      iex> create_resource(%{field: bad_value})
+      iex> create_resource(resource_type, %{field: bad_value})
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_resource(attrs \\ %{}) do
+  def create_resource(%ResourceType{} = resource_type, attrs \\ %{}) do
     %Resource{}
     |> Resource.changeset(attrs)
+    |> Resource.put_resource_type(resource_type)
     |> Repo.insert()
   end
 

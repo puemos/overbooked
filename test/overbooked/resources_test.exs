@@ -12,23 +12,29 @@ defmodule Overbooked.ResourcesTest do
 
     test "list_resources/0 returns all resources" do
       resource = resource_fixture()
-      assert Resources.list_resources() == [resource]
+      resource_id = resource.id
+      assert [%Resource{id: ^resource_id}] = Resources.list_resources()
     end
 
     test "get_resource!/1 returns the resource with given id" do
       resource = resource_fixture()
-      assert Resources.get_resource!(resource.id) == resource
+      resource_id = resource.id
+      assert %Resource{id: ^resource_id} = Resources.get_resource!(resource.id)
     end
 
     test "create_resource/1 with valid data creates a resource" do
       valid_attrs = %{name: "some name"}
+      resource_type = resource_type_fixture()
 
-      assert {:ok, %Resource{} = resource} = Resources.create_resource(valid_attrs)
+      assert {:ok, %Resource{} = resource} = Resources.create_resource(resource_type, valid_attrs)
       assert resource.name == "some name"
     end
 
     test "create_resource/1 with invalid data returns error changeset" do
-      assert {:error, %Ecto.Changeset{}} = Resources.create_resource(@invalid_attrs)
+      resource_type = resource_type_fixture()
+
+      assert {:error, %Ecto.Changeset{}} =
+               Resources.create_resource(resource_type, @invalid_attrs)
     end
 
     test "update_resource/2 with valid data updates the resource" do
@@ -41,8 +47,9 @@ defmodule Overbooked.ResourcesTest do
 
     test "update_resource/2 with invalid data returns error changeset" do
       resource = resource_fixture()
+      resource_name = resource.name
       assert {:error, %Ecto.Changeset{}} = Resources.update_resource(resource, @invalid_attrs)
-      assert resource == Resources.get_resource!(resource.id)
+      assert %Resource{name: ^resource_name} = Resources.get_resource!(resource.id)
     end
 
     test "delete_resource/1 deletes the resource" do

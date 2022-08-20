@@ -4,16 +4,52 @@ defmodule Overbooked.ResourcesFixtures do
   entities via the `Overbooked.Resources` context.
   """
 
+  alias Overbooked.Resources
+  alias Overbooked.Resources.{ResourceType}
+
+  def valid_resource_name, do: "Resource"
+
+  def valid_resource_attributes(attrs \\ %{}) do
+    Enum.into(attrs, %{
+      name: valid_resource_name()
+    })
+  end
+
+  def resource_type_fixture() do
+    Resources.get_resource_type_by_name!("room")
+  end
+
   @doc """
   Generate a resource.
   """
-  def resource_fixture(attrs \\ %{}) do
-    {:ok, resource} =
+  def resource_fixture() do
+    Resources.get_resource_type_by_name!("room")
+    |> resource_fixture(valid_resource_attributes(%{}))
+  end
+
+  def resource_fixture(attrs) do
+    Resources.get_resource_type_by_name!("room")
+    |> resource_fixture(valid_resource_attributes(attrs))
+  end
+
+  def resource_fixture(:room, attrs) do
+    Resources.get_resource_type_by_name!("room")
+    |> resource_fixture(valid_resource_attributes(attrs))
+  end
+
+  def resource_fixture(:desk, attrs) do
+    Resources.get_resource_type_by_name!("desk")
+    |> resource_fixture(valid_resource_attributes(attrs))
+  end
+
+  def resource_fixture(%ResourceType{} = resource_type, attrs) do
+    attrs =
       attrs
       |> Enum.into(%{
         name: "some name"
       })
-      |> Overbooked.Resources.create_resource()
+
+    {:ok, resource} = Resources.create_resource(resource_type, attrs)
 
     resource
   end
