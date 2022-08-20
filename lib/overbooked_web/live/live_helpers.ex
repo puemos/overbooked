@@ -12,6 +12,22 @@ defmodule OverbookedWeb.LiveHelpers do
     str
   end
 
+  def from_to_datetime(from_date, to_date) do
+    same_year = Timex.compare(from_date, to_date, :year) == 0
+    same_day = Timex.compare(from_date, to_date, :day) == 0
+
+    {:ok, from_date_str} =
+      Timex.format(from_date, "#{if !same_year, do: "{YYYY}"} {Mshort} {D} {h24}:{m}")
+
+    {:ok, to_date_str} =
+      Timex.format(
+        to_date,
+        "#{if !same_year, do: "{YYYY}"} #{if same_day, do: "{h24}:{m}", else: "{Mshort} {D} {h24}:{m}"}"
+      )
+
+    "#{from_date_str} ⋅ #{to_date_str}"
+  end
+
   attr :flash, :map
   attr :kind, :atom
 
@@ -355,10 +371,7 @@ defmodule OverbookedWeb.LiveHelpers do
                 </.button>
               <% end %>
               <%= for cancel <- @cancel do %>
-                <.button
-                  phx-click={hide_modal(@on_cancel, @id)}
-                  {assigns_to_attributes(cancel)}
-                >
+                <.button phx-click={hide_modal(@on_cancel, @id)} {assigns_to_attributes(cancel)}>
                   <%= render_slot(cancel) %>
                 </.button>
               <% end %>

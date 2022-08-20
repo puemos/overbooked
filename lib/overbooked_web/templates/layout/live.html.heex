@@ -26,13 +26,13 @@
           <div class="space-y-2">
             <%= if @current_user do %>
               <.link
-                navigate="#"
+                navigate={Routes.scheduler_path(@socket, :index)}
                 class="text-gray-700 hover:text-gray-900 group flex items-center px-2 py-2 text-sm font-medium rounded-md hover:bg-gray-50"
               >
                 <.icon
                   name={:calendar}
                   class="text-gray-400 group-hover:text-gray-500 mr-3 flex-shrink-0 h-6 w-6"
-                /> Schedule
+                /> Scheduler
               </.link>
               <.link
                 navigate="#"

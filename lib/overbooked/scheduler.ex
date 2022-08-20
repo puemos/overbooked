@@ -32,7 +32,10 @@ defmodule Overbooked.Scheduler do
   end
 
   def book_resource(%Resource{} = resource, %User{} = user, attrs \\ %{}) do
-    if resource_busy?(resource, attrs[:start_at], attrs[:end_at]) do
+    end_at = attrs["end_at"] || attrs[:end_at]
+    start_at = attrs["start_at"] || attrs[:start_at]
+
+    if resource_busy?(resource, start_at, end_at) do
       {:error, :resource_busy}
     else
       %Booking{}
@@ -45,10 +48,9 @@ defmodule Overbooked.Scheduler do
 
   def list_bookings(start_at, end_at) do
     from(b in Booking,
-      where:
-        (^start_at >= b.start_at and ^start_at <= b.end_at) or
-          (^end_at >= b.start_at and ^end_at <= b.end_at),
-      order_by: b.start_at
+      where: ^start_at <= b.end_at and b.start_at <= ^end_at,
+      order_by: b.start_at,
+      preload: [resource: [:resource_type], user: []]
     )
     |> Repo.all()
   end
@@ -85,7 +87,7 @@ defmodule Overbooked.Scheduler do
     Repo.delete(booking)
   end
 
-  def change_booking(%Booking{user_id: user_id} = booking, %User{id: user_id}, attrs \\ %{}) do
+  def change_booking(%Booking{} = booking, attrs \\ %{}) do
     Booking.changeset(booking, attrs)
   end
 end

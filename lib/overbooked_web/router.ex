@@ -95,6 +95,7 @@ defmodule OverbookedWeb.Router do
     live_session :authenticated,
       on_mount: [{OverbookedWeb.UserAuth, :ensure_authenticated}] do
       live "/", HomeLive, :index
+      live "/scheduler", SchedulerLive, :index
       live "/settings", UserSettingsLive, :index
     end
 

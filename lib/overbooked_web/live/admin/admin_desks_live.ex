@@ -4,12 +4,12 @@ defmodule OverbookedWeb.AdminDesksLive do
   alias Overbooked.Resources.{Resource}
   @impl true
   def mount(socket) do
-    resources = Resources.list_desks()
+    desks = Resources.list_desks()
     changelog = Resources.change_resource(%Resource{})
 
     {:ok,
      socket
-     |> assign(resources: resources)
+     |> assign(desks: desks)
      |> assign(changelog: changelog)}
   end
 
@@ -57,8 +57,8 @@ defmodule OverbookedWeb.AdminDesksLive do
             </.modal>
           </div>
           <.table
-            id="resources"
-            rows={@resources}
+            id="desks"
+            rows={@desks}
             row_id={fn resource -> "resource-#{resource.id}" end}
           >
             <:col :let={resource} label="Name"><%= resource.name %></:col>
