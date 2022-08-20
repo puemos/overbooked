@@ -53,6 +53,9 @@ defmodule OverbookedWeb.UserAuth do
 
           %User{confirmed_at: _} ->
             {:cont, new_socket}
+
+          _ ->
+            {:halt, redirect_require_login(socket)}
         end
 
       %{} ->

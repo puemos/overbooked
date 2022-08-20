@@ -93,6 +93,7 @@ defmodule OverbookedWeb do
       import OverbookedWeb.ErrorHelpers
       import OverbookedWeb.Gettext
       alias OverbookedWeb.Router.Helpers, as: Routes
+      alias Phoenix.LiveView.JS
 
       # Import global components
       import OverbookedWeb.Components.{

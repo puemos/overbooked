@@ -18,8 +18,8 @@ defmodule OverbookedWeb.LayoutComponent do
         %{module: _module, confirm: {text, attrs}} = show ->
           show
           |> Map.put_new(:title, show[:title])
-          |> Map.put_new(:on_cancel, show[:on_cancel])
-          |> Map.put_new(:on_confirm, show[:on_confirm])
+          |> Map.put_new(:on_cancel, show[:on_cancel] || %JS{})
+          |> Map.put_new(:on_confirm, show[:on_confirm] || %JS{})
           |> Map.put_new(:patch, nil)
           |> Map.put_new(:navigate, nil)
           |> Map.merge(%{confirm_text: text, confirm_attrs: attrs})

@@ -1,6 +1,6 @@
 <!-- Static sidebar for desktop -->
 <div class="flex flex-shrink-0" role="region">
-  <div class="flex flex-col w-64 border-r border-gray-200 pt-5 pb-4 bg-gray-100">
+  <div class="flex flex-col w-64 border-r border-gray-200 pt-5 bg-gray-100">
     <div class="flex items-center flex-shrink-0 px-6">
       <.link navigate={Routes.home_path(@socket, :index)}>
         <span class="h-8 w-auto text-2xl ml-1 font-bold">
@@ -9,7 +9,7 @@
       </.link>
     </div>
     <!-- Sidebar component, swap this element with another sidebar if you like -->
-    <div class="flex-1 flex flex-col overflow-y-auto mt-2">
+    <div class="flex-1 flex flex-col overflow-y-auto mt-8 p-1">
       <%= if @current_user do %>
         <.dropdown id="tesr" foo="bar">
           <:title><%= @current_user.name %></:title>

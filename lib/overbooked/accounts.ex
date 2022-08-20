@@ -75,7 +75,25 @@ defmodule Overbooked.Accounts do
   """
   def get_user!(id), do: Repo.get!(User, id)
 
+  def delete_user(deleted_by_user, user) do
+    if !User.is_admin?(deleted_by_user) do
+      {:error, :forbidden}
+    else
+      Repo.delete(user)
+    end
+  end
+
   ## User registration
+
+  def get_registration_token!(id), do: Repo.get!(RegistrationToken, id)
+
+  def delete_registration_token(deleted_by_user, registration_token) do
+    if !User.is_admin?(deleted_by_user) do
+      {:error, :forbidden}
+    else
+      Repo.delete(registration_token)
+    end
+  end
 
   def generate_registration_token(opts \\ []) do
     {token_string, hashed_token} = RegistrationToken.build_hashed_token()
