@@ -55,6 +55,10 @@ if config_env() == :prod do
     ],
     secret_key_base: secret_key_base
 
+  config :overbooked, Overbooked.Mailer,
+    adapter: Swoosh.Adapters.Sendinblue,
+    api_key: System.get_env("SENDINBLUE_API_KEY")
+
   # ## Using releases
   #
   # If you are doing OTP releases, you need to instruct Phoenix
