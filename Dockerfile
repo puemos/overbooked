@@ -82,7 +82,7 @@ WORKDIR "/app"
 RUN chown nobody /app
 
 # Only copy the final release from the build stage
-COPY --from=builder --chown=nobody:root /app/_build/prod/rel/live_beats ./
+COPY --from=builder --chown=nobody:root /app/_build/prod/rel/overbooked ./
 
 USER nobody
 
