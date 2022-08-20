@@ -59,6 +59,8 @@ if config_env() == :prod do
     adapter: Swoosh.Adapters.Sendinblue,
     api_key: System.get_env("SENDINBLUE_API_KEY")
 
+  config :swoosh, :api_client, Swoosh.ApiClient.Hackney
+
   # ## Using releases
   #
   # If you are doing OTP releases, you need to instruct Phoenix
