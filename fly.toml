@@ -1,5 +1,3 @@
-# fly.toml file generated for overbooked on 2022-08-20T22:30:10+02:00
-
 app = "overbooked"
 kill_signal = "SIGTERM"
 kill_timeout = 5
@@ -10,7 +8,6 @@ processes = []
 
 [env]
   PHX_HOST = "overbooked.fly.dev"
-  PORT = "8080"
 
 [experimental]
   allowed_public_ports = []
@@ -18,17 +15,17 @@ processes = []
 
 [[services]]
   http_checks = []
-  internal_port = 8080
+  internal_port = 4000
   processes = ["app"]
   protocol = "tcp"
   script_checks = []
+
   [services.concurrency]
-    hard_limit = 25
-    soft_limit = 20
+    hard_limit = 2500
+    soft_limit = 2000
     type = "connections"
 
   [[services.ports]]
-    force_https = true
     handlers = ["http"]
     port = 80
 
@@ -37,7 +34,7 @@ processes = []
     port = 443
 
   [[services.tcp_checks]]
-    grace_period = "1s"
+    grace_period = "20s"  # allow some time for startup
     interval = "15s"
     restart_limit = 0
     timeout = "2s"
