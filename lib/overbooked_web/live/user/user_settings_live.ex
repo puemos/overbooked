@@ -29,7 +29,7 @@ defmodule OverbookedWeb.UserSettingsLive do
             for={@profile_changeset}
             phx-submit={:change_profile}
             id="change-profile-form"
-            class="flex flex-col space-y-2"
+            class="flex flex-col space-y-4"
           >
             <div class="">
               <label for="name" class="block text-sm font-medium text-gray-700">
@@ -55,7 +55,7 @@ defmodule OverbookedWeb.UserSettingsLive do
             for={@email_changeset}
             phx-submit={:change_email}
             id="change-email-form"
-            class="flex flex-col space-y-2"
+            class="flex flex-col space-y-4"
           >
             <div class="">
               <label for="password" class="block text-sm font-medium text-gray-700">
@@ -96,7 +96,7 @@ defmodule OverbookedWeb.UserSettingsLive do
             for={@password_changeset}
             phx-submit={:change_password}
             id="change-password-form"
-            class="flex flex-col space-y-2"
+            class="flex flex-col space-y-4"
           >
             <div class="">
               <label for="password" class="block text-sm font-medium text-gray-700">

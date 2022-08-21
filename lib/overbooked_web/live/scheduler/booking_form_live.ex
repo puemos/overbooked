@@ -18,7 +18,7 @@ defmodule OverbookedWeb.SchedulerLive.BookingForm do
           phx-change={:validate}
           phx-target={@myself}
           id={"#{@id}-form"}
-          class="flex flex-col space-y-2"
+          class="flex flex-col space-y-4"
         >
           <div class="">
             <label for="start_at" class="block text-sm font-medium text-gray-700">

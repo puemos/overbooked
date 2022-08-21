@@ -91,10 +91,9 @@ defmodule Overbooked.ResourcesTest do
     end
 
     test "create_amenity/1 with valid data creates a amenity" do
-      valid_attrs = %{count: 42, name: "some name"}
+      valid_attrs = %{name: "some name"}
 
       assert {:ok, %Amenity{} = amenity} = Resources.create_amenity(valid_attrs)
-      assert amenity.count == 42
       assert amenity.name == "some name"
     end
 
@@ -104,10 +103,9 @@ defmodule Overbooked.ResourcesTest do
 
     test "update_amenity/2 with valid data updates the amenity" do
       amenity = amenity_fixture()
-      update_attrs = %{count: 43, name: "some updated name"}
+      update_attrs = %{name: "some updated name"}
 
       assert {:ok, %Amenity{} = amenity} = Resources.update_amenity(amenity, update_attrs)
-      assert amenity.count == 43
       assert amenity.name == "some updated name"
     end
 

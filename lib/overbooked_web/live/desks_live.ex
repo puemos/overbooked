@@ -27,6 +27,7 @@ defmodule OverbookedWeb.DesksLive do
               <.desk_card
                 name={desk.name}
                 color={desk.color}
+                amenities={desk.amenities}
                 busy={Scheduler.resource_busy?(desk, Timex.now(), Timex.now())}
               >
               </.desk_card>
@@ -45,6 +46,11 @@ defmodule OverbookedWeb.DesksLive do
 
       <div class="h-full flex flex-col justify-between">
         <div><%= @name %></div>
+        <div class="flex flex-row space-x-1">
+          <%= for amenity <- @amenities do %>
+            <.badge color="gray"><%= amenity.name %></.badge>
+          <% end %>
+        </div>
         <div>
           <.badge color={if @busy, do: "red", else: "green"}>
             <div class="flex flex-row space-x-1 items-center ">

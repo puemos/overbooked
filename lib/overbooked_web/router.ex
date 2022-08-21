@@ -106,6 +106,7 @@ defmodule OverbookedWeb.Router do
       live "/admin/users", AdminLive, :users
       live "/admin/desks", AdminLive, :desks
       live "/admin/rooms", AdminLive, :rooms
+      live "/admin/amenities", AdminLive, :amenities
     end
   end
 end

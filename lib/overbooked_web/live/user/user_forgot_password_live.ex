@@ -18,7 +18,7 @@ defmodule OverbookedWeb.UserForgotPasswordLive do
           for={:user}
           phx-submit={:reset}
           id="forgot-password-form"
-          class="flex flex-col space-y-2"
+          class="flex flex-col space-y-4"
         >
           <div class="">
             <label for="email" class="block text-sm font-medium text-gray-700">

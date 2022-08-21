@@ -39,6 +39,12 @@ defmodule OverbookedWeb.AdminLive do
         >
           Desks
         </.link>
+        <.link
+          navigate={Routes.admin_path(@socket, :amenities)}
+          class={"text-gray-700 hover:text-gray-900 group flex items-center px-2 py-2 text-sm font-medium rounded-md #{if @live_action == :amenities, do: "bg-gray-200", else: "hover:bg-gray-50"}"}
+        >
+          Amenities
+        </.link>
       </div>
       <%= if @live_action == :users do %>
         <.live_component
@@ -62,6 +68,14 @@ defmodule OverbookedWeb.AdminLive do
           is_admin={@is_admin}
           module={OverbookedWeb.AdminDesksLive}
           id="admin-desks"
+        />
+      <% end %>
+      <%= if @live_action == :amenities do %>
+        <.live_component
+          current_user={@current_user}
+          is_admin={@is_admin}
+          module={OverbookedWeb.AdminAmenitiesLive}
+          id="admin-amenities"
         />
       <% end %>
     </div>

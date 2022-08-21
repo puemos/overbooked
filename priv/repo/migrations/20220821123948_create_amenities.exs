@@ -4,7 +4,6 @@ defmodule Overbooked.Repo.Migrations.CreateAmenities do
   def change do
     create table(:amenities) do
       add :name, :string
-      add :count, :integer
 
       timestamps()
     end

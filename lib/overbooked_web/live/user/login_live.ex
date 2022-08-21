@@ -18,7 +18,7 @@ defmodule OverbookedWeb.LoginLive do
           action={Routes.user_session_path(@socket, :create)}
           for={:user}
           id="login-form"
-          class="flex flex-col space-y-2"
+          class="flex flex-col space-y-4"
         >
           <div class="">
             <label for="email" class="block text-sm font-medium text-gray-700">

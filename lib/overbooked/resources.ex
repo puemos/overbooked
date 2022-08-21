@@ -6,7 +6,7 @@ defmodule Overbooked.Resources do
   import Ecto.Query, warn: false
   alias Overbooked.Repo
 
-  alias Overbooked.Resources.{Resource, ResourceType}
+  alias Overbooked.Resources.{Resource, ResourceType, Amenity}
 
   def get_resource_type_by_name!(name), do: Repo.get_by!(ResourceType, name: name)
 
@@ -29,7 +29,8 @@ defmodule Overbooked.Resources do
       join: rt in ResourceType,
       on: rt.id == r.resource_type_id,
       where: rt.name == "room",
-      group_by: r.id
+      group_by: r.id,
+      preload: [:amenities]
     )
     |> Repo.all()
   end
@@ -40,7 +41,8 @@ defmodule Overbooked.Resources do
       join: rt in ResourceType,
       on: rt.id == r.resource_type_id,
       where: rt.name == "desk",
-      group_by: r.id
+      group_by: r.id,
+      preload: [:amenities]
     )
     |> Repo.all()
   end
@@ -82,8 +84,15 @@ defmodule Overbooked.Resources do
 
   """
   def create_resource(%ResourceType{} = resource_type, attrs \\ %{}) do
+    amenities_id_list = Map.get(attrs, "amenities", [])
+
+    amenities = from(a in Amenity, where: a.id in ^amenities_id_list) |> Repo.all()
+
+    IO.inspect(amenities)
+
     %Resource{}
     |> Resource.changeset(attrs)
+    |> Resource.put_amenities(amenities)
     |> Resource.put_resource_type(resource_type)
     |> Repo.insert()
   end

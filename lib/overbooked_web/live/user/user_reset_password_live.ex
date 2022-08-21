@@ -18,7 +18,7 @@ defmodule OverbookedWeb.UserResetPasswordLive do
           for={@changeset}
           phx-submit={:reset}
           id="reset-password-form"
-          class="flex flex-col space-y-2"
+          class="flex flex-col space-y-4"
         >
           <div class="">
             <label for="password" class="block text-sm font-medium text-gray-700">

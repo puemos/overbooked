@@ -21,7 +21,7 @@ defmodule OverbookedWeb.SignupLive do
           phx-change={:validate}
           phx-submit={:save}
           id="signup-form"
-          class="flex flex-col space-y-2"
+          class="flex flex-col space-y-4"
         >
           <div class="">
             <label for="email" class="block text-sm font-medium text-gray-700">

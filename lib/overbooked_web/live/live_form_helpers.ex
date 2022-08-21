@@ -123,6 +123,49 @@ defmodule OverbookedWeb.LiveFormHelpers do
     """
   end
 
+  def checkbox_group(assigns) do
+    assigns =
+      assigns
+      |> assign_defaults(checkbox_classes(field_has_errors?(assigns)))
+      |> assign_new(:checked, fn ->
+        values =
+          case input_value(assigns[:form], assigns[:field]) do
+            value when is_binary(value) -> [value]
+            value when is_list(value) -> value
+            _ -> []
+          end
+
+        Enum.map(values, &to_string/1)
+      end)
+      |> assign_new(:id_prefix, fn -> input_id(assigns[:form], assigns[:field]) <> "_" end)
+      |> assign_new(:layout, fn -> :col end)
+
+    ~H"""
+    <div class={checkbox_group_layout_classes(%{layout: @layout})}>
+      <%= hidden_input(@form, @field, name: input_name(@form, @field), value: "") %>
+      <%= for {label, value} <- @options do %>
+        <label class={checkbox_group_layout_item_classes(%{layout: @layout})}>
+          <.checkbox
+            form={@form}
+            field={@field}
+            id={@id_prefix <> to_string(value)}
+            name={input_name(@form, @field) <> "[]"}
+            checked_value={value}
+            unchecked_value=""
+            value={value}
+            checked={to_string(value) in @checked}
+            hidden_input={false}
+            {@rest}
+          />
+          <div class={label_classes(%{form: @form, field: @field, type: "checkbox"})}>
+            <%= label %>
+          </div>
+        </label>
+      <% end %>
+    </div>
+    """
+  end
+
   def telephone_input(assigns) do
     assigns = assign_defaults(assigns, text_input_classes(field_has_errors?(assigns)))
 
@@ -343,12 +386,46 @@ defmodule OverbookedWeb.LiveFormHelpers do
     "#{if has_error, do: "has-error", else: ""} border-gray-300 text-primary-700 rounded w-5 h-5 ease-linear transition-all duration-150 dark:bg-gray-800 dark:border-gray-600"
   end
 
+  defp checkbox_group_layout_classes(assigns) do
+    case assigns[:layout] do
+      :grid ->
+        "grid grid-cols-3 gap-2"
+
+      :row ->
+        "flex flex-row gap-4"
+
+      _col ->
+        "flex flex-col gap-3"
+    end
+  end
+
+  defp checkbox_group_layout_item_classes(assigns) do
+    case assigns[:layout] do
+      :row ->
+        "inline-flex items-center block gap-2"
+
+      _col ->
+        "inline-flex items-center block gap-3"
+    end
+  end
+
   defp switch_classes(has_error) do
     "#{if has_error, do: "has-error", else: ""} absolute w-10 h-5 bg-white border-none rounded-full cursor-pointer peer checked:border-0 checked:bg-transparent checked:focus:bg-transparent checked:hover:bg-transparent dark:bg-gray-800"
   end
 
   defp radio_classes(has_error) do
     "#{if has_error, do: "has-error", else: ""} border-gray-300 h-4 w-4 cursor-pointer text-primary-600 focus:ring-primary-500 dark:bg-gray-800 dark:border-gray-600"
+  end
+
+  defp label_classes(assigns) do
+    type_classes =
+      if Enum.member?(["checkbox", "radio"], assigns[:type]) do
+        ""
+      else
+        "mb-2 font-medium"
+      end
+
+    "#{if field_has_errors?(assigns), do: "has-error", else: ""} #{type_classes} text-sm block text-gray-900 dark:text-gray-200"
   end
 
   defp field_has_errors?(%{form: form, field: field}) do

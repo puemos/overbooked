@@ -3,7 +3,6 @@ defmodule Overbooked.Resources.Amenity do
   import Ecto.Changeset
 
   schema "amenities" do
-    field :count, :integer
     field :name, :string
 
     many_to_many :resources, Overbooked.Resources.Resource,
@@ -16,7 +15,7 @@ defmodule Overbooked.Resources.Amenity do
   @doc false
   def changeset(amenity, attrs) do
     amenity
-    |> cast(attrs, [:name, :count])
-    |> validate_required([:name, :count])
+    |> cast(attrs, [:name])
+    |> validate_required([:name])
   end
 end
