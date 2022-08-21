@@ -16,6 +16,12 @@ defmodule OverbookedWeb.Nav do
         {OverbookedWeb.SchedulerLive, _} ->
           :scheduler
 
+        {OverbookedWeb.RoomsLive, _} ->
+          :rooms
+
+        {OverbookedWeb.DesksLive, _} ->
+          :desks
+
         {OverbookedWeb.AdminLive, _} ->
           :admin
 

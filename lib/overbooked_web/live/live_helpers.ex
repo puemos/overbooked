@@ -162,7 +162,7 @@ defmodule OverbookedWeb.LiveHelpers do
         <button
           id={@id}
           type="button"
-          class="group w-full bg-gray-100 rounded-md px-3.5 py-2 text-sm text-left font-medium text-gray-700 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-purple-500"
+          class="border rounded-md border-2 group w-full bg-gray-100 rounded-md px-3.5 py-2 text-sm text-left font-medium text-gray-700 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-purple-500"
           phx-click={show_dropdown("##{@id}-dropdown")}
           data-active-class="bg-gray-100"
           aria-haspopup="true"
@@ -431,6 +431,14 @@ defmodule OverbookedWeb.LiveHelpers do
         </div>
       <% end %>
     </div>
+    """
+  end
+
+  def badge(%{color: color} = assigns) do
+    ~H"""
+    <span class={"inline-flex items-center bg-#{color}-100 text-#{color}-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded dark:bg-#{color}-200 dark:text-#{color}-800"}>
+      <%= render_slot(@inner_block) %>
+    </span>
     """
   end
 

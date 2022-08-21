@@ -97,6 +97,8 @@ defmodule OverbookedWeb.Router do
       live "/", HomeLive, :index
       live "/scheduler", SchedulerLive, :index
       live "/settings", UserSettingsLive, :index
+      live "/rooms", RoomsLive, :index
+      live "/desks", DesksLive, :index
     end
 
     live_session :admin,

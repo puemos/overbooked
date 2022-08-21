@@ -86,36 +86,38 @@ defmodule OverbookedWeb.AdminDesksLive do
               <:col :let={resource} label="Created at" width="w-46">
                 <%= relative_time(resource.inserted_at) %>
               </:col>
-              <:col :let={resource} label="Actions">
-                <.button
-                  phx-click={show_modal("remove-desk-modal-#{resource.id}")}
-                  variant={:danger}
-                  size={:small}
-                >
-                  Remove
-                </.button>
-                <.button size={:small}>Edit</.button>
-
-                <.modal
-                  id={"remove-desk-modal-#{resource.id}"}
-                  on_confirm={
-                    JS.push("delete", value: %{id: resource.id}, target: @myself)
-                    |> hide_modal("remove-desk-modal-#{resource.id}")
-                    |> hide("#resource-#{resource.id}")
-                  }
-                  icon={nil}
-                >
-                  <:title>Remove a desk</:title>
-                  <span>
-                    Are you sure you want to remove
-                    <span class="font-bold"><%= resource.name %>?</span>
-                  </span>
-                  <:confirm phx-disable-with="Removing..." variant={:danger}>
+              <:col :let={resource} label="">
+                <div class="w-full flex flex-row-reverse space-x-2 space-x-reverse">
+                  <.button
+                    phx-click={show_modal("remove-desk-modal-#{resource.id}")}
+                    variant={:danger}
+                    size={:small}
+                  >
                     Remove
-                  </:confirm>
+                  </.button>
+                  <.button size={:small}>Edit</.button>
 
-                  <:cancel>Cancel</:cancel>
-                </.modal>
+                  <.modal
+                    id={"remove-desk-modal-#{resource.id}"}
+                    on_confirm={
+                      JS.push("delete", value: %{id: resource.id}, target: @myself)
+                      |> hide_modal("remove-desk-modal-#{resource.id}")
+                      |> hide("#resource-#{resource.id}")
+                    }
+                    icon={nil}
+                  >
+                    <:title>Remove a desk</:title>
+                    <span>
+                      Are you sure you want to remove
+                      <span class="font-bold"><%= resource.name %>?</span>
+                    </span>
+                    <:confirm phx-disable-with="Removing..." variant={:danger}>
+                      Remove
+                    </:confirm>
+
+                    <:cancel>Cancel</:cancel>
+                  </.modal>
+                </div>
               </:col>
             </.table>
           </div>

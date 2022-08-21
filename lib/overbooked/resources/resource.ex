@@ -5,6 +5,8 @@ defmodule Overbooked.Resources.Resource do
   schema "resources" do
     field :name, :string
     field :color, :string, default: "gray"
+    field :booking_count, :integer, virtual: true
+
     has_many :bookings, Overbooked.Scheduler.Booking
     belongs_to :resource_type, Overbooked.Resources.ResourceType
     timestamps()

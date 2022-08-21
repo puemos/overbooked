@@ -21,7 +21,9 @@ module.exports = {
     "col-start-7",
     "col-start-8",
     "col-start-9",
+
     "h-screen",
+
     "bg-gray-300",
     "bg-red-300",
     "bg-yellow-300",
@@ -30,6 +32,33 @@ module.exports = {
     "bg-indigo-300",
     "bg-pink-300",
     "bg-purple-300",
+
+    "bg-gray-100",
+    "bg-red-100",
+    "bg-yellow-100",
+    "bg-green-100",
+    "bg-blue-100",
+    "bg-indigo-100",
+    "bg-pink-100",
+    "bg-purple-100",
+
+    "text-gray-800",
+    "text-red-800",
+    "text-yellow-800",
+    "text-green-800",
+    "text-blue-800",
+    "text-indigo-800",
+    "text-pink-800",
+    "text-purple-800",
+
+    "text-gray-300",
+    "text-red-300",
+    "text-yellow-300",
+    "text-green-300",
+    "text-blue-300",
+    "text-indigo-300",
+    "text-pink-300",
+    "text-purple-300",
   ],
   plugins: [
     require("@tailwindcss/typography"),

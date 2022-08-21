@@ -73,8 +73,13 @@ defmodule OverbookedWeb.HomeLive do
           </div>
 
           <.table id="bookings" rows={@bookings} row_id={fn booking -> "booking-#{booking.id}" end}>
-            <:col :let={booking} label="Resource" width="w-16"><%= booking.resource.name %></:col>
-            <:col :let={booking} label="Booked by" width="w-24"><%= booking.user.name %></:col>
+            <:col :let={booking} label="Place" width="w-16" class="relative">
+              <div class="" title={booking.resource.name}>
+                <%= booking.resource.name %>
+              </div>
+              <div class={"absolute left-1 bg-#{booking.resource.color}-300 h-2 w-2 rounded-full"}>
+              </div>
+            </:col>
             <:col :let={booking} label="Type" width="w-16" class="capitalize">
               <%= booking.resource.resource_type.name %>
             </:col>
@@ -83,36 +88,38 @@ defmodule OverbookedWeb.HomeLive do
               <%= from_to_datetime(booking.start_at, booking.end_at) %>
             </:col>
 
-            <:col :let={booking} label="Actions" width="w-24">
-              <.button
-                phx-click={show_modal("remove-booking-modal-#{booking.id}")}
-                variant={:danger}
-                size={:small}
-                disabled={@current_user.id != booking.user.id and !@is_admin}
-              >
-                Remove
-              </.button>
-
-              <.modal
-                id={"remove-booking-modal-#{booking.id}"}
-                on_confirm={
-                  JS.push("delete", value: %{id: booking.id})
-                  |> hide_modal("remove-booking-modal-#{booking.id}")
-                  |> hide("#booking-#{booking.id}")
-                }
-                icon={nil}
-              >
-                <:title>Remove a booking</:title>
-                <span>
-                  Are you sure you want to remove
-                  <span class="font-bold"><%= booking.resource.name %>?</span>
-                </span>
-                <:confirm phx-disable-with="Removing..." variant={:danger}>
+            <:col :let={booking} label="" width="w-24">
+              <div class="w-full flex flex-row-reverse space-x-2 space-x-reverse">
+                <.button
+                  phx-click={show_modal("remove-booking-modal-#{booking.id}")}
+                  variant={:danger}
+                  size={:small}
+                  disabled={@current_user.id != booking.user.id and !@is_admin}
+                >
                   Remove
-                </:confirm>
+                </.button>
 
-                <:cancel>Cancel</:cancel>
-              </.modal>
+                <.modal
+                  id={"remove-booking-modal-#{booking.id}"}
+                  on_confirm={
+                    JS.push("delete", value: %{id: booking.id})
+                    |> hide_modal("remove-booking-modal-#{booking.id}")
+                    |> hide("#booking-#{booking.id}")
+                  }
+                  icon={nil}
+                >
+                  <:title>Remove a booking</:title>
+                  <span>
+                    Are you sure you want to remove
+                    <span class="font-bold"><%= booking.resource.name %>?</span>
+                  </span>
+                  <:confirm phx-disable-with="Removing..." variant={:danger}>
+                    Remove
+                  </:confirm>
+
+                  <:cancel>Cancel</:cancel>
+                </.modal>
+              </div>
             </:col>
           </.table>
         </div>

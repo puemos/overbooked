@@ -13,6 +13,7 @@ defmodule OverbookedWeb.SchedulerLive.Calendar do
             <%= Timex.format!(@beginning_of_month, "{Mshort} {YYYY}") %>
           </div>
           <div class="flex flex-row space-x-2">
+            <.button phx-click="today">Today</.button>
             <.button phx-click="prev_month">Prev</.button>
             <.button phx-click="next_month">Next</.button>
           </div>
@@ -39,6 +40,7 @@ defmodule OverbookedWeb.SchedulerLive.Calendar do
   end
 
   def day(%{index: index, date: date} = assigns) do
+    is_today = Timex.compare(Timex.today(), date, :day) == 0
     weekday = Timex.weekday(date, :monday)
     yearday = Timex.day(date)
     title = Timex.format!(date, "{Mfull} {D} {WDfull}")
@@ -53,10 +55,10 @@ defmodule OverbookedWeb.SchedulerLive.Calendar do
     ~H"""
     <button
       phx-click={show_modal("a-#{@yearday}-modal")}
-      class={"#{if index == 0, do: "col-start-#{@yearday}"} overflow-hidden h-32 border flex flex-col justify-start items-center text-center"}
+      class={"#{if index == 0, do: "col-start-#{@yearday}"} #{if is_today, do: "border-purple-500 border-2"} hover:bg-gray-100 overflow-hidden h-32 border flex flex-col justify-start items-center text-center"}
     >
       <div class="text-gray-400 font-bold mt-2"><%= @text %></div>
-      <div class="flex flex-col space-y-1 mt-2 bg-white w-full px-1">
+      <div class="flex flex-col space-y-1 mt-2 w-full px-1">
         <%= for booking <- @bookings do %>
           <.event
             user_name={booking.user.name}

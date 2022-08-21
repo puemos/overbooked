@@ -81,36 +81,38 @@ defmodule OverbookedWeb.AdminUsersLive do
                 </.form>
               </:col>
 
-              <:col :let={user} label="Actions" width="w-16">
-                <.button
-                  phx-click={show_modal("remove-user-modal-#{user.id}")}
-                  variant={:danger}
-                  size={:small}
-                  title={if User.is_admin?(user), do: "You can't delete an admin"}
-                  disabled={User.is_admin?(user)}
-                >
-                  Remove
-                </.button>
-
-                <.modal
-                  id={"remove-user-modal-#{user.id}"}
-                  on_confirm={
-                    JS.push("delete-user", value: %{id: user.id}, target: @myself)
-                    |> hide_modal("remove-user-modal-#{user.id}")
-                    |> hide("#user-#{user.id}")
-                  }
-                  icon={nil}
-                >
-                  <:title>Remove a user</:title>
-                  <span>
-                    Are you sure you want to remove <span class="font-bold"><%= user.name %>?</span>
-                  </span>
-                  <:confirm phx-disable-with="Removing..." variant={:danger}>
+              <:col :let={user} label="" width="w-16">
+                <div class="w-full flex flex-row-reverse space-x-2 space-x-reverse">
+                  <.button
+                    phx-click={show_modal("remove-user-modal-#{user.id}")}
+                    variant={:danger}
+                    size={:small}
+                    title={if User.is_admin?(user), do: "You can't delete an admin"}
+                    disabled={User.is_admin?(user)}
+                  >
                     Remove
-                  </:confirm>
+                  </.button>
 
-                  <:cancel>Cancel</:cancel>
-                </.modal>
+                  <.modal
+                    id={"remove-user-modal-#{user.id}"}
+                    on_confirm={
+                      JS.push("delete-user", value: %{id: user.id}, target: @myself)
+                      |> hide_modal("remove-user-modal-#{user.id}")
+                      |> hide("#user-#{user.id}")
+                    }
+                    icon={nil}
+                  >
+                    <:title>Remove a user</:title>
+                    <span>
+                      Are you sure you want to remove <span class="font-bold"><%= user.name %>?</span>
+                    </span>
+                    <:confirm phx-disable-with="Removing..." variant={:danger}>
+                      Remove
+                    </:confirm>
+
+                    <:cancel>Cancel</:cancel>
+                  </.modal>
+                </div>
               </:col>
             </.table>
           </div>
@@ -138,35 +140,37 @@ defmodule OverbookedWeb.AdminUsersLive do
                   <%= relative_time(invitation.inserted_at) %>
                 </span>
               </:col>
-              <:col :let={invitation} label="Actions" width="w-16">
-                <.button
-                  phx-click={show_modal("remove-invitation-modal-#{invitation.id}")}
-                  variant={:danger}
-                  size={:small}
-                >
-                  Remove
-                </.button>
-
-                <.modal
-                  id={"remove-invitation-modal-#{invitation.id}"}
-                  on_confirm={
-                    JS.push("delete-invitation", value: %{id: invitation.id}, target: @myself)
-                    |> hide_modal("remove-invitation-modal-#{invitation.id}")
-                    |> hide("#invitation-#{invitation.id}")
-                  }
-                  icon={nil}
-                >
-                  <:title>Remove an invitation</:title>
-                  <span>
-                    Are you sure you want to remove
-                    <span class="font-bold"><%= invitation.scoped_to_email %>?</span>
-                  </span>
-                  <:confirm phx-disable-with="Removing..." variant={:danger}>
+              <:col :let={invitation} label="" width="w-16">
+                <div class="w-full flex flex-row-reverse space-x-2 space-x-reverse">
+                  <.button
+                    phx-click={show_modal("remove-invitation-modal-#{invitation.id}")}
+                    variant={:danger}
+                    size={:small}
+                  >
                     Remove
-                  </:confirm>
+                  </.button>
 
-                  <:cancel>Cancel</:cancel>
-                </.modal>
+                  <.modal
+                    id={"remove-invitation-modal-#{invitation.id}"}
+                    on_confirm={
+                      JS.push("delete-invitation", value: %{id: invitation.id}, target: @myself)
+                      |> hide_modal("remove-invitation-modal-#{invitation.id}")
+                      |> hide("#invitation-#{invitation.id}")
+                    }
+                    icon={nil}
+                  >
+                    <:title>Remove an invitation</:title>
+                    <span>
+                      Are you sure you want to remove
+                      <span class="font-bold"><%= invitation.scoped_to_email %>?</span>
+                    </span>
+                    <:confirm phx-disable-with="Removing..." variant={:danger}>
+                      Remove
+                    </:confirm>
+
+                    <:cancel>Cancel</:cancel>
+                  </.modal>
+                </div>
               </:col>
             </.table>
           </div>

@@ -11,7 +11,7 @@
     <!-- Sidebar component, swap this element with another sidebar if you like -->
     <div class="flex-1 flex flex-col overflow-y-auto mt-8 p-1">
       <%= if @current_user do %>
-        <.dropdown id="tesr" foo="bar">
+        <.dropdown id="user-dropdown">
           <:title><%= @current_user.name %></:title>
           <:subtitle><%= @current_user.email %></:subtitle>
           <:link navigate={Routes.user_settings_path(@socket, :index)}>Settings</:link>
@@ -46,7 +46,7 @@
                 /> Scheduler
               </.link>
               <.link
-                navigate="#"
+                navigate={Routes.rooms_path(@socket, :index)}
                 class={"text-gray-700 hover:text-gray-900 group flex items-center px-2 py-2 text-sm font-medium rounded-md #{if @active_tab == :rooms, do: "bg-gray-200", else: "hover:bg-gray-50"}"}
               >
                 <.icon
@@ -56,7 +56,7 @@
                 /> Rooms
               </.link>
               <.link
-                navigate="#"
+                navigate={Routes.desks_path(@socket, :index)}
                 class={"text-gray-700 hover:text-gray-900 group flex items-center px-2 py-2 text-sm font-medium rounded-md #{if @active_tab == :desks, do: "bg-gray-200", else: "hover:bg-gray-50"}"}
               >
                 <.icon

@@ -63,6 +63,26 @@ defmodule OverbookedWeb.SchedulerLive do
   end
 
   @impl true
+  def handle_event("today", _params, socket) do
+    from_date =
+      Timex.today()
+      |> Timex.beginning_of_month()
+      |> Timex.to_naive_datetime()
+
+    to_date =
+      Timex.today()
+      |> Timex.end_of_month()
+      |> Timex.to_naive_datetime()
+
+    bookings = Scheduler.list_bookings(from_date, to_date)
+
+    {:noreply,
+     socket
+     |> assign(from_date: from_date)
+     |> assign(to_date: to_date)
+     |> assign(bookings: bookings)}
+  end
+
   def handle_event("prev_month", _params, socket) do
     from_date =
       socket.assigns.from_date
