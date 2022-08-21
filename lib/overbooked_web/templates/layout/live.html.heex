@@ -21,33 +21,46 @@
         </.dropdown>
       <% end %>
       <!-- Navigation -->
-      <nav class="flex-1 px-3 mt-6">
+      <nav class="flex-1 px-3 mt-6 mb-2">
         <div class="flex flex-col h-full justify-between">
           <div class="space-y-2">
             <%= if @current_user do %>
               <.link
-                navigate={Routes.scheduler_path(@socket, :index)}
-                class="text-gray-700 hover:text-gray-900 group flex items-center px-2 py-2 text-sm font-medium rounded-md hover:bg-gray-50"
+                navigate={Routes.home_path(@socket, :index)}
+                class={"text-gray-700 hover:text-gray-900 group flex items-center px-2 py-2 text-sm font-medium rounded-md #{if @active_tab == :home, do: "bg-gray-200", else: "hover:bg-gray-50"}"}
               >
                 <.icon
+                  outlined={true}
+                  name={:home}
+                  class="text-gray-400 group-hover:text-gray-500 mr-3 flex-shrink-0 h-6 w-6"
+                /> Home
+              </.link>
+              <.link
+                navigate={Routes.scheduler_path(@socket, :index)}
+                class={"text-gray-700 hover:text-gray-900 group flex items-center px-2 py-2 text-sm font-medium rounded-md #{if @active_tab == :scheduler, do: "bg-gray-200", else: "hover:bg-gray-50"}"}
+              >
+                <.icon
+                  outlined={true}
                   name={:calendar}
                   class="text-gray-400 group-hover:text-gray-500 mr-3 flex-shrink-0 h-6 w-6"
                 /> Scheduler
               </.link>
               <.link
                 navigate="#"
-                class="text-gray-700 hover:text-gray-900 group flex items-center px-2 py-2 text-sm font-medium rounded-md hover:bg-gray-50"
+                class={"text-gray-700 hover:text-gray-900 group flex items-center px-2 py-2 text-sm font-medium rounded-md #{if @active_tab == :rooms, do: "bg-gray-200", else: "hover:bg-gray-50"}"}
               >
                 <.icon
+                  outlined={true}
                   name={:presentation_chart_bar}
                   class="text-gray-400 group-hover:text-gray-500 mr-3 flex-shrink-0 h-6 w-6"
                 /> Rooms
               </.link>
               <.link
                 navigate="#"
-                class="text-gray-700 hover:text-gray-900 group flex items-center px-2 py-2 text-sm font-medium rounded-md hover:bg-gray-50"
+                class={"text-gray-700 hover:text-gray-900 group flex items-center px-2 py-2 text-sm font-medium rounded-md #{if @active_tab == :desks, do: "bg-gray-200", else: "hover:bg-gray-50"}"}
               >
                 <.icon
+                  outlined={true}
                   name={:desktop_computer}
                   class="text-gray-400 group-hover:text-gray-500 mr-3 flex-shrink-0 h-6 w-6"
                 /> Desks
@@ -60,7 +73,7 @@
               <hr class="-mx-3" />
               <.link
                 navigate={Routes.admin_path(@socket, :users)}
-                class="text-gray-700 hover:text-gray-900 hover:bg-gray-50 group flex items-center px-2 py-2 text-sm font-medium rounded-md"
+                class={"text-gray-700 hover:text-gray-900 group flex items-center px-2 py-2 text-sm font-medium rounded-md #{if @active_tab == :admin, do: "bg-gray-200", else: "hover:bg-gray-50"}"}
               >
                 <.icon
                   name={:cog}

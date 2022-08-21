@@ -93,14 +93,14 @@ defmodule OverbookedWeb.Router do
     end
 
     live_session :authenticated,
-      on_mount: [{OverbookedWeb.UserAuth, :ensure_authenticated}] do
+      on_mount: [{OverbookedWeb.UserAuth, :ensure_authenticated}, OverbookedWeb.Nav] do
       live "/", HomeLive, :index
       live "/scheduler", SchedulerLive, :index
       live "/settings", UserSettingsLive, :index
     end
 
     live_session :admin,
-      on_mount: [{OverbookedWeb.UserAuth, :ensure_authenticated}] do
+      on_mount: [{OverbookedWeb.UserAuth, :ensure_authenticated}, OverbookedWeb.Nav] do
       live "/admin/users", AdminLive, :users
       live "/admin/desks", AdminLive, :desks
       live "/admin/rooms", AdminLive, :rooms
