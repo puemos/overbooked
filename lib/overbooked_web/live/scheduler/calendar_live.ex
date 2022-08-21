@@ -97,7 +97,7 @@ defmodule OverbookedWeb.SchedulerLive.Calendar do
     ~H"""
     <div class="flex flex-row space-x-1 items-center">
       <div class={"bg-#{@color}-300 h-2 w-2 rounded-full"}></div>
-      <div class="text-xs truncate">
+      <div class="text-xs truncate" title={"#{@user_name} at #{@resource_name}"}>
         <%= @user_name %> at <%= @resource_name %>
       </div>
     </div>
