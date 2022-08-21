@@ -1,13 +1,12 @@
 defmodule Overbooked.ResourcesTest do
   use Overbooked.DataCase
 
+  import Overbooked.ResourcesFixtures
+
   alias Overbooked.Resources
+  alias Overbooked.Resources.{Amenity, Resource}
 
   describe "resources" do
-    alias Overbooked.Resources.Resource
-
-    import Overbooked.ResourcesFixtures
-
     @invalid_attrs %{name: nil}
 
     test "list_resources/0 returns all resources" do
@@ -61,6 +60,72 @@ defmodule Overbooked.ResourcesTest do
     test "change_resource/1 returns a resource changeset" do
       resource = resource_fixture()
       assert %Ecto.Changeset{} = Resources.change_resource(resource)
+    end
+
+    test "update_resource_amenities/2 with valid data updates the resource" do
+      resource = resource_fixture()
+
+      {:ok, %Amenity{} = coffee_amenity} = Resources.create_amenity(%{count: 2, name: "coffee"})
+      {:ok, %Amenity{} = screen_amenity} = Resources.create_amenity(%{count: 1, name: "screen"})
+
+      assert {:ok, %Resource{} = resource} =
+               Resources.update_resource_amenities(resource, [coffee_amenity, screen_amenity])
+
+      resource = Overbooked.Repo.preload(resource, :amenities)
+
+      assert [coffee_amenity, screen_amenity] == resource.amenities
+    end
+  end
+
+  describe "amenities" do
+    @invalid_attrs %{count: nil, name: nil}
+
+    test "list_amenities/0 returns all amenities" do
+      amenity = amenity_fixture()
+      assert Resources.list_amenities() == [amenity]
+    end
+
+    test "get_amenity!/1 returns the amenity with given id" do
+      amenity = amenity_fixture()
+      assert Resources.get_amenity!(amenity.id) == amenity
+    end
+
+    test "create_amenity/1 with valid data creates a amenity" do
+      valid_attrs = %{count: 42, name: "some name"}
+
+      assert {:ok, %Amenity{} = amenity} = Resources.create_amenity(valid_attrs)
+      assert amenity.count == 42
+      assert amenity.name == "some name"
+    end
+
+    test "create_amenity/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Resources.create_amenity(@invalid_attrs)
+    end
+
+    test "update_amenity/2 with valid data updates the amenity" do
+      amenity = amenity_fixture()
+      update_attrs = %{count: 43, name: "some updated name"}
+
+      assert {:ok, %Amenity{} = amenity} = Resources.update_amenity(amenity, update_attrs)
+      assert amenity.count == 43
+      assert amenity.name == "some updated name"
+    end
+
+    test "update_amenity/2 with invalid data returns error changeset" do
+      amenity = amenity_fixture()
+      assert {:error, %Ecto.Changeset{}} = Resources.update_amenity(amenity, @invalid_attrs)
+      assert amenity == Resources.get_amenity!(amenity.id)
+    end
+
+    test "delete_amenity/1 deletes the amenity" do
+      amenity = amenity_fixture()
+      assert {:ok, %Amenity{}} = Resources.delete_amenity(amenity)
+      assert_raise Ecto.NoResultsError, fn -> Resources.get_amenity!(amenity.id) end
+    end
+
+    test "change_amenity/1 returns a amenity changeset" do
+      amenity = amenity_fixture()
+      assert %Ecto.Changeset{} = Resources.change_amenity(amenity)
     end
   end
 end

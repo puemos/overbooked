@@ -53,4 +53,19 @@ defmodule Overbooked.ResourcesFixtures do
 
     resource
   end
+
+  @doc """
+  Generate a amenity.
+  """
+  def amenity_fixture(attrs \\ %{}) do
+    {:ok, amenity} =
+      attrs
+      |> Enum.into(%{
+        count: 42,
+        name: "some name"
+      })
+      |> Overbooked.Resources.create_amenity()
+
+    amenity
+  end
 end

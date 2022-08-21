@@ -28,28 +28,6 @@ defmodule Overbooked.AccountsFixtures do
     user
   end
 
-  def admin_fixture() do
-    admin_email =
-      Overbooked.config([:admin_emails])
-      |> List.first()
-
-    {:ok, user} =
-      case Overbooked.Accounts.get_user_by_email(admin_email) do
-        %User{} = user ->
-          {:ok, user}
-
-        _ ->
-          %User{}
-          |> User.registration_changeset(%{
-            email: admin_email,
-            password: "admin"
-          })
-          |> Repo.insert()
-      end
-
-    user
-  end
-
   def extract_user_token(fun) do
     {:ok, captured_email} = fun.(&"[TOKEN]#{&1}[TOKEN]")
     [_, token | _] = String.split(captured_email.text_body, "[TOKEN]")

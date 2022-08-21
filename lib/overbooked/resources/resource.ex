@@ -8,6 +8,11 @@ defmodule Overbooked.Resources.Resource do
     field :booking_count, :integer, virtual: true
 
     has_many :bookings, Overbooked.Scheduler.Booking
+
+    many_to_many :amenities, Overbooked.Resources.Amenity,
+      join_through: Overbooked.Resources.ResourceAmenity,
+      on_replace: :delete
+
     belongs_to :resource_type, Overbooked.Resources.ResourceType
     timestamps()
   end
@@ -24,5 +29,12 @@ defmodule Overbooked.Resources.Resource do
         %Overbooked.Resources.ResourceType{} = resource_type
       ) do
     put_assoc(changeset, :resource_type, resource_type)
+  end
+
+  def put_amenities(
+        %Ecto.Changeset{} = changeset,
+        amenities
+      ) do
+    put_assoc(changeset, :amenities, amenities)
   end
 end
