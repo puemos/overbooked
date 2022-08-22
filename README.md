@@ -1,6 +1,10 @@
 # Overbooked
 
+<img width="1149" alt="image" src="https://user-images.githubusercontent.com/13174025/185867729-e2403b13-eb1e-4e61-90f4-8319e172cdbf.png">
+
 Overbooked is a self-hosted flexible workplace platform for indie co-working owners.
+
+Live demo: https://overbooked.fly.dev/
 
 ## Deploy
 
