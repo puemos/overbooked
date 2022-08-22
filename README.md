@@ -8,7 +8,7 @@ Live demo: [https://overbooked.fly.dev/](https://overbooked.fly.dev/)
 
 **Got 2 minutes?** Check out a video overview of our product:
 
-![](.gitbook/assets/image.png)
+![The Scheduler](.gitbook/assets/image.png)
 
 ### Guides: Jump right in
 
