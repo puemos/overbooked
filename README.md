@@ -4,10 +4,16 @@ Overbooked is a self-hosted flexible workplace platform for indie co-working own
 
 ## Deploy
 
+### Methods
+
+1. Clone repo, change configs, deploy to Fly.io
+2. Run docker image
+
 ### Configs
 
-1. ..
-2. ..
+1. Domain
+2. Email provider
+
 
 ## Features
 
@@ -22,7 +28,7 @@ Overbooked is a self-hosted flexible workplace platform for indie co-working own
 
 - [x] Resources' colors
 - [x] Resources' amenities
-- [x] Amenities' count
+- [ ] Amenities' count
 
 
 ### Admin
