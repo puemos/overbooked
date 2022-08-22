@@ -2,6 +2,8 @@
 
 Overbooked is a self-hosted flexible workplace platform for indie co-working owners.
 
+Live demo: [https://overbooked.fly.dev/](https://overbooked.fly.dev/)
+
 ## Getting Started
 
 **Got 2 minutes?** Check out a video overview of our product:
