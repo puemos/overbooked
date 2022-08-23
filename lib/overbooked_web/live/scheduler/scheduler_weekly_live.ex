@@ -18,7 +18,7 @@ defmodule OverbookedWeb.SchedulerWeeklyLive do
       |> Timex.to_naive_datetime()
 
     resources = Resources.list_resources()
-    selected_resource_id = Enum.at(resources, 0).id
+    resource_id = Enum.at(resources, 0).id
 
     bookings_hourly =
       Scheduler.list_bookings(from_date, to_date, Enum.at(resources, 0))
@@ -32,7 +32,7 @@ defmodule OverbookedWeb.SchedulerWeeklyLive do
      |> assign(from_date: from_date)
      |> assign(to_date: to_date)
      |> assign(resources: resources)
-     |> assign(selected_resource_id: selected_resource_id)
+     |> assign(resource_id: resource_id)
      |> assign(bookings_hourly: bookings_hourly)
      |> assign(changelog: changelog)}
   end
