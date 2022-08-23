@@ -1,9 +1,9 @@
-defmodule OverbookedWeb.SchedulerWeeklyLive do
+defmodule OverbookedWeb.ScheduleWeeklyLive do
   use OverbookedWeb, :live_view
 
   alias Overbooked.Resources
-  alias Overbooked.Scheduler
-  alias Overbooked.Scheduler.{Booking}
+  alias Overbooked.Schedule
+  alias Overbooked.Schedule.{Booking}
 
   @impl true
   def mount(_params, _session, socket) do
@@ -21,10 +21,10 @@ defmodule OverbookedWeb.SchedulerWeeklyLive do
     resource_id = Enum.at(resources, 0).id
 
     bookings_hourly =
-      Scheduler.list_bookings(from_date, to_date, Enum.at(resources, 0))
-      |> Scheduler.booking_groups(:hourly)
+      Schedule.list_bookings(from_date, to_date, Enum.at(resources, 0))
+      |> Schedule.booking_groups(:hourly)
 
-    changelog = Scheduler.change_booking(%Booking{})
+    changelog = Schedule.change_booking(%Booking{})
 
     {:ok,
      socket
@@ -40,21 +40,36 @@ defmodule OverbookedWeb.SchedulerWeeklyLive do
   @impl true
   def render(assigns) do
     ~H"""
-    <.header label="Scheduler" />
+    <.header label="Schedule">
+      <div class="flex flex-row space-x-2">
+        <.link
+          navigate={Routes.schedule_weekly_path(@socket, :index)}
+          class={"text-gray-700 hover:text-gray-900 group flex items-center px-2 py-1.5 text-sm font-medium rounded-md #{if @active_tab == :schedule_weekly, do: "bg-gray-200", else: "hover:bg-gray-50"}"}
+        >
+          Weekly
+        </.link>
+        <.link
+          navigate={Routes.schedule_monthly_path(@socket, :index)}
+          class={"text-gray-700 hover:text-gray-900 group flex items-center px-2 py-1.5 text-sm font-medium rounded-md #{if @active_tab == :schedule_monthly, do: "bg-gray-200", else: "hover:bg-gray-50"}"}
+        >
+          Monthly
+        </.link>
+      </div>
+    </.header>
     <.live_component
-      success_path={Routes.scheduler_weekly_path(@socket, :index)}
+      success_path={Routes.schedule_weekly_path(@socket, :index)}
       current_user={@current_user}
       is_admin={@is_admin}
       changelog={@changelog}
       resources={@resources}
       default_day={@default_day}
-      module={OverbookedWeb.SchedulerLive.BookingForm}
+      module={OverbookedWeb.ScheduleLive.BookingForm}
       id="booking-form"
     />
     <.page full={true}>
       <div class="w-full space-y-12">
         <div class="w-full">
-          <OverbookedWeb.SchedulerLive.Calendar.weekly
+          <OverbookedWeb.ScheduleLive.Calendar.weekly
             id="calendar"
             resources={@resources}
             bookings_hourly={@bookings_hourly}
@@ -103,8 +118,8 @@ defmodule OverbookedWeb.SchedulerWeeklyLive do
       end
 
     bookings_hourly =
-      Scheduler.list_bookings(from_date, to_date, resource)
-      |> Scheduler.booking_groups(:hourly)
+      Schedule.list_bookings(from_date, to_date, resource)
+      |> Schedule.booking_groups(:hourly)
 
     {:noreply,
      socket
@@ -122,7 +137,7 @@ defmodule OverbookedWeb.SchedulerWeeklyLive do
      socket
      |> push_patch(
        to:
-         Routes.scheduler_weekly_path(socket, :index, %{
+         Routes.schedule_weekly_path(socket, :index, %{
            to_date: Timex.format!(to_date, "{ISOdate}"),
            from_date: Timex.format!(from_date, "{ISOdate}"),
            resource_id: resource_id
@@ -146,7 +161,7 @@ defmodule OverbookedWeb.SchedulerWeeklyLive do
      socket
      |> push_patch(
        to:
-         Routes.scheduler_weekly_path(socket, :index, %{
+         Routes.schedule_weekly_path(socket, :index, %{
            to_date: Timex.format!(to_date, "{ISOdate}"),
            from_date: Timex.format!(from_date, "{ISOdate}"),
            resource_id: socket.assigns.resource_id
@@ -171,7 +186,7 @@ defmodule OverbookedWeb.SchedulerWeeklyLive do
      socket
      |> push_patch(
        to:
-         Routes.scheduler_weekly_path(socket, :index, %{
+         Routes.schedule_weekly_path(socket, :index, %{
            to_date: Timex.format!(to_date, "{ISOdate}"),
            from_date: Timex.format!(from_date, "{ISOdate}"),
            resource_id: socket.assigns.resource_id
@@ -196,7 +211,7 @@ defmodule OverbookedWeb.SchedulerWeeklyLive do
      socket
      |> push_patch(
        to:
-         Routes.scheduler_weekly_path(socket, :index, %{
+         Routes.schedule_weekly_path(socket, :index, %{
            to_date: Timex.format!(to_date, "{ISOdate}"),
            from_date: Timex.format!(from_date, "{ISOdate}"),
            resource_id: socket.assigns.resource_id

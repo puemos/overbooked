@@ -1,12 +1,12 @@
-defmodule Overbooked.Scheduler do
+defmodule Overbooked.Schedule do
   @moduledoc """
-  The Scheduler context.
+  The Schedule context.
   """
 
   import Ecto.Query, warn: false
   alias Overbooked.Repo
 
-  alias Overbooked.Scheduler.Booking
+  alias Overbooked.Schedule.Booking
   alias Overbooked.Resources.Resource
   alias Overbooked.Accounts.User
 

@@ -10,7 +10,7 @@ defmodule OverbookedWeb.UserResetPasswordLive do
 
   def render(assigns) do
     ~H"""
-    <.header label="Reset password" />
+    <.header label="Reset password"></.header>
     <.page>
       <div class="max-w-md mx-auto mt-6">
         <.form

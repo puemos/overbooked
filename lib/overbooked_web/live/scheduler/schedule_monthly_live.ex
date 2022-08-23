@@ -1,9 +1,9 @@
-defmodule OverbookedWeb.SchedulerLive do
+defmodule OverbookedWeb.ScheduleMonthlyLive do
   use OverbookedWeb, :live_view
 
   alias Overbooked.Resources
-  alias Overbooked.Scheduler
-  alias Overbooked.Scheduler.{Booking}
+  alias Overbooked.Schedule
+  alias Overbooked.Schedule.{Booking}
 
   @impl true
   def mount(_params, _session, socket) do
@@ -19,7 +19,7 @@ defmodule OverbookedWeb.SchedulerLive do
 
     resources = Resources.list_resources()
 
-    changelog = Scheduler.change_booking(%Booking{})
+    changelog = Schedule.change_booking(%Booking{})
 
     {:ok,
      socket
@@ -34,10 +34,26 @@ defmodule OverbookedWeb.SchedulerLive do
   @impl true
   def render(assigns) do
     ~H"""
-    <.header label="Scheduler" />
+    <.header label="Schedule">
+      <div class="flex flex-row space-x-2">
+        <.link
+          navigate={Routes.schedule_weekly_path(@socket, :index)}
+          class={"text-gray-700 hover:text-gray-900 group flex items-center px-2 py-1.5 text-sm font-medium rounded-md #{if @active_tab == :schedule_weekly, do: "bg-gray-200", else: "hover:bg-gray-50"}"}
+        >
+          Weekly
+        </.link>
+        <.link
+          navigate={Routes.schedule_monthly_path(@socket, :index)}
+          class={"text-gray-700 hover:text-gray-900 group flex items-center px-2 py-1.5 text-sm font-medium rounded-md #{if @active_tab == :schedule_monthly, do: "bg-gray-200", else: "hover:bg-gray-50"}"}
+        >
+          Monthly
+        </.link>
+      </div>
+    </.header>
+
     <.live_component
       success_path={
-        Routes.scheduler_path(@socket, :index, %{
+        Routes.schedule_monthly_path(@socket, :index, %{
           to_date: Timex.format!(@to_date, "{ISOdate}"),
           from_date: Timex.format!(@from_date, "{ISOdate}")
         })
@@ -47,13 +63,13 @@ defmodule OverbookedWeb.SchedulerLive do
       changelog={@changelog}
       resources={@resources}
       default_day={@default_day}
-      module={OverbookedWeb.SchedulerLive.BookingForm}
+      module={OverbookedWeb.ScheduleLive.BookingForm}
       id="booking-form"
     />
     <.page full={true}>
       <div class="w-full space-y-12">
         <div class="w-full">
-          <OverbookedWeb.SchedulerLive.Calendar.monthly
+          <OverbookedWeb.ScheduleLive.Calendar.monthly
             id="calendar"
             bookings_daily={@bookings_daily}
             beginning_of_month={@from_date}
@@ -92,8 +108,8 @@ defmodule OverbookedWeb.SchedulerLive do
       end
 
     bookings_daily =
-      Scheduler.list_bookings(from_date, to_date)
-      |> Scheduler.booking_groups(:daily)
+      Schedule.list_bookings(from_date, to_date)
+      |> Schedule.booking_groups(:daily)
 
     {:noreply,
      socket
@@ -118,7 +134,7 @@ defmodule OverbookedWeb.SchedulerLive do
      socket
      |> push_patch(
        to:
-         Routes.scheduler_path(socket, :index, %{
+         Routes.schedule_monthly_path(socket, :index, %{
            to_date: Timex.format!(to_date, "{ISOdate}"),
            from_date: Timex.format!(from_date, "{ISOdate}")
          })
@@ -142,7 +158,7 @@ defmodule OverbookedWeb.SchedulerLive do
      socket
      |> push_patch(
        to:
-         Routes.scheduler_path(socket, :index, %{
+         Routes.schedule_monthly_path(socket, :index, %{
            to_date: Timex.format!(to_date, "{ISOdate}"),
            from_date: Timex.format!(from_date, "{ISOdate}")
          })
@@ -177,7 +193,7 @@ defmodule OverbookedWeb.SchedulerLive do
      socket
      |> push_patch(
        to:
-         Routes.scheduler_path(socket, :index, %{
+         Routes.schedule_monthly_path(socket, :index, %{
            to_date: Timex.format!(to_date, "{ISOdate}"),
            from_date: Timex.format!(from_date, "{ISOdate}")
          })
@@ -185,9 +201,9 @@ defmodule OverbookedWeb.SchedulerLive do
   end
 
   def handle_event("delete", %{"id" => id}, socket) do
-    booking = Scheduler.get_booking!(id)
+    booking = Schedule.get_booking!(id)
 
-    case Scheduler.delete_booking(booking, socket.assigns.current_user) do
+    case Schedule.delete_booking(booking, socket.assigns.current_user) do
       {:ok, _} -> {:noreply, socket}
     end
   end

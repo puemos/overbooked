@@ -1,4 +1,4 @@
-defmodule OverbookedWeb.SchedulerLive.Calendar do
+defmodule OverbookedWeb.ScheduleLive.Calendar do
   use Phoenix.Component
 
   import OverbookedWeb.LiveHelpers

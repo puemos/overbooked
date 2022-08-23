@@ -37,14 +37,14 @@
                 /> Home
               </.link>
               <.link
-                navigate={Routes.scheduler_path(@socket, :index)}
-                class={"text-gray-700 hover:text-gray-900 group flex items-center px-2 py-2 text-sm font-medium rounded-md #{if @active_tab == :scheduler, do: "bg-gray-200", else: "hover:bg-gray-50"}"}
+                navigate={Routes.schedule_monthly_path(@socket, :index)}
+                class={"text-gray-700 hover:text-gray-900 group flex items-center px-2 py-2 text-sm font-medium rounded-md #{if @active_tab == :schedule_monthly, do: "bg-gray-200", else: "hover:bg-gray-50"}"}
               >
                 <.icon
                   outlined={true}
                   name={:calendar}
                   class="text-gray-400 group-hover:text-gray-500 mr-3 flex-shrink-0 h-6 w-6"
-                /> Scheduler
+                /> Schedule
               </.link>
               <.link
                 navigate={Routes.rooms_path(@socket, :index)}

@@ -16,7 +16,7 @@ defmodule OverbookedWeb.UserSettingsLive do
 
   def render(assigns) do
     ~H"""
-    <.header label="Profile Settings" />
+    <.header label="Profile Settings"></.header>
 
     <.page>
       <div class="max-w-md mx-auto mt-6">

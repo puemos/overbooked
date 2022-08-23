@@ -7,7 +7,7 @@ defmodule Overbooked.Resources.Resource do
     field :color, :string, default: "gray"
     field :booking_count, :integer, virtual: true
 
-    has_many :bookings, Overbooked.Scheduler.Booking
+    has_many :bookings, Overbooked.Schedule.Booking
 
     many_to_many :amenities, Overbooked.Resources.Amenity,
       join_through: Overbooked.Resources.ResourceAmenity,

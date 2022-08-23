@@ -18,34 +18,35 @@ defmodule OverbookedWeb.AdminLive do
   @impl true
   def render(assigns) do
     ~H"""
-    <.header label="Admin" />
-    <div class="flex flex-row">
-      <div class="space-y-2 w-60 p-6">
+    <.header label="Admin">
+      <div class="flex flex-row space-x-2">
         <.link
           navigate={Routes.admin_path(@socket, :users)}
-          class={"text-gray-700 hover:text-gray-900 group flex items-center px-2 py-2 text-sm font-medium rounded-md #{if @live_action == :users, do: "bg-gray-200", else: "hover:bg-gray-50"}"}
+          class={"text-gray-700 hover:text-gray-900 group flex items-center px-2 py-1.5 text-sm font-medium rounded-md #{if @live_action == :users, do: "bg-gray-200", else: "hover:bg-gray-50"}"}
         >
           Users
         </.link>
         <.link
           navigate={Routes.admin_path(@socket, :rooms)}
-          class={"text-gray-700 hover:text-gray-900 group flex items-center px-2 py-2 text-sm font-medium rounded-md #{if @live_action == :rooms, do: "bg-gray-200", else: "hover:bg-gray-50"}"}
+          class={"text-gray-700 hover:text-gray-900 group flex items-center px-2 py-1.5 text-sm font-medium rounded-md #{if @live_action == :rooms, do: "bg-gray-200", else: "hover:bg-gray-50"}"}
         >
           Rooms
         </.link>
         <.link
           navigate={Routes.admin_path(@socket, :desks)}
-          class={"text-gray-700 hover:text-gray-900 group flex items-center px-2 py-2 text-sm font-medium rounded-md #{if @live_action == :desks, do: "bg-gray-200", else: "hover:bg-gray-50"}"}
+          class={"text-gray-700 hover:text-gray-900 group flex items-center px-2 py-1.5 text-sm font-medium rounded-md #{if @live_action == :desks, do: "bg-gray-200", else: "hover:bg-gray-50"}"}
         >
           Desks
         </.link>
         <.link
           navigate={Routes.admin_path(@socket, :amenities)}
-          class={"text-gray-700 hover:text-gray-900 group flex items-center px-2 py-2 text-sm font-medium rounded-md #{if @live_action == :amenities, do: "bg-gray-200", else: "hover:bg-gray-50"}"}
+          class={"text-gray-700 hover:text-gray-900 group flex items-center px-2 py-1.5 text-sm font-medium rounded-md #{if @live_action == :amenities, do: "bg-gray-200", else: "hover:bg-gray-50"}"}
         >
           Amenities
         </.link>
       </div>
+    </.header>
+    <.page>
       <%= if @live_action == :users do %>
         <.live_component
           current_user={@current_user}
@@ -78,7 +79,7 @@ defmodule OverbookedWeb.AdminLive do
           id="admin-amenities"
         />
       <% end %>
-    </div>
+    </.page>
     """
   end
 end

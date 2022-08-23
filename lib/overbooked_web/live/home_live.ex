@@ -2,8 +2,8 @@ defmodule OverbookedWeb.HomeLive do
   use OverbookedWeb, :live_view
 
   alias Overbooked.Resources
-  alias Overbooked.Scheduler
-  alias Overbooked.Scheduler.{Booking}
+  alias Overbooked.Schedule
+  alias Overbooked.Schedule.{Booking}
 
   @impl true
   def mount(_params, _session, socket) do
@@ -18,11 +18,11 @@ defmodule OverbookedWeb.HomeLive do
 
     daterange = %{to_date: to_date, from_date: from_date}
 
-    bookings = Scheduler.list_bookings(from_date, to_date, socket.assigns.current_user)
+    bookings = Schedule.list_bookings(from_date, to_date, socket.assigns.current_user)
 
     resources = Resources.list_resources()
 
-    changelog = Scheduler.change_booking(%Booking{})
+    changelog = Schedule.change_booking(%Booking{})
 
     {:ok,
      socket
@@ -36,7 +36,7 @@ defmodule OverbookedWeb.HomeLive do
   @impl true
   def render(assigns) do
     ~H"""
-    <.header label="Home" />
+    <.header label="Home"></.header>
 
     <.live_component
       success_path={Routes.home_path(@socket, :index)}
@@ -45,7 +45,7 @@ defmodule OverbookedWeb.HomeLive do
       changelog={@changelog}
       resources={@resources}
       default_day={@default_day}
-      module={OverbookedWeb.SchedulerLive.BookingForm}
+      module={OverbookedWeb.ScheduleLive.BookingForm}
       id="booking-form"
     />
 
@@ -133,7 +133,7 @@ defmodule OverbookedWeb.HomeLive do
     %{"from_date" => from_date, "to_date" => to_date} = daterange_params
 
     bookings =
-      Scheduler.list_bookings(
+      Schedule.list_bookings(
         Timex.parse!(from_date, "{YYYY}-{M}-{D}"),
         Timex.parse!(to_date, "{YYYY}-{M}-{D}"),
         socket.assigns.current_user
@@ -152,9 +152,9 @@ defmodule OverbookedWeb.HomeLive do
   end
 
   def handle_event("delete", %{"id" => id}, socket) do
-    booking = Scheduler.get_booking!(id)
+    booking = Schedule.get_booking!(id)
 
-    case Scheduler.delete_booking(booking, socket.assigns.current_user) do
+    case Schedule.delete_booking(booking, socket.assigns.current_user) do
       {:ok, _} -> {:noreply, socket}
     end
   end

@@ -1,9 +1,9 @@
-defmodule OverbookedWeb.SchedulerLive.BookingForm do
+defmodule OverbookedWeb.ScheduleLive.BookingForm do
   use OverbookedWeb, :live_component
 
   alias Overbooked.Resources
-  alias Overbooked.Scheduler
-  alias Overbooked.Scheduler.{Booking}
+  alias Overbooked.Schedule
+  alias Overbooked.Schedule.{Booking}
 
   @impl true
   def render(assigns) do
@@ -96,7 +96,7 @@ defmodule OverbookedWeb.SchedulerLive.BookingForm do
   def handle_event("validate", %{"booking" => booking_params}, socket) do
     changeset =
       %Booking{}
-      |> Scheduler.change_booking(booking_params)
+      |> Schedule.change_booking(booking_params)
       |> Map.put(:action, :insert)
 
     {:noreply, assign(socket, changeset: changeset)}
@@ -115,7 +115,7 @@ defmodule OverbookedWeb.SchedulerLive.BookingForm do
 
     booking_params = %{start_at: start_at, end_at: end_at}
 
-    case Scheduler.book_resource(resource, socket.assigns.current_user, booking_params) do
+    case Schedule.book_resource(resource, socket.assigns.current_user, booking_params) do
       {:ok, _booking} ->
         hide_modal("#{socket.assigns.id}-modal")
 

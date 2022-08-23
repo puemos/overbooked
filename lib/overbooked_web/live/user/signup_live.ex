@@ -12,7 +12,7 @@ defmodule OverbookedWeb.SignupLive do
 
   def render(assigns) do
     ~H"""
-    <.header label="Sign up" />
+    <.header label="Sign up"></.header>
     <.page>
       <div class="max-w-md mx-auto mt-6">
         <.form

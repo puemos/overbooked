@@ -1,6 +1,6 @@
 defmodule OverbookedWeb.RoomsLive do
   use OverbookedWeb, :live_view
-  alias Overbooked.Scheduler
+  alias Overbooked.Schedule
   alias Overbooked.Resources
   alias Overbooked.Resources.{Resource}
   @impl true
@@ -17,7 +17,7 @@ defmodule OverbookedWeb.RoomsLive do
   @impl true
   def render(assigns) do
     ~H"""
-    <.header label="Rooms" />
+    <.header label="Rooms"></.header>
 
     <.page>
       <div class="w-full space-y-12">
@@ -28,7 +28,7 @@ defmodule OverbookedWeb.RoomsLive do
                 name={room.name}
                 color={room.color}
                 amenities={room.amenities}
-                busy={Scheduler.resource_busy?(room, Timex.now(), Timex.now())}
+                busy={Schedule.resource_busy?(room, Timex.now(), Timex.now())}
               >
               </.room_card>
             <% end %>

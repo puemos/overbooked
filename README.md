@@ -21,7 +21,7 @@ Live demo: https://overbooked.fly.dev/
 
 ## Features
 
-### Scheduler
+### Schedule
 
 - [x] Block unavalible resources
 - [x] Monthly view

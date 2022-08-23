@@ -1,4 +1,4 @@
-defmodule Overbooked.Scheduler.Booking do
+defmodule Overbooked.Schedule.Booking do
   use Ecto.Schema
   import Ecto.Changeset
 
