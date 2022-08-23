@@ -179,17 +179,6 @@ defmodule OverbookedWeb.SchedulerWeeklyLive do
      )}
   end
 
-  def handle_event("day-modal", %{"date" => date}, socket) do
-    default_day =
-      date
-      |> Timex.parse!("{ISO:Extended:Z}")
-      |> Timex.format!("{YYYY}-{0M}-{0D}")
-
-    {:noreply,
-     socket
-     |> assign(default_day: default_day)}
-  end
-
   def handle_event("next_week", _params, socket) do
     from_date =
       socket.assigns.from_date
@@ -203,22 +192,15 @@ defmodule OverbookedWeb.SchedulerWeeklyLive do
       |> Timex.end_of_week()
       |> Timex.to_naive_datetime()
 
-    bookings_hourly =
-      Scheduler.list_bookings(from_date, to_date)
-      |> Scheduler.booking_groups(:hourly)
-
     {:noreply,
      socket
-     |> assign(from_date: from_date)
-     |> assign(to_date: to_date)
-     |> assign(bookings_hourly: bookings_hourly)}
-  end
-
-  def handle_event("delete", %{"id" => id}, socket) do
-    booking = Scheduler.get_booking!(id)
-
-    case Scheduler.delete_booking(booking, socket.assigns.current_user) do
-      {:ok, _} -> {:noreply, socket}
-    end
+     |> push_patch(
+       to:
+         Routes.scheduler_weekly_path(socket, :index, %{
+           to_date: Timex.format!(to_date, "{ISOdate}"),
+           from_date: Timex.format!(from_date, "{ISOdate}"),
+           resource_id: socket.assigns.resource_id
+         })
+     )}
   end
 end
