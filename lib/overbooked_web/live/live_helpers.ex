@@ -14,6 +14,7 @@ defmodule OverbookedWeb.LiveHelpers do
 
   def from_to_datetime(from_date, to_date) do
     same_year = Timex.compare(from_date, to_date, :year) == 0
+    same_month = Timex.compare(from_date, to_date, :month) == 0
     same_day = Timex.compare(from_date, to_date, :day) == 0
 
     {:ok, from_date_str} =
@@ -22,7 +23,7 @@ defmodule OverbookedWeb.LiveHelpers do
     {:ok, to_date_str} =
       Timex.format(
         to_date,
-        "#{if !same_year, do: "{YYYY}"} #{if same_day, do: "{h24}:{m}", else: "{Mshort} {D} {h24}:{m}"}"
+        "#{if !same_year, do: "{YYYY}"} #{if !same_month, do: "{Mshort}"} #{if same_day, do: "{h24}:{m}", else: "{D} {h24}:{m}"}"
       )
 
     "#{from_date_str} - #{to_date_str}"
@@ -604,9 +605,11 @@ defmodule OverbookedWeb.LiveHelpers do
     """
   end
 
+  attr :full, :boolean, default: false
+
   def page(assigns) do
     ~H"""
-    <div class="px-4 py-4 sm:px-6 lg:px-8 max-w-4xl w-full mx-auto">
+    <div class={"px-4 py-4 sm:px-6 lg:px-8 w-full #{if !@full, do: "mx-auto max-w-4xl"}"}>
       <%= render_slot(@inner_block) %>
     </div>
     """

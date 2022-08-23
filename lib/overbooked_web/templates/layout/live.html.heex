@@ -2,7 +2,8 @@
 <div class="flex flex-shrink-0" role="region">
   <div class="flex flex-col w-64 border-r border-gray-200 pt-5 bg-gray-100">
     <div class="flex items-center flex-shrink-0 px-6">
-      <.link navigate={Routes.home_path(@socket, :index)}>
+      <.link class="flex items-center space-x-2" navigate={Routes.home_path(@socket, :index)}>
+        <img class="w-8" src={Routes.static_path(@socket, "/images/logo.png")} />
         <span class="h-8 w-auto text-2xl ml-1 font-bold">
           Overbooked
         </span>

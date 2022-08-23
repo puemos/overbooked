@@ -88,8 +88,6 @@ defmodule Overbooked.Resources do
 
     amenities = from(a in Amenity, where: a.id in ^amenities_id_list) |> Repo.all()
 
-    IO.inspect(amenities)
-
     %Resource{}
     |> Resource.changeset(attrs)
     |> Resource.put_amenities(amenities)
