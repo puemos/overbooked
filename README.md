@@ -1,6 +1,6 @@
-# Overbooked
+# 🍚 Overbooked
 
-<img width="1149" alt="image" src="https://user-images.githubusercontent.com/13174025/185867729-e2403b13-eb1e-4e61-90f4-8319e172cdbf.png">
+<img width="500" alt="image" src="https://user-images.githubusercontent.com/13174025/186359925-6b92062f-51b7-4858-8cd7-d47423897c05.png">
 
 Overbooked is a self-hosted flexible workplace platform for indie co-working owners.
 
@@ -18,14 +18,13 @@ Live demo: https://overbooked.fly.dev/
 1. Domain
 2. Email provider
 
-
 ## Features
 
 ### Schedule
 
 - [x] Block unavalible resources
 - [x] Monthly view
-- [ ] Weekly view
+- [x] Weekly view
 - [ ] Search avalible resources
 
 ### Rooms and Desks
@@ -42,6 +41,7 @@ Live demo: https://overbooked.fly.dev/
 - [x] Manage rooms and desks
 - [x] Manage amenities
 - [x] Invite and manage users
+- [ ] Edit amenities and resources
 
 #### Integrations
 
