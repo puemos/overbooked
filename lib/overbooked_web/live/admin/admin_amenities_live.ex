@@ -64,7 +64,7 @@ defmodule OverbookedWeb.AdminAmenitiesLive do
               rows={@amenities}
               row_id={fn amenity -> "amenity-#{amenity.id}" end}
             >
-              <:col :let={amenity} label="Name" width="w-36"><%= amenity.name %></:col>
+              <:col :let={amenity} label="Name" width="w-52"><%= amenity.name %></:col>
 
               <:col :let={amenity} label="">
                 <div class="w-full flex flex-row-reverse space-x-2 space-x-reverse">
