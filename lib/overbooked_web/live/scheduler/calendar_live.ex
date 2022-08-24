@@ -108,6 +108,7 @@ defmodule OverbookedWeb.ScheduleLive.Calendar do
   end
 
   def weekday(%{date: date, bookings_hourly: bookings_hourly} = assigns) do
+    older = Timex.compare(Timex.today(), date, :day) == 1
     is_today = Timex.compare(Timex.today(), date, :day) == 0
     weekday = Timex.weekday(date, :monday)
     yearday = Timex.day(date)
@@ -132,12 +133,13 @@ defmodule OverbookedWeb.ScheduleLive.Calendar do
 
     ~H"""
     <button
+      disabled={older}
       phx-click={show_modal("a-#{@yearday}-modal")}
       class={"#{if is_today, do: "border-purple-500"} grid"}
     >
       <div class="flex flex-col mt-2 w-full border-l">
         <%= for hour <- @hours_of_day do %>
-          <div class={"#{if round_hour?(hour), do: "border-t"} h-3 w-full"}>
+          <div class={"#{if round_hour?(hour), do: "border-t"} #{if older, do: "bg-gray-50", else: "hover:bg-gray-100"} h-3 w-full"}>
             <%= for {_, booking} <- booking_by_hour(@bookings_hourly, hour) do %>
               <div class={"bg-#{booking.resource.color}-300 h-full w-full"}></div>
             <% end %>
@@ -149,6 +151,7 @@ defmodule OverbookedWeb.ScheduleLive.Calendar do
   end
 
   def day(%{index: index, date: date} = assigns) do
+    older = Timex.compare(Timex.today(), date, :day) == 1
     is_today = Timex.compare(Timex.today(), date, :day) == 0
     weekday = Timex.weekday(date, :monday)
     yearday = Timex.day(date)
@@ -163,8 +166,9 @@ defmodule OverbookedWeb.ScheduleLive.Calendar do
 
     ~H"""
     <button
+      disabled={older}
       phx-click={show_modal("a-#{@yearday}-modal")}
-      class={"#{if index == 0, do: "col-start-#{@weekday}"} #{if is_today, do: "border-purple-500 border-2"} hover:bg-gray-100 overflow-hidden h-32 border flex flex-col justify-start items-center text-center"}
+      class={"#{if index == 0, do: "col-start-#{@weekday}"} #{if is_today, do: "border-purple-500 border-2"} #{if older, do: "bg-gray-50", else: "hover:bg-gray-100"} overflow-hidden h-32 border flex flex-col justify-start items-center text-center"}
     >
       <div class="text-gray-400 font-bold mt-2"><%= @text %></div>
       <div class="flex flex-col space-y-1 mt-2 w-full px-1">
@@ -209,7 +213,7 @@ defmodule OverbookedWeb.ScheduleLive.Calendar do
     <div class="flex flex-row space-x-1 items-center">
       <div class={"bg-#{@color}-300 h-2 w-2 rounded-full"}></div>
       <div class="text-xs truncate" title={"#{@user_name} at #{@resource_name}"}>
-        <%= @user_name %> at <%= @resource_name %>
+        <%= String.capitalize(@user_name) %> at <%= String.capitalize(@resource_name) %>
       </div>
     </div>
     """
@@ -223,7 +227,7 @@ defmodule OverbookedWeb.ScheduleLive.Calendar do
         <%= @time %>
       </div>
       <div class="text-sm truncate">
-        <%= @user_name %> at <%= @resource_name %>
+        <%= String.capitalize(@user_name) %> at <%= String.capitalize(@resource_name) %>
       </div>
     </div>
     """
