@@ -12,7 +12,7 @@ defmodule OverbookedWeb.LoginLive do
     ~H"""
     <.header label="Log in"></.header>
     <.page>
-      <div class="max-w-md mx-auto mt-6">
+      <div class="max-w-md mt-6">
         <.form
           :let={f}
           action={Routes.user_session_path(@socket, :create)}

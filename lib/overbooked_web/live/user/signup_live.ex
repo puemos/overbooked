@@ -14,7 +14,7 @@ defmodule OverbookedWeb.SignupLive do
     ~H"""
     <.header label="Sign up"></.header>
     <.page>
-      <div class="max-w-md mx-auto mt-6">
+      <div class="max-w-md mt-6">
         <.form
           :let={f}
           for={@changeset}

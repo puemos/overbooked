@@ -19,67 +19,54 @@ defmodule OverbookedWeb.AdminLive do
   def render(assigns) do
     ~H"""
     <.header label="Admin">
-      <div class="flex flex-row space-x-2">
-        <.link
-          navigate={Routes.admin_path(@socket, :users)}
-          class={"text-gray-700 hover:text-gray-900 group flex items-center px-2 py-1.5 text-sm font-medium rounded-md #{if @live_action == :users, do: "bg-gray-200", else: "hover:bg-gray-50"}"}
-        >
+      <.tabs>
+        <:link active={@live_action == :users} navigate={Routes.admin_path(@socket, :users)}>
           Users
-        </.link>
-        <.link
-          navigate={Routes.admin_path(@socket, :rooms)}
-          class={"text-gray-700 hover:text-gray-900 group flex items-center px-2 py-1.5 text-sm font-medium rounded-md #{if @live_action == :rooms, do: "bg-gray-200", else: "hover:bg-gray-50"}"}
-        >
+        </:link>
+        <:link active={@live_action == :rooms} navigate={Routes.admin_path(@socket, :rooms)}>
           Rooms
-        </.link>
-        <.link
-          navigate={Routes.admin_path(@socket, :desks)}
-          class={"text-gray-700 hover:text-gray-900 group flex items-center px-2 py-1.5 text-sm font-medium rounded-md #{if @live_action == :desks, do: "bg-gray-200", else: "hover:bg-gray-50"}"}
-        >
+        </:link>
+        <:link active={@live_action == :desks} navigate={Routes.admin_path(@socket, :desks)}>
           Desks
-        </.link>
-        <.link
-          navigate={Routes.admin_path(@socket, :amenities)}
-          class={"text-gray-700 hover:text-gray-900 group flex items-center px-2 py-1.5 text-sm font-medium rounded-md #{if @live_action == :amenities, do: "bg-gray-200", else: "hover:bg-gray-50"}"}
-        >
+        </:link>
+        <:link active={@live_action == :amenities} navigate={Routes.admin_path(@socket, :amenities)}>
           Amenities
-        </.link>
-      </div>
+        </:link>
+      </.tabs>
     </.header>
-    <.page>
-      <%= if @live_action == :users do %>
-        <.live_component
-          current_user={@current_user}
-          is_admin={@is_admin}
-          module={OverbookedWeb.AdminUsersLive}
-          id="admin-users"
-        />
-      <% end %>
-      <%= if @live_action == :rooms do %>
-        <.live_component
-          current_user={@current_user}
-          is_admin={@is_admin}
-          module={OverbookedWeb.AdminRoomsLive}
-          id="admin-rooms"
-        />
-      <% end %>
-      <%= if @live_action == :desks do %>
-        <.live_component
-          current_user={@current_user}
-          is_admin={@is_admin}
-          module={OverbookedWeb.AdminDesksLive}
-          id="admin-desks"
-        />
-      <% end %>
-      <%= if @live_action == :amenities do %>
-        <.live_component
-          current_user={@current_user}
-          is_admin={@is_admin}
-          module={OverbookedWeb.AdminAmenitiesLive}
-          id="admin-amenities"
-        />
-      <% end %>
-    </.page>
+
+    <%= if @live_action == :users do %>
+      <.live_component
+        current_user={@current_user}
+        is_admin={@is_admin}
+        module={OverbookedWeb.AdminUsersLive}
+        id="admin-users"
+      />
+    <% end %>
+    <%= if @live_action == :rooms do %>
+      <.live_component
+        current_user={@current_user}
+        is_admin={@is_admin}
+        module={OverbookedWeb.AdminRoomsLive}
+        id="admin-rooms"
+      />
+    <% end %>
+    <%= if @live_action == :desks do %>
+      <.live_component
+        current_user={@current_user}
+        is_admin={@is_admin}
+        module={OverbookedWeb.AdminDesksLive}
+        id="admin-desks"
+      />
+    <% end %>
+    <%= if @live_action == :amenities do %>
+      <.live_component
+        current_user={@current_user}
+        is_admin={@is_admin}
+        module={OverbookedWeb.AdminAmenitiesLive}
+        id="admin-amenities"
+      />
+    <% end %>
     """
   end
 end

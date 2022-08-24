@@ -14,7 +14,7 @@ defmodule OverbookedWeb.UserResendConfirmationLive do
     ~H"""
     <.header label="Resend confirmation instructions"></.header>
     <.page>
-      <div class="max-w-md mx-auto mt-6">
+      <div class="max-w-md mt-6">
         <.form :let={f} for={:user} phx-submit={:resend} class="flex flex-col space-y-4">
           <div class="">
             <label for="email" class="block text-sm font-medium text-gray-700">

@@ -19,7 +19,7 @@ defmodule OverbookedWeb.UserSettingsLive do
     <.header label="Profile Settings"></.header>
 
     <.page>
-      <div class="max-w-md mx-auto mt-6">
+      <div class="max-w-md mt-6">
         <h3>
           Change profile
         </h3>

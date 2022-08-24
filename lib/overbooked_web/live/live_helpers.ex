@@ -591,13 +591,32 @@ defmodule OverbookedWeb.LiveHelpers do
     """
   end
 
+  attr :link, :list, default: []
+
+  def tabs(assigns) do
+    ~H"""
+    <div class="flex flex-row space-x-2">
+      <%= for link <- @link do %>
+        <.link
+          tabindex="-1"
+          role="menuitem"
+          class={"#{if link[:active], do: "underline text-gray-700", else: "text-gray-500 hover:text-gray-700"} transition-colors block decoration-purple-300 decoration-[3px] underline-offset-[14px] text-sm font-medium focus:outline-none focus:ring-0 focus:ring-offset-0 focus:ring-offset-gray-100 focus:ring-purple-500"}
+          {link}
+        >
+          &nbsp; <%= render_slot(link) %> &nbsp;
+        </.link>
+      <% end %>
+    </div>
+    """
+  end
+
   attr :label, :string
 
   def header(assigns) do
     ~H"""
-    <div class="border-b border-gray-200 px-4 py-4 sm:flex sm:items-center sm:justify-between sm:px-6 lg:px-8 sm:h-16">
+    <div class="border-b bg-white sticky top-0 border-gray-200 px-4 pt-4 pb-1 sm:flex sm:items-center sm:justify-between sm:px-6 lg:px-8 mx-auto">
       <div class="min-w-0 mr-6">
-        <h1 tabindex="-1">
+        <h1 tabindex="-1" class="text-3xl">
           <%= @label %>
         </h1>
       </div>

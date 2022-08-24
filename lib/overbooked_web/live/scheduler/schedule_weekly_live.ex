@@ -41,20 +41,20 @@ defmodule OverbookedWeb.ScheduleWeeklyLive do
   def render(assigns) do
     ~H"""
     <.header label="Schedule">
-      <div class="flex flex-row space-x-2">
-        <.link
-          navigate={Routes.schedule_weekly_path(@socket, :index)}
-          class={"text-gray-700 hover:text-gray-900 group flex items-center px-2 py-1.5 text-sm font-medium rounded-md #{if @active_tab == :schedule_weekly, do: "bg-gray-200", else: "hover:bg-gray-50"}"}
-        >
-          Weekly
-        </.link>
-        <.link
+      <.tabs>
+        <:link
+          active={@active_tab == :schedule_monthly}
           navigate={Routes.schedule_monthly_path(@socket, :index)}
-          class={"text-gray-700 hover:text-gray-900 group flex items-center px-2 py-1.5 text-sm font-medium rounded-md #{if @active_tab == :schedule_monthly, do: "bg-gray-200", else: "hover:bg-gray-50"}"}
         >
           Monthly
-        </.link>
-      </div>
+        </:link>
+        <:link
+          active={@active_tab == :schedule_weekly}
+          navigate={Routes.schedule_weekly_path(@socket, :index)}
+        >
+          Weekly
+        </:link>
+      </.tabs>
     </.header>
     <.live_component
       success_path={Routes.schedule_weekly_path(@socket, :index)}
