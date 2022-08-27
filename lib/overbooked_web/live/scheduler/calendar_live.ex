@@ -25,9 +25,9 @@ defmodule OverbookedWeb.ScheduleLive.Calendar do
                 required={true}
               />
             </.form>
+            <.button phx-click="prev_week">Previous week</.button>
             <.button phx-click="today">Today</.button>
-            <.button phx-click="prev_week">Prev</.button>
-            <.button phx-click="next_week">Next</.button>
+            <.button phx-click="next_week">Next week</.button>
           </div>
         </div>
       </div>
@@ -62,9 +62,9 @@ defmodule OverbookedWeb.ScheduleLive.Calendar do
             <%= Timex.format!(@beginning_of_month, "{Mshort} {YYYY}") %>
           </div>
           <div class="flex flex-row space-x-2">
+            <.button phx-click="prev_month">Previous month</.button>
             <.button phx-click="today">Today</.button>
-            <.button phx-click="prev_month">Prev</.button>
-            <.button phx-click="next_month">Next</.button>
+            <.button phx-click="next_month">Next month</.button>
           </div>
         </div>
       </div>

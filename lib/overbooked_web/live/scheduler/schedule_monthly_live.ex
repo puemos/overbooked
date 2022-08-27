@@ -19,7 +19,7 @@ defmodule OverbookedWeb.ScheduleMonthlyLive do
 
     resources = Resources.list_resources()
 
-    changelog = Schedule.change_booking(%Booking{})
+    changeset = Schedule.change_booking(%Booking{})
 
     {:ok,
      socket
@@ -28,7 +28,7 @@ defmodule OverbookedWeb.ScheduleMonthlyLive do
      |> assign(to_date: to_date)
      |> assign(resources: resources)
      |> assign(bookings_daily: [])
-     |> assign(changelog: changelog)}
+     |> assign(changeset: changeset)}
   end
 
   @impl true
@@ -61,7 +61,7 @@ defmodule OverbookedWeb.ScheduleMonthlyLive do
       }
       current_user={@current_user}
       is_admin={@is_admin}
-      changelog={@changelog}
+      changeset={@changeset}
       resources={@resources}
       default_day={@default_day}
       module={OverbookedWeb.ScheduleLive.BookingForm}

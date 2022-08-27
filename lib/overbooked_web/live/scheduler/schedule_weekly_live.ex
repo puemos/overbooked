@@ -24,7 +24,7 @@ defmodule OverbookedWeb.ScheduleWeeklyLive do
       Schedule.list_bookings(from_date, to_date, Enum.at(resources, 0))
       |> Schedule.booking_groups(:hourly)
 
-    changelog = Schedule.change_booking(%Booking{})
+    changeset = Schedule.change_booking(%Booking{})
 
     {:ok,
      socket
@@ -34,7 +34,7 @@ defmodule OverbookedWeb.ScheduleWeeklyLive do
      |> assign(resources: resources)
      |> assign(resource_id: resource_id)
      |> assign(bookings_hourly: bookings_hourly)
-     |> assign(changelog: changelog)}
+     |> assign(changeset: changeset)}
   end
 
   @impl true
@@ -60,7 +60,7 @@ defmodule OverbookedWeb.ScheduleWeeklyLive do
       success_path={Routes.schedule_weekly_path(@socket, :index)}
       current_user={@current_user}
       is_admin={@is_admin}
-      changelog={@changelog}
+      changeset={@changeset}
       resources={@resources}
       default_day={@default_day}
       module={OverbookedWeb.ScheduleLive.BookingForm}

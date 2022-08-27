@@ -25,8 +25,17 @@ defmodule OverbookedWeb.Nav do
         {OverbookedWeb.DesksLive, _} ->
           :desks
 
-        {OverbookedWeb.AdminLive, _} ->
-          :admin
+        {OverbookedWeb.AdminUsersLive, _} ->
+          :admin_users
+
+        {OverbookedWeb.AdminDesksLive, _} ->
+          :admin_desks
+
+        {OverbookedWeb.AdminRoomsLive, _} ->
+          :admin_rooms
+
+        {OverbookedWeb.AdminAmenitiesLive, _} ->
+          :admin_amenities
 
         {OverbookedWeb.UserSettingsLive, _} ->
           :settings

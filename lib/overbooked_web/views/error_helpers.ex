@@ -4,6 +4,8 @@ defmodule OverbookedWeb.ErrorHelpers do
   """
 
   use Phoenix.HTML
+  import Phoenix.LiveView
+  import Phoenix.LiveView.Helpers
 
   @doc """
   Generates tag for inlined form input errors.

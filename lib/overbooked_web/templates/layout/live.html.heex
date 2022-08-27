@@ -73,8 +73,8 @@
             <%= if @is_admin do %>
               <hr class="-mx-3" />
               <.link
-                navigate={Routes.admin_path(@socket, :users)}
-                class={"text-gray-700 hover:text-gray-900 group flex items-center px-2 py-2 text-sm font-medium rounded-md #{if @active_tab == :admin, do: "bg-gray-200", else: "hover:bg-gray-50"}"}
+                navigate={Routes.admin_users_path(@socket, :index)}
+                class={"text-gray-700 hover:text-gray-900 group flex items-center px-2 py-2 text-sm font-medium rounded-md"}
               >
                 <.icon
                   name={:cog}

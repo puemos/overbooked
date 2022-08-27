@@ -104,10 +104,10 @@ defmodule OverbookedWeb.Router do
 
     live_session :admin,
       on_mount: [{OverbookedWeb.UserAuth, :ensure_authenticated}, OverbookedWeb.Nav] do
-      live "/admin/users", AdminLive, :users
-      live "/admin/desks", AdminLive, :desks
-      live "/admin/rooms", AdminLive, :rooms
-      live "/admin/amenities", AdminLive, :amenities
+      live "/admin/users", AdminUsersLive, :index
+      live "/admin/desks", AdminDesksLive, :index
+      live "/admin/rooms", AdminRoomsLive, :index
+      live "/admin/amenities", AdminAmenitiesLive, :index
     end
   end
 end

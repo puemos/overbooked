@@ -17,5 +17,6 @@ defmodule Overbooked.Resources.Amenity do
     amenity
     |> cast(attrs, [:name])
     |> validate_required([:name])
+    |> validate_length(:name, min: 2)
   end
 end

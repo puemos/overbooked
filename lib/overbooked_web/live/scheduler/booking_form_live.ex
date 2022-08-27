@@ -13,7 +13,7 @@ defmodule OverbookedWeb.ScheduleLive.BookingForm do
         <:title>Book a resource</:title>
         <.form
           :let={f}
-          for={@changelog}
+          for={@changeset}
           phx-submit={:add_booking}
           phx-change={:validate}
           phx-target={@myself}

@@ -1,182 +1,215 @@
 defmodule OverbookedWeb.AdminUsersLive do
-  use OverbookedWeb, :live_component
+  use OverbookedWeb, :live_view
 
   alias Overbooked.Accounts
   alias Overbooked.Accounts.User
 
   @impl true
-  def mount(socket) do
-    users = Overbooked.Accounts.list_users()
+  def mount(_params, _session, socket) do
+    {:ok,
+     socket
+     |> assign_users()
+     |> assign_invitations()}
+  end
 
+  defp assign_users(socket) do
+    users = Overbooked.Accounts.list_users()
+    assign(socket, users: users)
+  end
+
+  defp assign_invitations(socket) do
     invitations =
       Overbooked.Accounts.list_invitations()
       |> Enum.filter(fn invitation -> invitation.used_by_user == nil end)
 
-    {:ok,
-     socket
-     |> assign(users: users)
-     |> assign(invitations: invitations)}
+    assign(socket, invitations: invitations)
   end
 
   @impl true
   def render(assigns) do
     ~H"""
-    <div id={@id}>
-      <.page>
-        <div class="w-full space-y-12">
-          <div class="w-full">
-            <div class="w-full flex flex-row justify-between">
-              <h3>Users</h3>
-              <.button type="button" phx-click={show_modal("add-user-modal")}>
-                Invite a user
-              </.button>
-              <.modal id="add-user-modal" on_confirm={hide_modal("add-user-modal")} icon={nil}>
-                <:title>Invite a user</:title>
-                <.form
-                  :let={f}
-                  for={:invitation}
-                  phx-submit={:invite}
-                  phx-target={@myself}
-                  id="user-invitation-form"
-                  class="flex flex-col space-y-4"
-                >
-                  <div class="">
-                    <label for="email" class="block text-sm font-medium text-gray-700">
-                      Email address
-                    </label>
-                    <div class="mt-1">
-                      <.text_input form={f} field={:email} phx_debounce="blur" required={true} />
-                      <.error form={f} field={:email} />
-                    </div>
+    <.header label="Admin">
+      <.tabs>
+        <:link
+          active={@active_tab == :admin_users}
+          navigate={Routes.admin_users_path(@socket, :index)}
+        >
+          Users
+        </:link>
+        <:link
+          active={@active_tab == :admin_rooms}
+          navigate={Routes.admin_rooms_path(@socket, :index)}
+        >
+          Rooms
+        </:link>
+        <:link
+          active={@active_tab == :admin_desks}
+          navigate={Routes.admin_desks_path(@socket, :index)}
+        >
+          Desks
+        </:link>
+        <:link
+          active={@active_tab == :admin_amenities}
+          navigate={Routes.admin_amenities_path(@socket, :index)}
+        >
+          Amenities
+        </:link>
+      </.tabs>
+    </.header>
+
+    <.page>
+      <div class="w-full space-y-12">
+        <div class="w-full">
+          <div class="w-full flex flex-row justify-between">
+            <h3>Users</h3>
+            <.button type="button" phx-click={show_modal("add-user-modal")}>
+              Invite a user
+            </.button>
+            <.modal id="add-user-modal" on_confirm={hide_modal("add-user-modal")} icon={nil}>
+              <:title>Invite a user</:title>
+              <.form
+                :let={f}
+                for={:invitation}
+                phx-submit={:invite}
+                id="user-invitation-form"
+                class="flex flex-col space-y-4"
+              >
+                <div class="">
+                  <label for="email" class="block text-sm font-medium text-gray-700">
+                    Email address
+                  </label>
+                  <div class="mt-1">
+                    <.text_input form={f} field={:email} phx_debounce="blur" required={true} />
+                    <.error form={f} field={:email} />
                   </div>
-                </.form>
-                <:confirm
-                  type="submit"
-                  form="user-invitation-form"
-                  phx-disable-with="Sending..."
-                  variant={:secondary}
+                </div>
+              </.form>
+              <:confirm
+                type="submit"
+                form="user-invitation-form"
+                phx-disable-with="Sending..."
+                variant={:secondary}
+              >
+                Invite
+              </:confirm>
+
+              <:cancel>Cancel</:cancel>
+            </.modal>
+          </div>
+          <.table id="users" rows={@users} row_id={fn user -> "user-#{user.id}" end}>
+            <:col :let={user} label="Name" width="w-24">
+              <span class="truncate" title={user.name}><%= user.name %></span>
+            </:col>
+            <:col :let={user} label="Email" width="w-36">
+              <span class="truncate" title={user.email}><%= user.email %></span>
+            </:col>
+            <:col :let={user} label="Confirmed at" width="w-24">
+              <span class="truncate" title={relative_time(user.confirmed_at)}>
+                <%= relative_time(user.confirmed_at) %>
+              </span>
+            </:col>
+            <:col :let={user} label="Admin" width="w-24">
+              <.form :let={f} for={:admin} phx-change="change-admin">
+                <.number_input form={f} field={:user_id} value={user.id} class="hidden" />
+                <.switch form={f} field={:admin} checked={user.admin} />
+              </.form>
+            </:col>
+
+            <:col :let={user} label="" width="w-16">
+              <div class="w-full flex flex-row-reverse space-x-2 space-x-reverse">
+                <.button
+                  phx-click={show_modal("remove-user-modal-#{user.id}")}
+                  variant={:danger}
+                  size={:small}
+                  title={if User.is_admin?(user), do: "You can't delete an admin"}
+                  disabled={User.is_admin?(user)}
                 >
-                  Invite
-                </:confirm>
+                  Remove
+                </.button>
 
-                <:cancel>Cancel</:cancel>
-              </.modal>
-            </div>
-            <.table id="users" rows={@users} row_id={fn user -> "user-#{user.id}" end}>
-              <:col :let={user} label="Name" width="w-24">
-                <span class="truncate" title={user.name}><%= user.name %></span>
-              </:col>
-              <:col :let={user} label="Email" width="w-36">
-                <span class="truncate" title={user.email}><%= user.email %></span>
-              </:col>
-              <:col :let={user} label="Confirmed at" width="w-24">
-                <span class="truncate" title={relative_time(user.confirmed_at)}>
-                  <%= relative_time(user.confirmed_at) %>
-                </span>
-              </:col>
-              <:col :let={user} label="Admin" width="w-24">
-                <.form :let={f} for={:admin} phx-change="change-admin" phx-target={@myself}>
-                  <.number_input form={f} field={:user_id} value={user.id} class="hidden" />
-                  <.switch form={f} field={:admin} checked={user.admin} />
-                </.form>
-              </:col>
-
-              <:col :let={user} label="" width="w-16">
-                <div class="w-full flex flex-row-reverse space-x-2 space-x-reverse">
-                  <.button
-                    phx-click={show_modal("remove-user-modal-#{user.id}")}
-                    variant={:danger}
-                    size={:small}
-                    title={if User.is_admin?(user), do: "You can't delete an admin"}
-                    disabled={User.is_admin?(user)}
-                  >
+                <.modal
+                  id={"remove-user-modal-#{user.id}"}
+                  on_confirm={
+                    JS.push("delete-user", value: %{id: user.id})
+                    |> hide_modal("remove-user-modal-#{user.id}")
+                    |> hide("#user-#{user.id}")
+                  }
+                  icon={nil}
+                >
+                  <:title>Remove a user</:title>
+                  <span>
+                    Are you sure you want to remove <span class="font-bold"><%= user.name %>?</span>
+                  </span>
+                  <:confirm phx-disable-with="Removing..." variant={:danger}>
                     Remove
-                  </.button>
+                  </:confirm>
 
-                  <.modal
-                    id={"remove-user-modal-#{user.id}"}
-                    on_confirm={
-                      JS.push("delete-user", value: %{id: user.id}, target: @myself)
-                      |> hide_modal("remove-user-modal-#{user.id}")
-                      |> hide("#user-#{user.id}")
-                    }
-                    icon={nil}
-                  >
-                    <:title>Remove a user</:title>
-                    <span>
-                      Are you sure you want to remove <span class="font-bold"><%= user.name %>?</span>
-                    </span>
-                    <:confirm phx-disable-with="Removing..." variant={:danger}>
-                      Remove
-                    </:confirm>
-
-                    <:cancel>Cancel</:cancel>
-                  </.modal>
-                </div>
-              </:col>
-            </.table>
-          </div>
-
-          <div>
-            <h3>Pending invitations</h3>
-
-            <.table
-              id="invitations"
-              rows={@invitations}
-              row_id={fn invitation -> "invitation-#{invitation.id}" end}
-            >
-              <:col :let={invitation} label="Invited by" width="w-24">
-                <span class="truncate" title={invitation.generated_by_user.name}>
-                  <%= invitation.generated_by_user.name %>
-                </span>
-              </:col>
-              <:col :let={invitation} label="Email" width="w-36">
-                <span class="truncate" title={invitation.scoped_to_email}>
-                  <%= invitation.scoped_to_email %>
-                </span>
-              </:col>
-              <:col :let={invitation} label="Created at" width="w-24">
-                <span class="truncate" title={relative_time(invitation.inserted_at)}>
-                  <%= relative_time(invitation.inserted_at) %>
-                </span>
-              </:col>
-              <:col :let={invitation} label="" width="w-16">
-                <div class="w-full flex flex-row-reverse space-x-2 space-x-reverse">
-                  <.button
-                    phx-click={show_modal("remove-invitation-modal-#{invitation.id}")}
-                    variant={:danger}
-                    size={:small}
-                  >
-                    Remove
-                  </.button>
-
-                  <.modal
-                    id={"remove-invitation-modal-#{invitation.id}"}
-                    on_confirm={
-                      JS.push("delete-invitation", value: %{id: invitation.id}, target: @myself)
-                      |> hide_modal("remove-invitation-modal-#{invitation.id}")
-                      |> hide("#invitation-#{invitation.id}")
-                    }
-                    icon={nil}
-                  >
-                    <:title>Remove an invitation</:title>
-                    <span>
-                      Are you sure you want to remove
-                      <span class="font-bold"><%= invitation.scoped_to_email %>?</span>
-                    </span>
-                    <:confirm phx-disable-with="Removing..." variant={:danger}>
-                      Remove
-                    </:confirm>
-
-                    <:cancel>Cancel</:cancel>
-                  </.modal>
-                </div>
-              </:col>
-            </.table>
-          </div>
+                  <:cancel>Cancel</:cancel>
+                </.modal>
+              </div>
+            </:col>
+          </.table>
         </div>
-      </.page>
-    </div>
+
+        <div>
+          <h3>Pending invitations</h3>
+
+          <.table
+            id="invitations"
+            rows={@invitations}
+            row_id={fn invitation -> "invitation-#{invitation.id}" end}
+          >
+            <:col :let={invitation} label="Invited by" width="w-24">
+              <span class="truncate" title={invitation.generated_by_user.name}>
+                <%= invitation.generated_by_user.name %>
+              </span>
+            </:col>
+            <:col :let={invitation} label="Email" width="w-36">
+              <span class="truncate" title={invitation.scoped_to_email}>
+                <%= invitation.scoped_to_email %>
+              </span>
+            </:col>
+            <:col :let={invitation} label="Created at" width="w-24">
+              <span class="truncate" title={relative_time(invitation.inserted_at)}>
+                <%= relative_time(invitation.inserted_at) %>
+              </span>
+            </:col>
+            <:col :let={invitation} label="" width="w-16">
+              <div class="w-full flex flex-row-reverse space-x-2 space-x-reverse">
+                <.button
+                  phx-click={show_modal("remove-invitation-modal-#{invitation.id}")}
+                  variant={:danger}
+                  size={:small}
+                >
+                  Remove
+                </.button>
+
+                <.modal
+                  id={"remove-invitation-modal-#{invitation.id}"}
+                  on_confirm={
+                    JS.push("delete-invitation", value: %{id: invitation.id})
+                    |> hide_modal("remove-invitation-modal-#{invitation.id}")
+                    |> hide("#invitation-#{invitation.id}")
+                  }
+                  icon={nil}
+                >
+                  <:title>Remove an invitation</:title>
+                  <span>
+                    Are you sure you want to remove
+                    <span class="font-bold"><%= invitation.scoped_to_email %>?</span>
+                  </span>
+                  <:confirm phx-disable-with="Removing..." variant={:danger}>
+                    Remove
+                  </:confirm>
+
+                  <:cancel>Cancel</:cancel>
+                </.modal>
+              </div>
+            </:col>
+          </.table>
+        </div>
+      </div>
+    </.page>
     """
   end
 
@@ -194,7 +227,7 @@ defmodule OverbookedWeb.AdminUsersLive do
        :info,
        "Your new member will receive instructions to sign up."
      )
-     |> push_redirect(to: Routes.admin_path(socket, :users))}
+     |> assign_invitations()}
   end
 
   def handle_event("change-admin", %{"admin" => params}, socket) do
@@ -209,7 +242,7 @@ defmodule OverbookedWeb.AdminUsersLive do
        :info,
        "#{if user.admin, do: "#{user.name} is no more admin", else: "#{user.name} is now admin"}"
      )
-     |> push_redirect(to: Routes.admin_path(socket, :users))}
+     |> assign_users()}
   end
 
   def handle_event("delete-user", %{"id" => id}, socket) do
@@ -221,8 +254,7 @@ defmodule OverbookedWeb.AdminUsersLive do
      |> put_flash(
        :info,
        "#{user.name} was removeed successfully"
-     )
-     |> push_redirect(to: Routes.admin_path(socket, :users))}
+     )}
   end
 
   def handle_event("delete-invitation", %{"id" => id}, socket) do

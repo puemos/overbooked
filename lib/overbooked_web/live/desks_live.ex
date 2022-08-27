@@ -6,12 +6,12 @@ defmodule OverbookedWeb.DesksLive do
   @impl true
   def mount(_params, _session, socket) do
     desks = Resources.list_desks()
-    changelog = Resources.change_resource(%Resource{})
+    changeset = Resources.change_resource(%Resource{})
 
     {:ok,
      socket
      |> assign(desks: desks)
-     |> assign(changelog: changelog)}
+     |> assign(changeset: changeset)}
   end
 
   @impl true

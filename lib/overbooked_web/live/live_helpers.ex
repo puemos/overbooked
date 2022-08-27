@@ -549,8 +549,7 @@ defmodule OverbookedWeb.LiveHelpers do
   attr :module, :atom, required: true
   attr :row_id, :any, default: false
   attr :rows, :list, required: true
-  attr :owns_profile?, :boolean, default: false
-  attr :active_id, :any, default: nil
+  attr :rest, :global
   # slots
   attr :col, :list
 
@@ -570,7 +569,7 @@ defmodule OverbookedWeb.LiveHelpers do
               <% end %>
             </tr>
           </thead>
-          <tbody id={@id} class="bg-white divide-y divide-gray-100" phx-update="append">
+          <tbody id={@id} class="bg-white divide-y divide-gray-100">
             <%= for {row, i} <- Enum.with_index(@rows) do %>
               <.live_component
                 module={@module}
@@ -578,10 +577,8 @@ defmodule OverbookedWeb.LiveHelpers do
                 row={row}
                 col={@col}
                 index={i}
-                active_id={@active_id}
                 class="hover:bg-gray-50"
-                ,
-                owns_profile?={@owns_profile?}
+                {@rest}
               />
             <% end %>
           </tbody>

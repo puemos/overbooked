@@ -282,6 +282,7 @@ defmodule OverbookedWeb.LiveFormHelpers do
 
   def error(assigns) do
     assigns = assign_new(assigns, :class, fn -> "" end)
+    # if assigns.form, do: IO.inspect(assigns.form.errors)
 
     ~H"""
     <div class={@class}>

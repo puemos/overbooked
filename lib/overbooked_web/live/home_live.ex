@@ -22,7 +22,7 @@ defmodule OverbookedWeb.HomeLive do
 
     resources = Resources.list_resources()
 
-    changelog = Schedule.change_booking(%Booking{})
+    changeset = Schedule.change_booking(%Booking{})
 
     {:ok,
      socket
@@ -30,7 +30,7 @@ defmodule OverbookedWeb.HomeLive do
      |> assign(default_day: Timex.format!(Timex.now(), "{YYYY}-{0M}-{D}"))
      |> assign(resources: resources)
      |> assign(bookings: bookings)
-     |> assign(changelog: changelog)}
+     |> assign(changeset: changeset)}
   end
 
   @impl true
@@ -42,7 +42,7 @@ defmodule OverbookedWeb.HomeLive do
       success_path={Routes.home_path(@socket, :index)}
       current_user={@current_user}
       is_admin={@is_admin}
-      changelog={@changelog}
+      changeset={@changeset}
       resources={@resources}
       default_day={@default_day}
       module={OverbookedWeb.ScheduleLive.BookingForm}
