@@ -26,18 +26,26 @@ Overbooked is a self-hosted flexible workplace platform for indie co-working own
 
 ## Features
 
+### Home
+
+- [x] Upcoming reservations
+- [ ] Who's coming today/tomorrow
+
 ### Schedule
 
 - [x] Block unavalible resources
-- [x] Monthly view
-- [x] Weekly view
-- [ ] Search avalible resources
+- [x] Reservations' Monthly view
+- [x] Reservations' Weekly view
+- [ ] Search available resources
+- [ ] Timezones
+- [ ] Reservations' visibility
 
 ### Rooms and Desks
 
 - [x] Resources' colors
 - [x] Resources' amenities
-- [ ] Amenities' count
+- [ ] Amenities' quantities
+- [ ] Resources' capacity
 
 
 ### Admin
@@ -56,5 +64,5 @@ Overbooked is a self-hosted flexible workplace platform for indie co-working own
 
 #### Analytics
 
-- [ ] Booking overtime
+- [ ] Reservations overtime
 - [ ] Most used resources
