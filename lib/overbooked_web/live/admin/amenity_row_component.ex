@@ -4,11 +4,7 @@ defmodule OverbookedWeb.AdminAmenitiesLive.AmenitRowComponent do
   def render(assigns) do
     ~H"""
     <tr id={@id} class={@class} tabindex="0">
-      <.modal
-        id={"edit-amenity-modal-#{@amenity.id}"}
-        on_confirm={hide_modal("edit-amenity-modal-#{@amenity.id}")}
-        icon={nil}
-      >
+      <.modal id={"edit-amenity-modal-#{@amenity.id}"} icon={nil}>
         <:title>Edit Amenity</:title>
         <.form
           :let={f}

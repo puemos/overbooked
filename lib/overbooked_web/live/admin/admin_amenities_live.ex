@@ -145,6 +145,7 @@ defmodule OverbookedWeb.AdminAmenitiesLive do
 
     case Resources.update_amenity(amenity, amenity_params) do
       {:ok, _amenity} ->
+        hide_modal("edit-amenity-modal-#{id}")
         {:noreply,
          socket
          |> put_flash(
