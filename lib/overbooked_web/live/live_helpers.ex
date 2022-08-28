@@ -2,6 +2,7 @@ defmodule OverbookedWeb.LiveHelpers do
   use Phoenix.Component
 
   alias Phoenix.LiveView.JS
+  alias OverbookedWeb.Router.Helpers, as: Routes
 
   ## String formatters
 
@@ -96,6 +97,28 @@ defmodule OverbookedWeb.LiveHelpers do
     """
   end
 
+  def admin_tabs(assigns) do
+    ~H"""
+    <.tabs>
+      <:link active={@active_tab == :admin_users} navigate={Routes.admin_users_path(@socket, :index)}>
+        Users
+      </:link>
+      <:link active={@active_tab == :admin_rooms} navigate={Routes.admin_rooms_path(@socket, :index)}>
+        Rooms
+      </:link>
+      <:link active={@active_tab == :admin_desks} navigate={Routes.admin_desks_path(@socket, :index)}>
+        Desks
+      </:link>
+      <:link
+        active={@active_tab == :admin_amenities}
+        navigate={Routes.admin_amenities_path(@socket, :index)}
+      >
+        Amenities
+      </:link>
+    </.tabs>
+    """
+  end
+
   def spinner(assigns) do
     ~H"""
     <svg
@@ -163,7 +186,7 @@ defmodule OverbookedWeb.LiveHelpers do
         <button
           id={@id}
           type="button"
-          class="border rounded-md border-2 group w-full bg-gray-100 rounded-md px-3.5 py-2 text-sm text-left font-medium text-gray-700 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-purple-500"
+          class="border rounded-md border-2 group w-full bg-gray-100 rounded-md px-3.5 py-2 text-sm text-left font-medium text-gray-700 hover:bg-gray-200 focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-primary-500"
           phx-click={show_dropdown("##{@id}-dropdown")}
           data-active-class="bg-gray-100"
           aria-haspopup="true"
@@ -213,7 +236,7 @@ defmodule OverbookedWeb.LiveHelpers do
             <.link
               tabindex="-1"
               role="menuitem"
-              class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-purple-500"
+              class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-primary-500"
               {link}
             >
               <%= render_slot(link) %>
@@ -359,9 +382,9 @@ defmodule OverbookedWeb.LiveHelpers do
                   <%= render_slot(@title) %>
                 </h3>
                 <div class="mt-6">
-                  <p id={"#{@id}-content"} class="text-sm text-gray-500">
+                  <div id={"#{@id}-content"} class="text-sm text-gray-500">
                     <%= render_slot(@inner_block) %>
-                  </p>
+                  </div>
                 </div>
               </div>
             </div>
@@ -483,6 +506,7 @@ defmodule OverbookedWeb.LiveHelpers do
     case size do
       :base -> "text-sm px-4 py-1.5"
       :small -> "text-xs px-2 py-1"
+      :narrow -> "text-sm px-1 py-1"
       _ -> "text-sm px-4 py-1.5"
     end
   end
@@ -497,7 +521,7 @@ defmodule OverbookedWeb.LiveHelpers do
   end
 
   defp button_classes_base() do
-    "font-medium inline-flex items-center border shadow-sm rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500"
+    "font-medium inline-flex items-center border shadow-sm rounded-md focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-primary-500"
   end
 
   attr :row_id, :any, default: false
@@ -514,7 +538,7 @@ defmodule OverbookedWeb.LiveHelpers do
     ~H"""
     <div class="hidden mt-8 sm:block">
       <div class="align-middle inline-block min-w-full border-b border-gray-200">
-        <table class="w-full table-fixed">
+        <table class="w-full table-fixed border-t border-r border-l">
           <thead>
             <tr class="border-t border-gray-200">
               <%= for col <- @col do %>
@@ -559,7 +583,7 @@ defmodule OverbookedWeb.LiveHelpers do
     ~H"""
     <div class="hidden mt-8 sm:block">
       <div class="align-middle inline-block min-w-full border-b border-gray-200">
-        <table class="min-w-full">
+        <table class="min-w-full border-t border-r border-l">
           <thead>
             <tr class="border-t border-gray-200">
               <%= for col <- @col do %>
@@ -595,9 +619,8 @@ defmodule OverbookedWeb.LiveHelpers do
     <div class="flex flex-row space-x-2">
       <%= for link <- @link do %>
         <.link
-          tabindex="-1"
-          role="menuitem"
-          class={"#{if link[:active], do: "underline text-gray-700", else: "text-gray-500 hover:text-gray-700"} transition-colors block decoration-purple-300 decoration-[3px] underline-offset-[14px] text-sm font-medium focus:outline-none focus:ring-0 focus:ring-offset-0 focus:ring-offset-gray-100 focus:ring-purple-500"}
+          tabindex="0"
+          class={"#{if link[:active], do: "underline text-gray-700", else: "focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-primary-500 text-gray-500 hover:text-gray-700"} transition-colors block decoration-purple-300 decoration-[3px] underline-offset-[14px] text-sm font-medium focus:outline-none focus:ring-0 focus:ring-offset-0 focus:ring-offset-gray-100 focus:ring-purple-500"}
           {link}
         >
           &nbsp; <%= render_slot(link) %> &nbsp;

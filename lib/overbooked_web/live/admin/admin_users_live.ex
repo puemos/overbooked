@@ -29,32 +29,7 @@ defmodule OverbookedWeb.AdminUsersLive do
   def render(assigns) do
     ~H"""
     <.header label="Admin">
-      <.tabs>
-        <:link
-          active={@active_tab == :admin_users}
-          navigate={Routes.admin_users_path(@socket, :index)}
-        >
-          Users
-        </:link>
-        <:link
-          active={@active_tab == :admin_rooms}
-          navigate={Routes.admin_rooms_path(@socket, :index)}
-        >
-          Rooms
-        </:link>
-        <:link
-          active={@active_tab == :admin_desks}
-          navigate={Routes.admin_desks_path(@socket, :index)}
-        >
-          Desks
-        </:link>
-        <:link
-          active={@active_tab == :admin_amenities}
-          navigate={Routes.admin_amenities_path(@socket, :index)}
-        >
-          Amenities
-        </:link>
-      </.tabs>
+      <.admin_tabs active_tab={@active_tab} socket={@socket} />
     </.header>
 
     <.page>

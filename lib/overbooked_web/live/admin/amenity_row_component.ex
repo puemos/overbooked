@@ -1,16 +1,20 @@
-defmodule OverbookedWeb.AdminAmenitiesLive.AmenitRowComponent do
+defmodule OverbookedWeb.AmenityRowComponent do
   use OverbookedWeb, :live_component
 
   def render(assigns) do
     ~H"""
     <tr id={@id} class={@class} tabindex="0">
-      <.modal id={"edit-amenity-modal-#{@amenity.id}"} icon={nil}>
+      <.modal
+        id={"edit-amenity-modal-#{@amenity.id}"}
+        on_confirm={hide_modal("edit-amenity-modal-#{@amenity.id}")}
+        icon={nil}
+      >
         <:title>Edit Amenity</:title>
         <.form
           :let={f}
           for={@changeset}
-          phx-submit={:edit_amenity}
-          phx-change={:validate_edit}
+          phx-submit={:update}
+          phx-change={:validate_update}
           id={"edit-amenity-form-#{@amenity.id}"}
           class="flex flex-col space-y-4"
         >
@@ -29,6 +33,7 @@ defmodule OverbookedWeb.AdminAmenitiesLive.AmenitRowComponent do
           type="submit"
           form={"edit-amenity-form-#{@amenity.id}"}
           phx-disable-with="Saving..."
+          disabled={!@changeset.valid?}
           variant={:secondary}
         >
           Save
@@ -55,7 +60,7 @@ defmodule OverbookedWeb.AdminAmenitiesLive.AmenitRowComponent do
 
         <:cancel>Cancel</:cancel>
       </.modal>
-      <%= for {col, _i} <- Enum.with_index(@col) do %>
+      <%= for {col, i} <- Enum.with_index(@col) do %>
         <td class={"px-6 py-3 text-sm font-medium text-gray-900 #{col[:class]}"}>
           <div class="flex items-center space-x-3 lg:pl-2">
             <%= render_slot(col, assigns) %>

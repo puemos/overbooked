@@ -9,7 +9,7 @@ defmodule OverbookedWeb.ScheduleLive.BookingForm do
   def render(assigns) do
     ~H"""
     <div id={@id}>
-      <.modal id={"#{@id}-modal"} icon={nil}>
+      <.modal id={"#{@id}-modal"} on_confirm={hide_modal("#{@id}-modal")} icon={nil}>
         <:title>Book a resource</:title>
         <.form
           :let={f}
@@ -82,7 +82,13 @@ defmodule OverbookedWeb.ScheduleLive.BookingForm do
             </div>
           </div>
         </.form>
-        <:confirm type="submit" form={"#{@id}-form"} phx-disable-with="Saving..." variant={:secondary}>
+        <:confirm
+          type="submit"
+          form={"#{@id}-form"}
+          phx-disable-with="Saving..."
+          disabled={!@changeset.valid?}
+          variant={:secondary}
+        >
           Save
         </:confirm>
 
@@ -117,8 +123,6 @@ defmodule OverbookedWeb.ScheduleLive.BookingForm do
 
     case Schedule.book_resource(resource, socket.assigns.current_user, booking_params) do
       {:ok, _booking} ->
-        hide_modal("#{socket.assigns.id}-modal")
-
         {:noreply,
          socket
          |> put_flash(

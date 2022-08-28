@@ -23,32 +23,7 @@ defmodule OverbookedWeb.AdminAmenitiesLive do
   def render(assigns) do
     ~H"""
     <.header label="Admin">
-      <.tabs>
-        <:link
-          active={@active_tab == :admin_users}
-          navigate={Routes.admin_users_path(@socket, :index)}
-        >
-          Users
-        </:link>
-        <:link
-          active={@active_tab == :admin_rooms}
-          navigate={Routes.admin_rooms_path(@socket, :index)}
-        >
-          Rooms
-        </:link>
-        <:link
-          active={@active_tab == :admin_desks}
-          navigate={Routes.admin_desks_path(@socket, :index)}
-        >
-          Desks
-        </:link>
-        <:link
-          active={@active_tab == :admin_amenities}
-          navigate={Routes.admin_amenities_path(@socket, :index)}
-        >
-          Amenities
-        </:link>
-      </.tabs>
+      <.admin_tabs active_tab={@active_tab} socket={@socket} />
     </.header>
 
     <.page>
@@ -60,12 +35,12 @@ defmodule OverbookedWeb.AdminAmenitiesLive do
               New amenity
             </.button>
 
-            <.modal id="add-amenity-modal" icon={nil}>
+            <.modal id="add-amenity-modal" on_confirm={hide_modal("add-amenity-modal")} icon={nil}>
               <:title>Add a new amenity</:title>
               <.form
                 :let={f}
                 for={@changeset}
-                phx-submit={:add_amenity}
+                phx-submit={:create}
                 phx-change={:validate}
                 id="add-amenity-form"
                 class="flex flex-col space-y-4"
@@ -84,6 +59,7 @@ defmodule OverbookedWeb.AdminAmenitiesLive do
                 type="submit"
                 form="add-amenity-form"
                 phx-disable-with="Saving..."
+                disabled={!@changeset.valid?}
                 variant={:secondary}
               >
                 Save
@@ -93,7 +69,7 @@ defmodule OverbookedWeb.AdminAmenitiesLive do
             </.modal>
           </div>
           <.live_table
-            module={OverbookedWeb.AdminAmenitiesLive.AmenitRowComponent}
+            module={OverbookedWeb.AmenityRowComponent}
             id="amenities"
             rows={@amenities}
             changeset={@edit_changeset}
@@ -134,18 +110,26 @@ defmodule OverbookedWeb.AdminAmenitiesLive do
     edit_changeset =
       amenity
       |> Resources.change_amenity(%{})
-      |> Map.put(:action, :edit)
+      |> Map.put(:action, :insert)
 
     {:noreply, assign(socket, edit_changeset: edit_changeset)}
   end
 
+  def handle_event("validate_update", %{"amenity" => amenity_params}, socket) do
+    changeset =
+      %Amenity{}
+      |> Resources.change_amenity(amenity_params)
+      |> Map.put(:action, :update)
+
+    {:noreply, assign(socket, edit_changeset: changeset)}
+  end
+
   @impl true
-  def handle_event("edit_amenity", %{"amenity" => amenity_params, "amenity_id" => id}, socket) do
+  def handle_event("update", %{"amenity" => amenity_params, "amenity_id" => id}, socket) do
     amenity = Resources.get_amenity!(id)
 
     case Resources.update_amenity(amenity, amenity_params) do
       {:ok, _amenity} ->
-        hide_modal("edit-amenity-modal-#{id}")
         {:noreply,
          socket
          |> put_flash(
@@ -168,21 +152,10 @@ defmodule OverbookedWeb.AdminAmenitiesLive do
     {:noreply, assign(socket, changeset: changeset)}
   end
 
-  def handle_event("validate_edit", %{"amenity" => amenity_params}, socket) do
-    changeset =
-      %Amenity{}
-      |> Resources.change_amenity(amenity_params)
-      |> Map.put(:action, :insert)
-
-    {:noreply, assign(socket, edit_changeset: changeset)}
-  end
-
   @impl true
-  def handle_event("add_amenity", %{"amenity" => amenity_params}, socket) do
+  def handle_event("create", %{"amenity" => amenity_params}, socket) do
     case Resources.create_amenity(amenity_params) do
       {:ok, _amenity} ->
-        hide_modal("add-amenity-modal")
-
         {:noreply,
          socket
          |> put_flash(

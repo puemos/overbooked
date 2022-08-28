@@ -61,7 +61,10 @@ defmodule Overbooked.Resources do
       ** (Ecto.NoResultsError)
 
   """
-  def get_resource!(id), do: Repo.get!(Resource, id)
+  def get_resource!(id) do
+    Repo.get!(Resource, id)
+    |> Repo.preload(:amenities)
+  end
 
   def update_resource_amenities(%Resource{} = resource, amenities) do
     resource
@@ -85,8 +88,7 @@ defmodule Overbooked.Resources do
   """
   def create_resource(%ResourceType{} = resource_type, attrs \\ %{}) do
     amenities_id_list = Map.get(attrs, "amenities", [])
-
-    amenities = from(a in Amenity, where: a.id in ^amenities_id_list) |> Repo.all()
+    amenities = list_amenities(id: amenities_id_list)
 
     %Resource{}
     |> Resource.changeset(attrs)
@@ -120,9 +122,16 @@ defmodule Overbooked.Resources do
 
   """
   def update_resource(%Resource{} = resource, attrs) do
-    resource
-    |> Resource.changeset(attrs)
-    |> Repo.update()
+    IO.inspect(resource: resource, attrs: attrs)
+    amenities_id_list = Map.get(attrs, "amenities", [])
+    amenities = list_amenities(id: amenities_id_list)
+
+    changeset =
+      resource
+      |> Resource.changeset(attrs)
+      |> Resource.put_amenities(amenities)
+
+    Repo.update(changeset)
   end
 
   @doc """
@@ -156,17 +165,20 @@ defmodule Overbooked.Resources do
 
   alias Overbooked.Resources.Amenity
 
-  @doc """
-  Returns the list of amenities.
+  def list_amenities(opts \\ []) do
+    id = Keyword.get(opts, :id)
 
-  ## Examples
+    where =
+      if id != nil do
+        ids = List.wrap(id)
+        dynamic([a], a.id in ^ids)
+      else
+        true
+      end
 
-      iex> list_amenities()
-      [%Amenity{}, ...]
-
-  """
-  def list_amenities do
-    Repo.all(Amenity)
+    from(a in Amenity)
+    |> where(^where)
+    |> Repo.all()
   end
 
   @doc """

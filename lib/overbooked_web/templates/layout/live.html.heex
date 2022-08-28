@@ -2,7 +2,7 @@
 <div class="flex flex-shrink-0" role="region">
   <div class="flex flex-col w-64 border-r border-gray-200 pt-5 bg-gray-100">
     <div class="flex items-center flex-shrink-0 px-6">
-      <.link class="flex items-center space-x-2" navigate={Routes.home_path(@socket, :index)}>
+      <.link class="w-full rounded-md flex items-center space-x-2 focus:outline-none focus:ring-2 focus:ring-offset-4 focus:ring-primary-500 focus:border-primary-500" navigate={Routes.home_path(@socket, :index)}>
         <img class="w-8" src={Routes.static_path(@socket, "/images/logo.png")} />
         <span class="h-8 w-auto text-2xl ml-1 font-bold">
           Overbooked
@@ -28,7 +28,7 @@
             <%= if @current_user do %>
               <.link
                 navigate={Routes.home_path(@socket, :index)}
-                class={"text-gray-700 hover:text-gray-900 group flex items-center px-2 py-2 text-sm font-medium rounded-md #{if @active_tab == :home, do: "bg-gray-200", else: "hover:bg-gray-50"}"}
+                class={"focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-gray-700 hover:text-gray-900 group flex items-center px-2 py-2 text-sm font-medium rounded-md #{if @active_tab == :home, do: "bg-gray-200", else: "hover:bg-gray-50"}"}
               >
                 <.icon
                   outlined={true}
@@ -38,7 +38,7 @@
               </.link>
               <.link
                 navigate={Routes.schedule_monthly_path(@socket, :index)}
-                class={"text-gray-700 hover:text-gray-900 group flex items-center px-2 py-2 text-sm font-medium rounded-md #{if @active_tab == :schedule_monthly, do: "bg-gray-200", else: "hover:bg-gray-50"}"}
+                class={"focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-gray-700 hover:text-gray-900 group flex items-center px-2 py-2 text-sm font-medium rounded-md #{if @active_tab == :schedule_monthly, do: "bg-gray-200", else: "hover:bg-gray-50"}"}
               >
                 <.icon
                   outlined={true}
@@ -48,7 +48,7 @@
               </.link>
               <.link
                 navigate={Routes.rooms_path(@socket, :index)}
-                class={"text-gray-700 hover:text-gray-900 group flex items-center px-2 py-2 text-sm font-medium rounded-md #{if @active_tab == :rooms, do: "bg-gray-200", else: "hover:bg-gray-50"}"}
+                class={"focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-gray-700 hover:text-gray-900 group flex items-center px-2 py-2 text-sm font-medium rounded-md #{if @active_tab == :rooms, do: "bg-gray-200", else: "hover:bg-gray-50"}"}
               >
                 <.icon
                   outlined={true}
@@ -58,7 +58,7 @@
               </.link>
               <.link
                 navigate={Routes.desks_path(@socket, :index)}
-                class={"text-gray-700 hover:text-gray-900 group flex items-center px-2 py-2 text-sm font-medium rounded-md #{if @active_tab == :desks, do: "bg-gray-200", else: "hover:bg-gray-50"}"}
+                class={"focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-gray-700 hover:text-gray-900 group flex items-center px-2 py-2 text-sm font-medium rounded-md #{if @active_tab == :desks, do: "bg-gray-200", else: "hover:bg-gray-50"}"}
               >
                 <.icon
                   outlined={true}
@@ -74,7 +74,7 @@
               <hr class="-mx-3" />
               <.link
                 navigate={Routes.admin_users_path(@socket, :index)}
-                class={"text-gray-700 hover:text-gray-900 group flex items-center px-2 py-2 text-sm font-medium rounded-md"}
+                class={"focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-gray-700 hover:text-gray-900 group flex items-center px-2 py-2 text-sm font-medium rounded-md"}
               >
                 <.icon
                   name={:cog}

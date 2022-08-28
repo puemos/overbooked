@@ -1,5 +1,7 @@
-import ColorSchemeHook from "./color-scheme-hook";
+import Focus from "./focus";
+import Flash from "./flash";
 
 export default {
-  ColorSchemeHook,
+  Focus,
+  Flash,
 };

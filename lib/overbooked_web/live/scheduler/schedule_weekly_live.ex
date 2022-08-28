@@ -129,7 +129,7 @@ defmodule OverbookedWeb.ScheduleWeeklyLive do
      |> assign(bookings_hourly: bookings_hourly)}
   end
 
-  def handle_event("selected_resource", %{"resource_id" => resource_id}, socket) do
+  def handle_event("filters", %{"resource_id" => resource_id}, socket) do
     from_date = socket.assigns.from_date
     to_date = socket.assigns.to_date
 

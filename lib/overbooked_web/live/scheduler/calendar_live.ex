@@ -11,23 +11,30 @@ defmodule OverbookedWeb.ScheduleLive.Calendar do
     ~H"""
     <div class="h-[35rem]">
       <div class="flex items-center mb-8">
-        <div class="w-full flex flex-row mt-6 justify-between">
-          <div class="flex flex-row text-xl text-gray-400 font-bold">
-            <%= weekly_title(@beginning_of_week, @end_of_week) %>
-          </div>
-          <div class="flex flex-row space-x-2">
-            <.form :let={f} for={:selected_resource} phx-change={:selected_resource}>
-              <.select
-                form={f}
-                field={:resource_id}
-                name="resource_id"
-                options={Enum.map(@resources, &{&1.name, &1.id})}
-                required={true}
-              />
-            </.form>
-            <.button phx-click="prev_week">Previous week</.button>
-            <.button phx-click="today">Today</.button>
-            <.button phx-click="next_week">Next week</.button>
+        <div class="w-full flex flex-col">
+          <div class="w-full flex flex-row mt-6 justify-between">
+            <div class="flex flex-row text-xl text-gray-400 font-bold">
+              <%= weekly_title(@beginning_of_week, @end_of_week) %>
+            </div>
+            <div class="flex flex-row space-x-2">
+              <.form :let={f} for={:filters} phx-change={:filters}>
+                <.select
+                  form={f}
+                  field={:resource_id}
+                  name="resource_id"
+                  options={Enum.map(@resources, &{&1.name, &1.id})}
+                  required={true}
+                  class="py-1.5"
+                />
+              </.form>
+              <.button phx-click="prev_week" size={:narrow}>
+                <.icon name={:chevron_left} class="w-4 h-4" />
+              </.button>
+              <.button phx-click="today">Today</.button>
+              <.button phx-click="next_week" size={:narrow}>
+                <.icon name={:chevron_right} class="w-4 h-4" />
+              </.button>
+            </div>
           </div>
         </div>
       </div>
@@ -62,9 +69,13 @@ defmodule OverbookedWeb.ScheduleLive.Calendar do
             <%= Timex.format!(@beginning_of_month, "{Mshort} {YYYY}") %>
           </div>
           <div class="flex flex-row space-x-2">
-            <.button phx-click="prev_month">Previous month</.button>
+            <.button phx-click="prev_month" size={:narrow}>
+              <.icon name={:chevron_left} class="w-4 h-4" />
+            </.button>
             <.button phx-click="today">Today</.button>
-            <.button phx-click="next_month">Next month</.button>
+            <.button phx-click="next_month" size={:narrow}>
+              <.icon name={:chevron_right} class="w-4 h-4" />
+            </.button>
           </div>
         </div>
       </div>
