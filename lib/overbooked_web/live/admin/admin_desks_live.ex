@@ -56,7 +56,7 @@ defmodule OverbookedWeb.AdminDesksLive do
     </.header>
 
     <.modal id="add-desk-modal" on_confirm={hide_modal("add-desk-modal")} icon={nil}>
-      <:title>Add a desk</:title>
+      <:title>Add a new desk</:title>
       <.form
         :let={f}
         for={@changeset}

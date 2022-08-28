@@ -57,11 +57,11 @@ defmodule OverbookedWeb.AdminAmenitiesLive do
           <div class="w-full flex flex-row justify-between">
             <h3>Amenities</h3>
             <.button type="button" phx-click={show_modal("add-amenity-modal")}>
-              Add amenity
+              New amenity
             </.button>
 
             <.modal id="add-amenity-modal" icon={nil}>
-              <:title>Add an amenity</:title>
+              <:title>Add a new amenity</:title>
               <.form
                 :let={f}
                 for={@changeset}

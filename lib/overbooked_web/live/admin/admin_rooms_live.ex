@@ -56,7 +56,7 @@ defmodule OverbookedWeb.AdminRoomsLive do
     </.header>
 
     <.modal id="add-room-modal" on_confirm={hide_modal("add-room-modal")} icon={nil}>
-      <:title>Add a room</:title>
+      <:title>Add a new room</:title>
       <.form
         :let={f}
         for={@changeset}
@@ -119,7 +119,7 @@ defmodule OverbookedWeb.AdminRoomsLive do
           <div class="w-full flex flex-row justify-between">
             <h3>Rooms</h3>
             <.button type="button" phx-click={show_modal("add-room-modal")}>
-              Add room
+              New room
             </.button>
           </div>
           <.table id="rooms" rows={@rooms} row_id={fn resource -> "resource-#{resource.id}" end}>

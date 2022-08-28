@@ -481,17 +481,17 @@ defmodule OverbookedWeb.LiveHelpers do
 
   defp button_classes_size(size) do
     case size do
-      :base -> "text-sm px-4 py-2"
+      :base -> "text-sm px-4 py-1.5"
       :small -> "text-xs px-2 py-1"
-      _ -> "text-sm px-4 py-2"
+      _ -> "text-sm px-4 py-1.5"
     end
   end
 
   defp button_classes_color(variant) do
     case variant do
       :primary -> "border-primary-300 text-primary-700 bg-white hover:bg-primary-50"
-      :secondary -> "border-secondary-400 text-secondary-700 bg-white hover:bg-secondary-50"
-      :danger -> "border-danger-300 text-danger-700 bg-white hover:bg-danger-50"
+      :secondary -> "bg-secondary-500 text-white hover:bg-secondary-600"
+      :danger -> "border-primary-300 text-danger-600 bg-white hover:bg-primary-50"
       _ -> "border-primary-300 text-primary-700 bg-white hover:bg-primary-50"
     end
   end
