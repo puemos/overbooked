@@ -47,7 +47,7 @@ defmodule OverbookedWeb.RoomsLive do
       <div class="h-full flex flex-col justify-between">
         <div>
           <div><%= @name %></div>
-          <div class="mt-4 flex flex-row space-x-1 flex-wrap">
+          <div class="mt-4 flex gap-2 flex-wrap">
             <%= for amenity <- @amenities do %>
               <.badge color="gray"><%= amenity.name %></.badge>
             <% end %>

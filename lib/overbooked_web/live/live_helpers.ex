@@ -460,7 +460,7 @@ defmodule OverbookedWeb.LiveHelpers do
 
   def badge(%{color: color} = assigns) do
     ~H"""
-    <span class={"inline-flex items-center bg-#{color}-100 text-#{color}-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded dark:bg-#{color}-200 dark:text-#{color}-800"}>
+    <span class={"inline-flex items-center bg-#{color}-100 text-#{color}-800 text-xs font-semibold px-2.5 py-0.5 rounded dark:bg-#{color}-200 dark:text-#{color}-800"}>
       <%= render_slot(@inner_block) %>
     </span>
     """

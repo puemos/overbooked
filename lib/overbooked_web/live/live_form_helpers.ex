@@ -135,7 +135,11 @@ defmodule OverbookedWeb.LiveFormHelpers do
             _ -> []
           end
 
-        Enum.map(values, &to_string/1)
+        case values do
+          [%{id: _}] -> Enum.map(values, &to_string(&1.id))
+          [%{id: _} | _rest] -> Enum.map(values, &to_string(&1.id))
+          _ -> Enum.map(values, &to_string/1)
+        end
       end)
       |> assign_new(:id_prefix, fn -> input_id(assigns[:form], assigns[:field]) <> "_" end)
       |> assign_new(:layout, fn -> :col end)

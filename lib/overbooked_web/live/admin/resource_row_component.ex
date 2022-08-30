@@ -38,6 +38,7 @@ defmodule OverbookedWeb.ResourceRowComponent do
                   <.select
                     form={f}
                     field={:color}
+                    phx_debounce="blur"
                     options={
                       Enum.map(
                         ~w(gray red yellow green blue indigo pink purple),
@@ -57,7 +58,6 @@ defmodule OverbookedWeb.ResourceRowComponent do
                 form={f}
                 layout={:grid}
                 field={:amenities}
-                checked={Enum.map(@resource.amenities, &Integer.to_string(&1.id))}
                 options={Enum.map(@amenities, &{&1.name, &1.id})}
               />
             </div>
@@ -76,7 +76,7 @@ defmodule OverbookedWeb.ResourceRowComponent do
         <:cancel>Cancel</:cancel>
       </.modal>
       <.modal id={"room-amenities-modal-#{@resource.id}"} icon={nil}>
-        <div class="flex flex-row space-x-1 wrap">
+        <div class="flex flex-row gap-2 flex-wrap">
           <%= for amenity <- @resource.amenities do %>
             <.badge color="gray"><%= amenity.name %></.badge>
           <% end %>

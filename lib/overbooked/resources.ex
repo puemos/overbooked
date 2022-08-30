@@ -122,7 +122,6 @@ defmodule Overbooked.Resources do
 
   """
   def update_resource(%Resource{} = resource, attrs) do
-    IO.inspect(resource: resource, attrs: attrs)
     amenities_id_list = Map.get(attrs, "amenities", [])
     amenities = list_amenities(id: amenities_id_list)
 
