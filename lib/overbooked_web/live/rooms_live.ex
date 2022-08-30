@@ -22,7 +22,7 @@ defmodule OverbookedWeb.RoomsLive do
     <.page>
       <div class="w-full space-y-12">
         <div class="w-full">
-          <div class="grid grid-cols-4 gap-4">
+          <div class="grid grid-cols-3 gap-4">
             <%= for room <- @rooms do %>
               <.room_card
                 name={room.name}
@@ -41,15 +41,17 @@ defmodule OverbookedWeb.RoomsLive do
 
   defp room_card(assigns) do
     ~H"""
-    <div class="relative px-4 py-2 h-36 border-primary-300 text-primary-700 bg-white hover:bg-primary-50 font-medium items-center border shadow-sm rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500">
+    <div class="relative px-4 py-2 h-44 border-primary-300 text-primary-700 bg-white hover:bg-primary-50 font-medium items-center border shadow-sm rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500">
       <div class={"absolute top-3 right-3 bg-#{@color}-300 h-2 w-2 rounded-full"}></div>
 
       <div class="h-full flex flex-col justify-between">
-        <div><%= @name %></div>
-        <div class="flex flex-row space-x-1">
-          <%= for amenity <- @amenities do %>
-            <.badge color="gray"><%= amenity.name %></.badge>
-          <% end %>
+        <div>
+          <div><%= @name %></div>
+          <div class="mt-4 flex flex-row space-x-1 flex-wrap">
+            <%= for amenity <- @amenities do %>
+              <.badge color="gray"><%= amenity.name %></.badge>
+            <% end %>
+          </div>
         </div>
         <div>
           <.badge color={if @busy, do: "red", else: "green"}>
