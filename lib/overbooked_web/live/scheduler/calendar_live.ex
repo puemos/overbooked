@@ -8,6 +8,14 @@ defmodule OverbookedWeb.ScheduleLive.Calendar do
   def weekly(assigns) do
     weekday = Timex.weekday(assigns.end_of_week, :monday)
 
+    hours_of_day =
+      Timex.Interval.new(
+        from: Timex.beginning_of_day(Timex.now()),
+        until: Timex.end_of_day(Timex.now()),
+        step: [minutes: 15]
+      )
+      |> Enum.map(&Timex.format!(&1, "%H:%M", :strftime))
+
     ~H"""
     <div class="h-[35rem]">
       <div class="flex items-center mb-8">
@@ -38,13 +46,29 @@ defmodule OverbookedWeb.ScheduleLive.Calendar do
           </div>
         </div>
       </div>
-      <div class="mb-6 text-center grid grid-cols-7 gap-y-1">
+      <div class="text-center grid grid-cols-[50px_repeat(7,1fr)] gap-y-1">
+        <div></div>
         <%= for i <- 0..weekday - 1 do %>
           <.weekday_header index={i} date={Timex.shift(@beginning_of_week, days: i)} />
         <% end %>
       </div>
       <div class="overflow-y-scroll h-full">
-        <div class="mb-6 text-center grid grid-cols-7 gap-y-1">
+        <div class="text-center grid grid-cols-[50px_repeat(7,1fr)] gap-y-1">
+          <div>
+            <div class="flex flex-col w-full">
+              <%= for {hour, _index} <- Enum.with_index(hours_of_day) do %>
+                <div class="h-3 relative">
+                  <%= if round_hour?(hour) do %>
+                    <div class="absolute -top-1/2 text-xs text-gray-500 h-3 right-2 z-10 flex-col items-center justify-center">
+                      <div class="">
+                        <%= hour %>
+                      </div>
+                    </div>
+                  <% end %>
+                </div>
+              <% end %>
+            </div>
+          </div>
           <%= for i <- 0..weekday - 1 do %>
             <.weekday
               index={i}
@@ -55,6 +79,89 @@ defmodule OverbookedWeb.ScheduleLive.Calendar do
             />
           <% end %>
         </div>
+      </div>
+    </div>
+    """
+  end
+
+  def weekday_header(%{date: date} = assigns) do
+    is_today = Timex.compare(Timex.today(), date, :day) == 0
+    weekday = Timex.format!(date, "{D}")
+    title = Timex.format!(date, "{WDshort}")
+
+    assigns =
+      assigns
+      |> assign(:title, title)
+      |> assign(:weekday, weekday)
+      |> assign(:is_today, is_today)
+
+    ~H"""
+    <div class="flex flex-col items-center border-b pb-4">
+      <div class="text-xs"><%= @title %></div>
+      <div class={"#{if @is_today, do: "bg-purple-500 text-white"} flex flex-col items-center justify-center w-7 h-7 rounded-full text-gray-400 font-bold mt-2"}>
+        <div><%= @weekday %></div>
+      </div>
+    </div>
+    """
+  end
+
+  def weekday(%{date: date, bookings_hourly: bookings_hourly} = assigns) do
+    older = Timex.compare(Timex.today(), date, :day) == 1
+    weekday = Timex.weekday(date, :monday)
+    yearday = Timex.day(date)
+    title = Timex.format!(date, "{Mfull} {D} {WDfull}")
+
+    hours_of_day =
+      Timex.Interval.new(
+        from: Timex.beginning_of_day(date),
+        until: Timex.end_of_day(date),
+        step: [minutes: 15]
+      )
+      |> Enum.map(&Timex.format!(&1, "%H:%M", :strftime))
+
+    first_slot? = fn index ->
+      !booking_by_hour(bookings_hourly, Enum.at(hours_of_day, index - 1))
+    end
+
+    last_slot? = fn index ->
+      !booking_by_hour(bookings_hourly, Enum.at(hours_of_day, index + 1))
+    end
+
+    assigns =
+      assigns
+      |> assign(:text, Timex.format!(date, "{D}"))
+      |> assign(:hours_of_day, hours_of_day)
+      |> assign(:bookings_hourly, bookings_hourly)
+      |> assign(:weekday, weekday)
+      |> assign(:yearday, yearday)
+      |> assign(:title, title)
+
+    ~H"""
+    <div>
+      <div class="flex flex-col w-full border-l">
+        <%= for {hour, index} <- Enum.with_index(@hours_of_day) do %>
+          <div class={"#{if index !=0 and round_hour?(hour) and first_slot?.(index), do: "border-t"} #{if booking_by_hour(@bookings_hourly, hour), do: "pr-1"} flex flex-col h-3 w-full relative"}>
+            <%= if booking = booking_by_hour(@bookings_hourly, hour) do %>
+              <div class={"bg-#{booking.resource.color}-300 #{if first_slot?.(index), do: "rounded-t-[5px]"} #{if last_slot?.(index), do: "rounded-b-[5px]"} h-full w-full relative"}>
+                <%= if first_slot?.(index) do %>
+                  <div class="text-xs text-left absolute top-0 left-0 p-1 w-full break-all z-10 ">
+                    <%= booking.user.name %>
+                  </div>
+                <% end %>
+              </div>
+            <% else %>
+              <button
+                class={"#{if older, do: "bg-gray-50", else: "hover:bg-gray-100 hover:h-12 absolute top-0 left-0"} top-0 h-full w-full"}
+                disabled={older}
+                phx-click={
+                  JS.push("hour", value: %{date: Timex.format!(date, "{YYYY}-{0M}-{0D}"), hour: hour})
+                  |> show_modal("booking-form-modal")
+                }
+              >
+              </button>
+            <% end %>
+          </div>
+        <% end %>
       </div>
     </div>
     """
@@ -96,68 +203,6 @@ defmodule OverbookedWeb.ScheduleLive.Calendar do
         <% end %>
       </div>
     </div>
-    """
-  end
-
-  def weekday_header(%{date: date} = assigns) do
-    is_today = Timex.compare(Timex.today(), date, :day) == 0
-    weekday = Timex.format!(date, "{D}")
-    title = Timex.format!(date, "{WDshort}")
-
-    assigns =
-      assigns
-      |> assign(:title, title)
-      |> assign(:weekday, weekday)
-      |> assign(:is_today, is_today)
-
-    ~H"""
-    <div>
-      <div class="text-xs"><%= @title %></div>
-      <div class="text-gray-400 font-bold mt-2"><%= @weekday %></div>
-    </div>
-    """
-  end
-
-  def weekday(%{date: date, bookings_hourly: bookings_hourly} = assigns) do
-    older = Timex.compare(Timex.today(), date, :day) == 1
-    is_today = Timex.compare(Timex.today(), date, :day) == 0
-    weekday = Timex.weekday(date, :monday)
-    yearday = Timex.day(date)
-    title = Timex.format!(date, "{Mfull} {D} {WDfull}")
-
-    hours_of_day =
-      Timex.Interval.new(
-        from: Timex.beginning_of_day(date),
-        until: Timex.end_of_day(date),
-        step: [minutes: 15]
-      )
-      |> Enum.map(&Timex.format!(&1, "%H:%M", :strftime))
-
-    assigns =
-      assigns
-      |> assign(:text, Timex.format!(date, "{D}"))
-      |> assign(:hours_of_day, hours_of_day)
-      |> assign(:bookings_hourly, bookings_hourly)
-      |> assign(:weekday, weekday)
-      |> assign(:yearday, yearday)
-      |> assign(:title, title)
-
-    ~H"""
-    <button
-      disabled={older}
-      phx-click={show_modal("a-#{@yearday}-modal")}
-      class={"#{if is_today, do: "border-purple-500"} grid"}
-    >
-      <div class="flex flex-col mt-2 w-full border-l">
-        <%= for hour <- @hours_of_day do %>
-          <div class={"#{if round_hour?(hour), do: "border-t"} #{if older, do: "bg-gray-50", else: "hover:bg-gray-100"} h-3 w-full"}>
-            <%= for {_, booking} <- booking_by_hour(@bookings_hourly, hour) do %>
-              <div class={"bg-#{booking.resource.color}-300 h-full w-full"}></div>
-            <% end %>
-          </div>
-        <% end %>
-      </div>
-    </button>
     """
   end
 
@@ -224,7 +269,7 @@ defmodule OverbookedWeb.ScheduleLive.Calendar do
     <div class="flex flex-row space-x-1 items-center">
       <div class={"bg-#{@color}-300 h-2 w-2 rounded-full"}></div>
       <div class="text-xs truncate" title={"#{@user_name} at #{@resource_name}"}>
-        <%= String.capitalize(@user_name) %> at <%= String.capitalize(@resource_name) %>
+        <%= @user_name %> at <%= @resource_name %>
       </div>
     </div>
     """
@@ -238,7 +283,7 @@ defmodule OverbookedWeb.ScheduleLive.Calendar do
         <%= @time %>
       </div>
       <div class="text-sm truncate">
-        <%= String.capitalize(@user_name) %> at <%= String.capitalize(@resource_name) %>
+        <%= @user_name %> at <%= @resource_name %>
       </div>
     </div>
     """
@@ -247,18 +292,15 @@ defmodule OverbookedWeb.ScheduleLive.Calendar do
   defp booking_by_day(bookings, date) do
     date = Timex.day(date)
 
-    slots = Map.get(bookings, date, [])
+    slots = Map.get(bookings, date, %{})
 
     slots
   end
 
   defp booking_by_hour(bookings, hour) do
-    if bookings == [] do
-      bookings
-    else
-      bookings
-      |> Map.get(hour, [])
-      |> Enum.with_index(fn element, index -> {index, element} end)
+    case Map.get(bookings, hour, []) do
+      [booking] -> booking
+      _ -> nil
     end
   end
 

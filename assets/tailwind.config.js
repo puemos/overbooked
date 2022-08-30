@@ -51,6 +51,15 @@ module.exports = {
     "text-pink-800",
     "text-purple-800",
 
+    "border-l-gray-500",
+    "border-l-red-500",
+    "border-l-yellow-500",
+    "border-l-green-500",
+    "border-l-blue-500",
+    "border-l-indigo-500",
+    "border-l-pink-500",
+    "border-l-purple-500",
+
     "text-gray-300",
     "text-red-300",
     "text-yellow-300",

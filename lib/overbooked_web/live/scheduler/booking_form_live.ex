@@ -15,7 +15,6 @@ defmodule OverbookedWeb.ScheduleLive.BookingForm do
           :let={f}
           for={@changeset}
           phx-submit={:add_booking}
-          phx-change={:validate}
           phx-target={@myself}
           id={"#{@id}-form"}
           class="flex flex-col space-y-4"
@@ -28,6 +27,7 @@ defmodule OverbookedWeb.ScheduleLive.BookingForm do
               <.select
                 form={f}
                 field={:resource_id}
+                value={@default_resource}
                 name="resource_id"
                 phx_debounce="blur"
                 options={Enum.map(@resources, &{&1.name, &1.id})}
@@ -59,7 +59,7 @@ defmodule OverbookedWeb.ScheduleLive.BookingForm do
                 <div class="mt-1">
                   <.select
                     options={time_options()}
-                    selected="09:00"
+                    value={@default_start_at}
                     form={f}
                     field={:start_at}
                     phx_debounce="blur"
@@ -70,7 +70,7 @@ defmodule OverbookedWeb.ScheduleLive.BookingForm do
                 <div class="mt-1">
                   <.select
                     options={time_options()}
-                    selected="10:00"
+                    value={@default_end_at}
                     form={f}
                     field={:end_at}
                     phx_debounce="blur"
@@ -82,13 +82,7 @@ defmodule OverbookedWeb.ScheduleLive.BookingForm do
             </div>
           </div>
         </.form>
-        <:confirm
-          type="submit"
-          form={"#{@id}-form"}
-          phx-disable-with="Saving..."
-          disabled={!@changeset.valid?}
-          variant={:secondary}
-        >
+        <:confirm type="submit" form={"#{@id}-form"} phx-disable-with="Saving..." variant={:secondary}>
           Save
         </:confirm>
 
@@ -96,6 +90,16 @@ defmodule OverbookedWeb.ScheduleLive.BookingForm do
       </.modal>
     </div>
     """
+  end
+
+  @impl true
+  def mount(socket) do
+    {:ok,
+     assign(socket,
+       default_start_at: "09:00",
+       default_end_at: "10:00",
+       default_resource: 1
+     )}
   end
 
   @impl true
@@ -122,23 +126,14 @@ defmodule OverbookedWeb.ScheduleLive.BookingForm do
     booking_params = %{start_at: start_at, end_at: end_at}
 
     case Schedule.book_resource(resource, socket.assigns.current_user, booking_params) do
-      {:ok, _booking} ->
-        {:noreply,
-         socket
-         |> put_flash(
-           :info,
-           "Booking created successfully."
-         )
-         |> push_redirect(to: socket.assigns.success_path)}
+      {:ok, booking} ->
+        send(self(), {:created_booking, booking})
+        {:noreply, socket}
 
       {:error, :resource_busy} ->
-        {:noreply,
-         socket
-         |> put_flash(
-           :error,
-           "#{resource.name} is unavailable during those hours"
-         )
-         |> push_redirect(to: socket.assigns.success_path)}
+        send(self(), {:resource_busy, resource})
+
+        {:noreply, socket}
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign(socket, changeset: changeset)}

@@ -28,7 +28,9 @@ defmodule OverbookedWeb.ScheduleWeeklyLive do
 
     {:ok,
      socket
-     |> assign(default_day: Timex.format!(Timex.now(), "{YYYY}-{0M}-{D}"))
+     |> assign(default_day: Timex.format!(Timex.now(), "{YYYY}-{0M}-{0D}"))
+     |> assign(default_start_at: "09:00")
+     |> assign(default_end_at: "10:00")
      |> assign(from_date: from_date)
      |> assign(to_date: to_date)
      |> assign(resources: resources)
@@ -62,7 +64,10 @@ defmodule OverbookedWeb.ScheduleWeeklyLive do
       is_admin={@is_admin}
       changeset={@changeset}
       resources={@resources}
+      default_resource={@resource_id}
       default_day={@default_day}
+      default_start_at={@default_start_at}
+      default_end_at={@default_end_at}
       module={OverbookedWeb.ScheduleLive.BookingForm}
       id="booking-form"
     />
@@ -216,6 +221,46 @@ defmodule OverbookedWeb.ScheduleWeeklyLive do
            from_date: Timex.format!(from_date, "{ISOdate}"),
            resource_id: socket.assigns.resource_id
          })
+     )}
+  end
+
+  def handle_event("hour", %{"date" => date, "hour" => default_start_at}, socket) do
+    default_end_at =
+      default_start_at
+      |> Timex.parse!("{h24}:{m}")
+      |> Timex.shift(hours: 1)
+      |> Timex.format!("{h24}:{m}")
+
+    {:noreply,
+     socket
+     |> assign(default_day: date)
+     |> assign(default_start_at: default_start_at)
+     |> assign(default_end_at: default_end_at)}
+  end
+
+  def handle_info({:created_booking, _}, socket) do
+    {:noreply,
+     socket
+     |> push_patch(
+       to:
+         Routes.schedule_weekly_path(socket, :index, %{
+           to_date: socket.assigns.to_date,
+           from_date: socket.assigns.from_date,
+           resource_id: socket.assigns.resource_id
+         })
+     )
+     |> put_flash(
+       :info,
+       "Booking created successfully."
+     )}
+  end
+
+  def handle_info({:resource_busy, resource}, socket) do
+    {:noreply,
+     socket
+     |> put_flash(
+       :error,
+       "#{resource.name} is unavailable during those hours"
      )}
   end
 end

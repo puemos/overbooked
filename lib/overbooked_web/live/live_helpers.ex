@@ -339,7 +339,7 @@ defmodule OverbookedWeb.LiveHelpers do
     ~H"""
     <div
       id={@id}
-      class={"fixed z-10 inset-0 overflow-y-auto #{if @show, do: "fade-in", else: "hidden"}"}
+      class={"fixed z-20 inset-0 overflow-y-auto #{if @show, do: "fade-in", else: "hidden"}"}
       {@rest}
     >
       <.focus_wrap id={"#{@id}-focus-wrap"} content={"##{@id}-container"}>
