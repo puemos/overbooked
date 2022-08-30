@@ -176,7 +176,6 @@ defmodule OverbookedWeb.AdminDesksLive do
   @impl true
   def handle_event("update", params, socket) do
     %{"resource" => resource_params, "resource_id" => id} = params
-    {:noreply, socket}
 
     resource = Resources.get_resource!(id)
 
