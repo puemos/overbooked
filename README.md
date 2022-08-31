@@ -55,7 +55,7 @@ Overbooked is a self-hosted flexible workplace platform for indie co-working own
 - [x] Manage rooms and desks
 - [x] Manage amenities
 - [x] Invite and manage users
-- [ ] Edit amenities and resources
+- [x] Edit amenities and resources
 
 #### Integrations
 
