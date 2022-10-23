@@ -1,6 +1,6 @@
 # 🍚 Overbooked
 
-<img width="500" alt="image" src="https://user-images.githubusercontent.com/13174025/186359925-6b92062f-51b7-4858-8cd7-d47423897c05.png">
+<img width="100%" alt="image" src="https://files.gitbook.com/v0/b/gitbook-x-prod.appspot.com/o/spaces%2FXBpGv7Idn7C40VULL8H1%2Fuploads%2FZDxnzHzr2wVXP6l3TOF6%2Foverbooked-overview.gif?alt=media&token=d3e40a60-01d7-4375-b979-81338bba01c7">
 
 Overbooked is a self-hosted flexible workplace platform for indie co-working owners.
 
