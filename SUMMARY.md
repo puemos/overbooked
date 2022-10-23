@@ -4,13 +4,14 @@
 
 ## Guides
 
-* [Admin](guides/admin/README.md)
-  * [Deploying your instance](guides/admin/deploying-your-instance.md)
-  * [First-time login](guides/admin/first-time-login.md)
-  * [Inviting a user](guides/admin/inviting-a-user.md)
-  * [Creating your first resource](guides/admin/creating-your-first-resource.md)
-* [Settings](guides/settings.md)
-* [Booking a resource](guides/booking-a-resource.md)
+* [Users](guides/users/README.md)
+  * [⚙ Settings](guides/users/settings.md)
+  * [🗓 Booking a room/desk](guides/users/booking-a-room-desk.md)
+* [Admins](guides/admins/README.md)
+  * [🚀 Deploying your instance](guides/admins/deploying-your-instance.md)
+  * [🎟 Inviting a user](guides/admins/inviting-a-user.md)
+  * [🖥 Creating rooms and desks](guides/admins/creating-rooms-and-desks.md)
+  * [🕹 Add amenities](guides/admins/add-amenities.md)
 
 ## Fundamentals
 

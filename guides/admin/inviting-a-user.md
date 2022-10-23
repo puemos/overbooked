@@ -1,3 +1,0 @@
-# Inviting a user
-
-WIP

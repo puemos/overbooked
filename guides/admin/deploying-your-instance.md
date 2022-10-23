@@ -1,3 +1,0 @@
-# Deploying your instance
-
-WIP

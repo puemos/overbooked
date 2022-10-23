@@ -1,2 +1,0 @@
-# Booking a resource
-

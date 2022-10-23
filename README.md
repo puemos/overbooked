@@ -8,22 +8,24 @@ Live demo: [https://overbooked.fly.dev/](https://overbooked.fly.dev/)
 
 **Got 2 minutes?** Check out a video overview of our product:
 
-![The Scheduler](.gitbook/assets/image.png)
+<figure><img src=".gitbook/assets/overbooked-overview.gif" alt=""><figcaption></figcaption></figure>
+
+
 
 ### Guides: Jump right in
 
 Follow our handy guides to get started on the basics as quickly as possible:
 
-{% content-ref url="guides/admin/deploying-your-instance.md" %}
-[deploying-your-instance.md](guides/admin/deploying-your-instance.md)
+{% content-ref url="guides/admins/deploying-your-instance.md" %}
+[deploying-your-instance.md](guides/admins/deploying-your-instance.md)
 {% endcontent-ref %}
 
-{% content-ref url="guides/admin/creating-your-first-resource.md" %}
-[creating-your-first-resource.md](guides/admin/creating-your-first-resource.md)
+{% content-ref url="guides/admins/creating-rooms-and-desks.md" %}
+[creating-rooms-and-desks.md](guides/admins/creating-rooms-and-desks.md)
 {% endcontent-ref %}
 
-{% content-ref url="guides/admin/inviting-a-user.md" %}
-[inviting-a-user.md](guides/admin/inviting-a-user.md)
+{% content-ref url="guides/admins/inviting-a-user.md" %}
+[inviting-a-user.md](guides/admins/inviting-a-user.md)
 {% endcontent-ref %}
 
 ### Fundamentals: Dive a little deeper
