@@ -197,7 +197,7 @@ defmodule OverbookedWeb.LiveHelpers do
                 <img
                   class="w-10 h-10 bg-gray-300 rounded-full flex-shrink-0"
                   alt=""
-                  {assigns_to_attributes(img)}
+                  {Phoenix.Component.assigns_to_attributes(img)}
                 />
               <% end %>
               <span class="flex-1 flex flex-col min-w-0">
@@ -329,11 +329,26 @@ defmodule OverbookedWeb.LiveHelpers do
   attr :navigate, :string, default: nil
   attr :on_cancel, JS, default: %JS{}
   attr :on_confirm, JS, default: %JS{}
-  # slots
-  attr :title, :list, default: []
-  attr :confirm, :list, default: []
-  attr :cancel, :list, default: []
   attr :rest, :global
+  # slots
+  slot(:title)
+
+  slot :confirm do
+    attr :patch, :string
+    attr :size, :atom
+    attr :form, :any
+    attr :type, :string
+    attr :variant, :atom
+    attr :disabled, :boolean
+  end
+
+  slot :cancel do
+    attr :patch, :string
+    attr :size, :atom
+    attr :type, :string
+    attr :variant, :atom
+    attr :disabled, :boolean
+  end
 
   def modal(assigns) do
     ~H"""
@@ -342,7 +357,7 @@ defmodule OverbookedWeb.LiveHelpers do
       class={"fixed z-20 inset-0 overflow-y-auto #{if @show, do: "fade-in", else: "hidden"}"}
       {@rest}
     >
-      <.focus_wrap id={"#{@id}-focus-wrap"} content={"##{@id}-container"}>
+      <.focus_wrap id={"#{@id}-focus-wrap"}>
         <div
           class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0"
           aria-labelledby={"#{@id}-title"}
@@ -388,19 +403,22 @@ defmodule OverbookedWeb.LiveHelpers do
                 </div>
               </div>
             </div>
-            <div class="sm:ml-4 mr-4 mt-8 flex flex-row flex-row-reverse space-x-2 space-x-reverse">
+            <div class="sm:ml-4 mr-4 mt-8 flex flex-row-reverse space-x-2 space-x-reverse">
               <%= for confirm <- @confirm do %>
                 <.button
                   id={"#{@id}-confirm"}
                   phx-click={@on_confirm}
                   phx-disable-with
-                  {assigns_to_attributes(confirm)}
+                  {Phoenix.Component.assigns_to_attributes(confirm)}
                 >
                   <%= render_slot(confirm) %>
                 </.button>
               <% end %>
               <%= for cancel <- @cancel do %>
-                <.button phx-click={hide_modal(@on_cancel, @id)} {assigns_to_attributes(cancel)}>
+                <.button
+                  phx-click={hide_modal(@on_cancel, @id)}
+                  {Phoenix.Component.assigns_to_attributes(cancel)}
+                >
                   <%= render_slot(cancel) %>
                 </.button>
               <% end %>
@@ -458,9 +476,9 @@ defmodule OverbookedWeb.LiveHelpers do
     """
   end
 
-  def badge(%{color: color} = assigns) do
+  def badge(assigns) do
     ~H"""
-    <span class={"inline-flex items-center bg-#{color}-100 text-#{color}-800 text-xs font-semibold px-2.5 py-0.5 rounded dark:bg-#{color}-200 dark:text-#{color}-800"}>
+    <span class={"inline-flex items-center bg-#{@color}-100 text-#{@color}-800 text-xs font-semibold px-2.5 py-0.5 rounded dark:bg-#{@color}-200 dark:text-#{@color}-800"}>
       <%= render_slot(@inner_block) %>
     </span>
     """
@@ -471,7 +489,8 @@ defmodule OverbookedWeb.LiveHelpers do
   attr :type, :string, default: "button"
   attr :variant, :atom, default: nil
   attr :disabled, :boolean, default: false
-  attr :rest, :global
+  attr :rest, :global, include: ~w(form)
+  slot(:inner_block, required: true)
 
   def button(%{patch: _} = assigns) do
     ~H"""
@@ -482,7 +501,7 @@ defmodule OverbookedWeb.LiveHelpers do
       <% end %>
     <% else %>
       <%= live_patch [to: @patch, class: "order-1 inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 sm:order-0"] ++
-        assigns_to_attributes(assigns, [:primary, :patch]) do %>
+      Phoenix.Component.assigns_to_attributes(assigns, [:primary, :patch]) do %>
         <%= render_slot(@inner_block) %>
       <% end %>
     <% end %>
@@ -524,10 +543,16 @@ defmodule OverbookedWeb.LiveHelpers do
     "font-medium inline-flex items-center border shadow-sm rounded-md focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-primary-500"
   end
 
+  attr :id, :any
   attr :row_id, :any, default: false
   attr :rows, :list, required: true
   # slots
-  attr :col, :list, required: true
+  slot(:inner_block, required: true)
+
+  slot :col, required: true do
+    attr :label, :string
+    attr :width, :string
+  end
 
   def table(assigns) do
     assigns =
@@ -575,7 +600,12 @@ defmodule OverbookedWeb.LiveHelpers do
   attr :rows, :list, required: true
   attr :rest, :global
   # slots
-  attr :col, :list
+  slot(:inner_block, required: true)
+
+  slot :col, required: true do
+    attr :label, :string
+    attr :width, :string
+  end
 
   def live_table(assigns) do
     assigns = assign(assigns, :col, for(col <- assigns.col, col[:if] != false, do: col))
@@ -612,7 +642,12 @@ defmodule OverbookedWeb.LiveHelpers do
     """
   end
 
-  attr :link, :list, default: []
+  slot :link, required: true do
+    attr :navigate, :string, required: true
+    attr :active, :boolean, required: true
+  end
+
+  slot(:inner_block, required: true)
 
   def tabs(assigns) do
     ~H"""
@@ -620,7 +655,7 @@ defmodule OverbookedWeb.LiveHelpers do
       <%= for link <- @link do %>
         <.link
           tabindex="0"
-          class={"#{if link[:active], do: "underline text-gray-700", else: "focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-primary-500 text-gray-500 hover:text-gray-700"} transition-colors block decoration-purple-300 decoration-[3px] underline-offset-[14px] text-sm font-medium focus:outline-none focus:ring-0 focus:ring-offset-0 focus:ring-offset-gray-100 focus:ring-purple-500"}
+          class={"#{if link[:active], do: "bg-gray-200 text-gray-700", else: "focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-primary-500 text-gray-500 hover:text-gray-700"} p-1 transition-colors block rounded text-sm font-medium focus:outline-none focus:ring-0 focus:ring-offset-0 focus:ring-offset-gray-100 focus:ring-purple-500"}
           {link}
         >
           &nbsp; <%= render_slot(link) %> &nbsp;
@@ -631,6 +666,7 @@ defmodule OverbookedWeb.LiveHelpers do
   end
 
   attr :label, :string
+  slot(:inner_block, required: true)
 
   def header(assigns) do
     ~H"""
@@ -648,6 +684,7 @@ defmodule OverbookedWeb.LiveHelpers do
   end
 
   attr :full, :boolean, default: false
+  slot(:inner_block, required: true)
 
   def page(assigns) do
     ~H"""

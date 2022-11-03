@@ -168,7 +168,7 @@ defmodule Overbooked.Resources do
     id = Keyword.get(opts, :id)
 
     where =
-      if id != nil do
+      if id != nil and id != "" do
         ids = List.wrap(id)
         dynamic([a], a.id in ^ids)
       else

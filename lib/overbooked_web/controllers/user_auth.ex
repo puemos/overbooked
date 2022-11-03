@@ -3,6 +3,7 @@ defmodule OverbookedWeb.UserAuth do
   import Phoenix.Controller
 
   alias Phoenix.LiveView
+  alias Phoenix.Component
   alias Overbooked.Accounts
   alias Overbooked.Accounts.{User}
   alias OverbookedWeb.Router.Helpers, as: Routes
@@ -10,8 +11,8 @@ defmodule OverbookedWeb.UserAuth do
   def on_mount(:default, _params, _session, socket) do
     {:cont,
      socket
-     |> LiveView.assign(:current_user, nil)
-     |> LiveView.assign(:is_admin, nil)}
+     |> Component.assign(:current_user, nil)
+     |> Component.assign(:is_admin, nil)}
   end
 
   def on_mount(:redirect_if_user_is_authenticated, _params, session, socket) do
@@ -24,8 +25,8 @@ defmodule OverbookedWeb.UserAuth do
       %{} ->
         {:cont,
          socket
-         |> LiveView.assign(:current_user, nil)
-         |> LiveView.assign(:is_admin, nil)}
+         |> Component.assign(:current_user, nil)
+         |> Component.assign(:is_admin, nil)}
     end
   end
 
@@ -34,10 +35,10 @@ defmodule OverbookedWeb.UserAuth do
       %{"user_token" => user_token} ->
         new_socket =
           socket
-          |> LiveView.assign_new(:current_user, fn ->
+          |> Component.assign_new(:current_user, fn ->
             Accounts.get_user_by_session_token(user_token)
           end)
-          |> LiveView.assign_new(:is_admin, fn %{current_user: current_user} ->
+          |> Component.assign_new(:is_admin, fn %{current_user: current_user} ->
             User.is_admin?(current_user)
           end)
 

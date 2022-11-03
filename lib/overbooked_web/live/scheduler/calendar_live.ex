@@ -16,6 +16,11 @@ defmodule OverbookedWeb.ScheduleLive.Calendar do
       )
       |> Enum.map(&Timex.format!(&1, "%H:%M", :strftime))
 
+    assigns =
+      assigns
+      |> assign(:hours_of_day, hours_of_day)
+      |> assign(:weekday, weekday)
+
     ~H"""
     <div class="h-[35rem]">
       <div class="flex items-center mb-8">
@@ -48,7 +53,7 @@ defmodule OverbookedWeb.ScheduleLive.Calendar do
       </div>
       <div class="text-center grid grid-cols-[50px_repeat(7,1fr)] gap-y-1">
         <div></div>
-        <%= for i <- 0..weekday - 1 do %>
+        <%= for i <- 0..@weekday - 1 do %>
           <.weekday_header index={i} date={Timex.shift(@beginning_of_week, days: i)} />
         <% end %>
       </div>
@@ -56,7 +61,7 @@ defmodule OverbookedWeb.ScheduleLive.Calendar do
         <div class="text-center grid grid-cols-[50px_repeat(7,1fr)] gap-y-1">
           <div>
             <div class="flex flex-col w-full">
-              <%= for {hour, _index} <- Enum.with_index(hours_of_day) do %>
+              <%= for {hour, _index} <- Enum.with_index(@hours_of_day) do %>
                 <div class="h-3 relative">
                   <%= if round_hour?(hour) do %>
                     <div class="absolute -top-1/2 text-xs text-gray-500 h-3 right-2 z-10 flex-col items-center justify-center">
@@ -69,7 +74,7 @@ defmodule OverbookedWeb.ScheduleLive.Calendar do
               <% end %>
             </div>
           </div>
-          <%= for i <- 0..weekday - 1 do %>
+          <%= for i <- 0..@weekday - 1 do %>
             <.weekday
               index={i}
               date={Timex.shift(@beginning_of_week, days: i)}
@@ -105,6 +110,14 @@ defmodule OverbookedWeb.ScheduleLive.Calendar do
     """
   end
 
+  defp first_slot?(bookings_hourly, hours_of_day, index) do
+    !booking_by_hour(bookings_hourly, Enum.at(hours_of_day, index - 1))
+  end
+
+  defp last_slot?(bookings_hourly, hours_of_day, index) do
+    !booking_by_hour(bookings_hourly, Enum.at(hours_of_day, index + 1))
+  end
+
   def weekday(%{date: date, bookings_hourly: bookings_hourly} = assigns) do
     older = Timex.compare(Timex.today(), date, :day) == 1
     weekday = Timex.weekday(date, :monday)
@@ -119,14 +132,6 @@ defmodule OverbookedWeb.ScheduleLive.Calendar do
       )
       |> Enum.map(&Timex.format!(&1, "%H:%M", :strftime))
 
-    first_slot? = fn index ->
-      !booking_by_hour(bookings_hourly, Enum.at(hours_of_day, index - 1))
-    end
-
-    last_slot? = fn index ->
-      !booking_by_hour(bookings_hourly, Enum.at(hours_of_day, index + 1))
-    end
-
     assigns =
       assigns
       |> assign(:text, Timex.format!(date, "{D}"))
@@ -134,27 +139,29 @@ defmodule OverbookedWeb.ScheduleLive.Calendar do
       |> assign(:bookings_hourly, bookings_hourly)
       |> assign(:weekday, weekday)
       |> assign(:yearday, yearday)
+      |> assign(:hours_of_day, hours_of_day)
       |> assign(:title, title)
+      |> assign(:older, older)
 
     ~H"""
     <div>
       <div class="flex flex-col w-full border-l">
         <%= for {hour, index} <- Enum.with_index(@hours_of_day) do %>
-          <div class={"#{if index !=0 and round_hour?(hour) and first_slot?.(index), do: "border-t"} #{if booking_by_hour(@bookings_hourly, hour), do: "pr-1"} flex flex-col h-3 w-full relative"}>
+          <div class={"#{if index !=0 and round_hour?(hour) and first_slot?(@bookings_hourly, @hours_of_day, index), do: "border-t"} #{if booking_by_hour(@bookings_hourly, hour), do: "pr-1"} flex flex-col h-3 w-full relative"}>
             <%= if booking = booking_by_hour(@bookings_hourly, hour) do %>
-              <div class={"bg-#{booking.resource.color}-300 #{if first_slot?.(index), do: "rounded-t-[5px]"} #{if last_slot?.(index), do: "rounded-b-[5px]"} h-full w-full relative"}>
-                <%= if first_slot?.(index) do %>
-                  <div class="text-xs text-left absolute top-0 left-0 p-1 w-full break-all z-10 ">
+              <div class={"bg-#{booking.resource.color}-400 #{if first_slot?(@bookings_hourly, @hours_of_day, index), do: "rounded-t-[5px]"} #{if last_slot?(@bookings_hourly, @hours_of_day, index), do: "rounded-b-[5px]"} h-full w-full relative"}>
+                <%= if first_slot?(@bookings_hourly, @hours_of_day, index) do %>
+                  <div class="text-white text-xs text-left absolute top-0 left-0 p-1 w-full break-all z-10 ">
                     <%= booking.user.name %>
                   </div>
                 <% end %>
               </div>
             <% else %>
               <button
-                class={"#{if older, do: "bg-gray-50", else: "hover:bg-gray-100 hover:h-12 absolute top-0 left-0"} top-0 h-full w-full"}
-                disabled={older}
+                class={"#{if @older, do: "bg-gray-50", else: "hover:bg-gray-100 hover:h-12 absolute top-0 left-0"} top-0 h-full w-full"}
+                disabled={@older}
                 phx-click={
-                  JS.push("hour", value: %{date: Timex.format!(date, "{YYYY}-{0M}-{0D}"), hour: hour})
+                  JS.push("hour", value: %{date: Timex.format!(@date, "{YYYY}-{0M}-{0D}"), hour: hour})
                   |> show_modal("booking-form-modal")
                 }
               >
