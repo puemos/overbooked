@@ -1,12 +1,12 @@
 # 🍚 Overbooked
 
+<a href="https://www.producthunt.com/posts/overbooked?utm_source=badge-featured&utm_medium=badge&utm_souce=badge-overbooked" target="_blank"><img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=371582&theme=light" alt="Overbooked - Self&#0045;hosted&#0032;workplace&#0032;platform&#0032;for&#0032;indie&#0032;co&#0045;working&#0032;owners | Product Hunt" style="width: 250px; height: 54px;" width="250" height="54" /></a>
+
 <img width="100%" alt="image" src="https://files.gitbook.com/v0/b/gitbook-x-prod.appspot.com/o/spaces%2FXBpGv7Idn7C40VULL8H1%2Fuploads%2FZDxnzHzr2wVXP6l3TOF6%2Foverbooked-overview.gif?alt=media&token=d3e40a60-01d7-4375-b979-81338bba01c7">
 
 Overbooked is a self-hosted flexible workplace platform for indie co-working owners.
 
 <br>
-
-**Live demo:** https://overbooked.fly.dev/
 
 **Docs:** https://overbookedapp.gitbook.io/docs/
 
